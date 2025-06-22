@@ -23,15 +23,17 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Algorithm Visualizer</title>
     <link rel="stylesheet" href="style.css">
-     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -86,7 +88,8 @@
                 <div class="algorithm-category">
                     <h3 class="category-title">Tree Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algorithm="binary-tree">Binary Tree Traversal</button></li>
+                        <li><button class="algorithm-btn" data-algorithm="binary-tree">Binary Tree Traversal</button>
+                        </li>
                         <li><button class="algorithm-btn" data-algorithm="avl-tree">AVL Tree</button></li>
                         <li><button class="algorithm-btn" data-algorithm="red-black">Red-Black Tree</button></li>
                     </ul>
@@ -96,7 +99,7 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-            <div class="canvas-container" >
+            <div class="canvas-container">
                 <div class="canvas-header">
                     <h2 id="algorithmTitle">Select an Algorithm</h2>
                     <div class="canvas-info">
@@ -111,20 +114,25 @@
     <!-- Animation Controls -->
     <div class="controls-panel" id="controlsPanel">
         <div class="controls-header">
-            <button class="controls-toggle" id="controlsToggle"> <ion-icon name="chevron-back-outline"></ion-icon> </button>
+            <button class="controls-toggle" id="controlsToggle"> <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
         </div>
         <div class="controls-content" id="controlsContent">
+
+            <div class="control-group">
+                <label for="customArrayInput">Custom Array (comma-separated)</label>
+                <div class="input-group">
+                    <input type="text" id="customArrayInput" class="array-input"
+                        placeholder="e.g., 64, 34, 25, 12, 22, 11, 90">
+                    <button class="control-btn apply-btn" id="applyArrayBtn" onclick="GenerateArray()">Apply</button>
+                </div>
+            </div>
+
             <div class="control-group">
                 <label for="speedSlider">Speed</label>
-                <input type="range" id="speedSlider" min="1" max="10" value="5" class="slider">
-                <span id="speedValue">5x</span>
+                <input type="range" id="speedSlider" min="1" max="5" step="1" value="1" class="slider">
+                <span id="speedValue">1x</span>
             </div>
-            
-            <!-- <div class="control-group">
-                <label for="scaleSlider">Scale</label>
-                <input type="range" id="scaleSlider" min="50" max="200" value="100" class="slider">
-                <span id="scaleValue">100%</span>
-            </div> -->
 
             <div class="control-buttons">
                 <button class="control-btn play-btn" id="playBtn">
@@ -172,4 +180,5 @@
     <script src="script.js"></script>
     <script src="Canvas.js"></script>
 </body>
+
 </html>

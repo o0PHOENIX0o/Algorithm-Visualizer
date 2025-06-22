@@ -23,16 +23,9 @@ const controlsPanel = document.getElementById('controlsPanel');
 
 controlsToggle.addEventListener('click', () => {
     controlsPanel.classList.toggle('active');
-    controlsToggle.innerHTML = controlsPanel.classList.contains('active') ? `<ion-icon name="chevron-forward-outline"></ion-icon>` : `<ion-icon name="chevron-back-outline"></ion-icon>`;
+    controlsToggle.innerHTML = controlsPanel.classList.contains('active') ? `<ion-icon name="chevron-back-outline"></ion-icon>` : `<ion-icon name="chevron-forward-outline"></ion-icon>`;
 });
 
-const speedSlider = document.getElementById('speedSlider');
-const speedValue = document.getElementById('speedValue');
-
-speedSlider.addEventListener('input', (e) => {
-    let animationSpeed = parseInt(e.target.value);
-    speedValue.textContent = `${animationSpeed}x`;
-});
 
 // Control buttons
 // document.getElementById('playBtn').addEventListener('click', () => play());
