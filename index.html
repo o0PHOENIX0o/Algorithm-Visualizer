@@ -57,11 +57,12 @@
                 <div class="algorithm-category">
                     <h3 class="category-title">Sorting Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algorithm="bubble-sort">Bubble Sort</button></li>
+                        <li><button class="algorithm-btn active" data-algorithm="bubble-sort">Bubble Sort</button></li>
+                        <li><button class="algorithm-btn" data-algorithm="selection-sort">Selection Sort</button></li>
+                        <li><button class="algorithm-btn" data-algorithm="insertion-sort">Insertion Sort</button></li>
                         <li><button class="algorithm-btn" data-algorithm="quick-sort">Quick Sort</button></li>
                         <li><button class="algorithm-btn" data-algorithm="merge-sort">Merge Sort</button></li>
                         <li><button class="algorithm-btn" data-algorithm="heap-sort">Heap Sort</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="insertion-sort">Insertion Sort</button></li>
                     </ul>
                 </div>
 
@@ -124,7 +125,7 @@
                 <div class="input-group">
                     <input type="text" id="customArrayInput" class="array-input"
                         placeholder="e.g., 64, 34, 25, 12, 22, 11, 90">
-                    <button class="control-btn apply-btn" id="applyArrayBtn" onclick="GenerateArray()">Apply</button>
+                    <button class="control-btn apply-btn" id="applyArrayBtn" >Apply</button>
                 </div>
             </div>
 
@@ -146,10 +147,6 @@
                 <button class="control-btn reset-btn" id="resetBtn">
                     <span class="btn-icon">⏹</span>
                     Reset
-                </button>
-                <button class="control-btn step-btn" id="stepBtn">
-                    <span class="btn-icon">⏭</span>
-                    Step
                 </button>
             </div>
 
@@ -177,8 +174,8 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="Canvas.js"></script>
+    <script type="module" src="./script.js"></script>
+    <script type="module" src="./sketch.js"></script>
 </body>
 
 </html>

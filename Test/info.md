@@ -1,0 +1,2 @@
+- cd Visualizer
+- python -m http.server

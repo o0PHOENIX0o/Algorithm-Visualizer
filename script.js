@@ -1,80 +1,72 @@
-const navToggle = document.getElementById('navToggle');
-const sidebar = document.getElementById('sidebar');
-
-// const canvas = document.getElementById('visualizationCanvas');
-// const ctx = canvas.getContext('2d');
-// resizeCanvas();
-// window.addEventListener('resize', () => resizeCanvas());
-
-navToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('active');
-});
-
-const algorithmButtons = document.querySelectorAll('.algorithm-btn');
-algorithmButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        algorithmButtons.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-    });
-});
+import { BubbleSort } from './algorithms/bubbleSort.js';
+import { SelectionSort } from './algorithms/selectionSort.js';
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
+const speedSlider = document.getElementById("speedSlider");
+const speedValue = document.getElementById("speedValue");
 
 controlsToggle.addEventListener('click', () => {
     controlsPanel.classList.toggle('active');
     controlsToggle.innerHTML = controlsPanel.classList.contains('active') ? `<ion-icon name="chevron-back-outline"></ion-icon>` : `<ion-icon name="chevron-forward-outline"></ion-icon>`;
 });
 
-
-// Control buttons
-// document.getElementById('playBtn').addEventListener('click', () => play());
-// document.getElementById('pauseBtn').addEventListener('click', () => pause());
-// document.getElementById('resetBtn').addEventListener('click', () => reset());
-// document.getElementById('stepBtn').addEventListener('click', () => step());
-// document.getElementById('generateBtn').addEventListener('click', () => generateRandomArray());
-
-
-// function resizeCanvas() {
-//     console.log("resize canvas")
-//     const container = canvas.parentElement;
-//     const rect = container.getBoundingClientRect();
-
-//     canvas.width = (rect.width - 64);
-//     canvas.style.width = `${canvas.width}px`;
-//     drawWelcomeScreen();
-// }
+speedSlider.addEventListener("input", (e)=>{
+  const val = parseInt(e.target.value);
+  currentAlgorithm.AnimationSpeed = currentAlgorithm.BaseSpeed * val;
+  currentAlgorithm.TimeoutDelay = currentAlgorithm.BaseDelay / val;
+  speedValue.textContent = `${val}x`;
+});
 
 
-// function drawWelcomeScreen() {
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
-//     ctx.fillStyle = '#f0f0f0';
-//     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-//     ctx.fillStyle = '#f0f0f0';
-//     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-//     ctx.fillStyle = '#667eea';
-//     ctx.textAlign = 'center';
-//     ctx.font = "24px Arial";
-//     ctx.fillText(
-//         'Select an Algorithm to Begin',
-//         canvas.width / 2,
-//         canvas.height / 2
-//     );
-
-//     ctx.fillStyle = '#888';
-//     ctx.font = "16px Arial";
-//     ctx.fillText(
-//         'Choose from the sidebar to start visualization',
-//         canvas.width / 2,
-//         canvas.height / 2 + 40
-//     );
-// }
+let currentAlgorithm = BubbleSort;
+window.currentAlgorithm = currentAlgorithm;
 
 
-// drawWelcomeScreen();
+document.querySelectorAll(".algorithm-btn").forEach(btn=>{
+  btn.addEventListener("click", (e)=>{
+    document.querySelectorAll(".algorithm-btn").forEach(b=>b.classList.remove("active"));
+    e.target.classList.add("active");
 
-const generateRandomArray = (size) => {
+    const alg = e.target.dataset.algorithm;
+    switch(alg){
+      case 'bubble-sort': currentAlgorithm = BubbleSort; break;
+      case 'selection-sort': currentAlgorithm = SelectionSort; break;
+      default: alert(`${alg} not implemented.`); return;
+    }
+    window.currentAlgorithm = currentAlgorithm;
+  });
+});
 
-}
+
+document.getElementById("applyArrayBtn").addEventListener("click", ()=>{
+  if(currentAlgorithm.isAnimating) return;
+  console.log(currentAlgorithm);
+  const input = document.getElementById("customArrayInput").value;
+  if(currentAlgorithm.name == "Bubble Sort" && input.length > 10){ 
+    alert("Use max 10 elements for visualization");
+    return;
+  }
+  const values = input.split(',').map(x=>x.trim()).filter(x=>x !== '');
+  currentAlgorithm.generate(values);
+});
+
+
+
+document.getElementById("playBtn").addEventListener("click", ()=>{
+  if((!currentAlgorithm.isAnimating || currentAlgorithm.isPause) && currentAlgorithm.objNodeArray.length > 0) {
+    currentAlgorithm.isPause = false;
+    currentAlgorithm.run();
+  }
+});
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  currentAlgorithm.isPause = false;
+  currentAlgorithm.reset();
+});
+
+document.getElementById("pauseBtn").addEventListener("click",()=>{
+  currentAlgorithm.isPause = true;
+})
+
