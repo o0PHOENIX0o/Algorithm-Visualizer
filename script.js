@@ -7,6 +7,12 @@ const controlsPanel = document.getElementById('controlsPanel');
 const speedSlider = document.getElementById("speedSlider");
 const speedValue = document.getElementById("speedValue");
 const InputField = document.getElementById("customArrayInput");
+const navToggle = document.getElementById('navToggle');
+
+
+navToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+});
 
 controlsToggle.addEventListener('click', () => {
     controlsPanel.classList.toggle('active');
