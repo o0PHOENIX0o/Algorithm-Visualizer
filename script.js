@@ -49,12 +49,11 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
 
 
 document.getElementById("applyArrayBtn").addEventListener("click", ()=>{
+  console.log("apply ",currentAlgorithm);
   if(currentAlgorithm.isAnimating) return;
-  console.log(currentAlgorithm);
   const input = InputField.value;
   const values = input.split(',').map(x=>x.trim()).filter(x=>x !== '');
   if(["Bubble Sort", "Selection Sort"].includes(currentAlgorithm.name) && values.length > 10){ 
-    console.log(values, values.length);
     alert("Use max 10 elements for visualization");
     return;
   }
