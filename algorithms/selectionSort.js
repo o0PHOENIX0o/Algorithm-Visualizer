@@ -13,6 +13,7 @@ export const SelectionSort = {
     HighlightCol2: "#09d3ff",
     sortedCol: "#4CAF50",
     isPause: false,
+    i:0,
 
     generate(input) {
         clearCanvas();
@@ -31,19 +32,22 @@ export const SelectionSort = {
         DrawArray();
     },
 
-    reset() {
+    async reset() {
         this.objNodeArray = [];
-        this.isPause = false;
         this.isAnimating = false;
+        this.i = 0;
+        await this.delay(50);
         clearCanvas();
-        DrawArray();
+        // DrawArray();
     },
+
+    Pause(){ this.isPause = true;},
 
     async run() {
         this.isAnimating = true;
         console.log(this.objNodeArray);
 
-        for (let i = 0; i < this.objNodeArray.length; i++) {
+        for (let i = this.i; i < this.objNodeArray.length; i++) {
             let min = i;
             let a = this.objNodeArray[min];
             a.obj.col = this.HighlightCol;
@@ -52,7 +56,7 @@ export const SelectionSort = {
             for (let j = i+1; j < this.objNodeArray.length; j++) {
                 if (this.isPause) {
                     console.log("Paused");
-                    this.isAnimating = false;
+                    this.i = i;
                     return;
                 }
                 const b = this.objNodeArray[j];

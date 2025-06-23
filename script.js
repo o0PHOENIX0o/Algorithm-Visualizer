@@ -1,10 +1,12 @@
-import { BubbleSort } from './algorithms/bubbleSort.js';
-import { SelectionSort } from './algorithms/selectionSort.js';
+import {BubbleSort} from './algorithms/bubbleSort.js';
+import {SelectionSort} from './algorithms/selectionSort.js';
+import {clearCanvas} from "./canvas.js"
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
 const speedSlider = document.getElementById("speedSlider");
 const speedValue = document.getElementById("speedValue");
+const InputField = document.getElementById("customArrayInput");
 
 controlsToggle.addEventListener('click', () => {
     controlsPanel.classList.toggle('active');
@@ -28,7 +30,9 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
   btn.addEventListener("click", (e)=>{
     document.querySelectorAll(".algorithm-btn").forEach(b=>b.classList.remove("active"));
     e.target.classList.add("active");
-
+    currentAlgorithm.isAnimating=false;
+    clearCanvas();
+    currentAlgorithm.delay(50);
     const alg = e.target.dataset.algorithm;
     switch(alg){
       case 'bubble-sort': currentAlgorithm = BubbleSort; break;
@@ -43,12 +47,13 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
 document.getElementById("applyArrayBtn").addEventListener("click", ()=>{
   if(currentAlgorithm.isAnimating) return;
   console.log(currentAlgorithm);
-  const input = document.getElementById("customArrayInput").value;
-  if(currentAlgorithm.name == "Bubble Sort" && input.length > 10){ 
+  const input = InputField.value;
+  const values = input.split(',').map(x=>x.trim()).filter(x=>x !== '');
+  if(["Bubble Sort", "Selection Sort"].includes(currentAlgorithm.name) && values.length > 10){ 
+    console.log(values, values.length);
     alert("Use max 10 elements for visualization");
     return;
   }
-  const values = input.split(',').map(x=>x.trim()).filter(x=>x !== '');
   currentAlgorithm.generate(values);
 });
 
@@ -62,11 +67,10 @@ document.getElementById("playBtn").addEventListener("click", ()=>{
 });
 
 document.getElementById("resetBtn").addEventListener("click", ()=>{
-  currentAlgorithm.isPause = false;
   currentAlgorithm.reset();
 });
 
 document.getElementById("pauseBtn").addEventListener("click",()=>{
-  currentAlgorithm.isPause = true;
+  currentAlgorithm.Pause();
 })
 

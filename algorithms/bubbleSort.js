@@ -10,7 +10,9 @@ export const BubbleSort = {
   TimeoutDelay: 500,
   BaseCol: "#9e9e9e",
   HighlightCol: "#667eea",
+  sortedCol: "#4CAF50",
   isPause: false,
+  i: 0,
 
   generate(input) {
     clearCanvas();
@@ -26,26 +28,35 @@ export const BubbleSort = {
       x += dia + spacing;
     });
 
+    this.i = this.objNodeArray.length;
+
     DrawArray();
   },
 
-  reset() {
+  async reset() {
     this.objNodeArray = [];
     this.isAnimating = false;
+    this.i = 0;
+    await this.delay(50);
     clearCanvas();
     // DrawArray();
   },
 
+  Pause(){ this.isPause = true; },
+
   async run() {
     this.isAnimating = true;
 
-    for (let i = this.objNodeArray.length - 1; i >= 0; i--) {
+    for (let i = this.i - 1; i >= 0; i--) {
       for (let j = 0; j < i; j++) {
-        if(this.isPause){ 
+        if (this.isPause) {
           console.log("Paused");
           this.isAnimating = false;
+          this.i = i+1;
           return;
         }
+        if (!this.isAnimating) return;
+
         const a = this.objNodeArray[j];
         const b = this.objNodeArray[j + 1];
         a.obj.col = b.obj.col = this.HighlightCol;
@@ -66,7 +77,7 @@ export const BubbleSort = {
         a.obj.col = b.obj.col = this.BaseCol;
       }
 
-      this.objNodeArray[i].obj.col = "#4CAF50"; // sorted color
+      this.objNodeArray[i].obj.col = this.sortedCol;
       DrawArray();
     }
 
@@ -83,7 +94,7 @@ export const BubbleSort = {
         obj2.xPos = lerp(startX2, startX1, t);
         clearCanvas();
         DrawArray(arrows);
-        if (t < 1) requestAnimationFrame(animate);
+        if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
         else resolve();
       };
       animate();
