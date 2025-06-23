@@ -59,6 +59,8 @@ export const SelectionSort = {
                     this.i = i;
                     return;
                 }
+                if (!this.isAnimating) return;
+                
                 const b = this.objNodeArray[j];
                 b.obj.col = this.HighlightCol;
 
@@ -108,7 +110,7 @@ export const SelectionSort = {
                 obj2.xPos = lerp(startX2, startX1, t);
                 clearCanvas();
                 DrawArray(arrows);
-                if (t < 1) requestAnimationFrame(animate);
+                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
                 else resolve();
             };
             animate();

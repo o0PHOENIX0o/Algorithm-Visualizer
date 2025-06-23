@@ -14,8 +14,9 @@ export const BubbleSort = {
   isPause: false,
   i: 0,
 
-  generate(input) {
+  generate(input){
     clearCanvas();
+    console.log("generate");
     this.objNodeArray = [];
     const spacing = 20;
     const dia = 50;
@@ -27,9 +28,7 @@ export const BubbleSort = {
       this.objNodeArray.push({ value: val, obj: circle });
       x += dia + spacing;
     });
-
     this.i = this.objNodeArray.length;
-
     DrawArray();
   },
 

@@ -44,8 +44,8 @@ export class PointerArrow {
 
 export function DrawArray(arrows = []) {
   clearCanvas();
+  if(arrows && arrows.length > 0) arrows.forEach(arrow => arrow.draw());
   window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
-  arrows.forEach(arrow => arrow.draw());
 }
 
 export function clearCanvas() {

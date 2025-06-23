@@ -1,6 +1,6 @@
 import {BubbleSort} from './algorithms/bubbleSort.js';
 import {SelectionSort} from './algorithms/selectionSort.js';
-import {clearCanvas} from "./canvas.js"
+import {clearCanvas, DrawArray} from "./canvas.js"
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
@@ -30,9 +30,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
   btn.addEventListener("click", (e)=>{
     document.querySelectorAll(".algorithm-btn").forEach(b=>b.classList.remove("active"));
     e.target.classList.add("active");
-    currentAlgorithm.isAnimating=false;
-    clearCanvas();
-    currentAlgorithm.delay(50);
+    resetCanvas();
     const alg = e.target.dataset.algorithm;
     switch(alg){
       case 'bubble-sort': currentAlgorithm = BubbleSort; break;
@@ -74,3 +72,12 @@ document.getElementById("pauseBtn").addEventListener("click",()=>{
   currentAlgorithm.Pause();
 })
 
+
+
+function resetCanvas(){
+  currentAlgorithm.objNodeArray = [];
+  currentAlgorithm.isAnimating = false;
+  currentAlgorithm.isPause = false;
+  currentAlgorithm.i = 0;
+  DrawArray(null);
+}
