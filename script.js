@@ -1,5 +1,6 @@
 import {BubbleSort} from './algorithms/Sorting/bubbleSort.js';
 import {SelectionSort} from './algorithms/Sorting/selectionSort.js';
+import {insertionSort} from './algorithms/Sorting/insertionSort.js';
 import {DrawArray} from "./canvas.js"
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -41,6 +42,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
     switch(alg){
       case 'bubble-sort': currentAlgorithm = BubbleSort; break;
       case 'selection-sort': currentAlgorithm = SelectionSort; break;
+      case 'insertion-sort': currentAlgorithm = insertionSort; break;
       default: alert(`${alg} not implemented.`); return;
     }
     window.currentAlgorithm = currentAlgorithm;
