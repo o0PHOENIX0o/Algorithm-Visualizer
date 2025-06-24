@@ -1,6 +1,6 @@
-import {BubbleSort} from './algorithms/bubbleSort.js';
-import {SelectionSort} from './algorithms/selectionSort.js';
-import {clearCanvas, DrawArray} from "./canvas.js"
+import {BubbleSort} from './algorithms/Sorting/bubbleSort.js';
+import {SelectionSort} from './algorithms/Sorting/selectionSort.js';
+import {DrawArray} from "./canvas.js"
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
@@ -49,7 +49,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
 
 
 document.getElementById("applyArrayBtn").addEventListener("click", ()=>{
-  console.log("apply ",currentAlgorithm);
+  // console.log("apply ",currentAlgorithm);
   if(currentAlgorithm.isAnimating) return;
   const input = InputField.value;
   const values = input.split(',').map(x=>x.trim()).filter(x=>x !== '');
@@ -80,9 +80,5 @@ document.getElementById("pauseBtn").addEventListener("click",()=>{
 
 
 function resetCanvas(){
-  currentAlgorithm.objNodeArray = [];
-  currentAlgorithm.isAnimating = false;
-  currentAlgorithm.isPause = false;
-  currentAlgorithm.i = 0;
-  DrawArray(null);
+  currentAlgorithm.reset();
 }

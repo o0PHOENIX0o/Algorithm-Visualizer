@@ -1,3 +1,5 @@
+let width, height;
+
 export class Circle {
   constructor(xPos, yPos, dia, label, col) {
     this.xPos = xPos;
@@ -56,6 +58,8 @@ export function clearCanvas() {
 export function setupCanvas() {
   const parent = document.getElementById("CanvasContainer");
   const canvas = createCanvas(parent.offsetWidth, parent.offsetHeight);
+  height = canvas.height;
+  width = canvas.width;
   canvas.parent("CanvasContainer");
   textAlign(CENTER, CENTER);
   textSize(16);
@@ -68,3 +72,6 @@ export function windowResized() {
   resizeCanvas(parent.offsetWidth-64, parent.offsetHeight);
   DrawArray();
 }
+
+
+export {height,width}
