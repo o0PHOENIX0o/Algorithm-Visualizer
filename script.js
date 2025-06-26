@@ -2,7 +2,7 @@ import {BubbleSort} from './algorithms/Sorting/bubbleSort.js';
 import {SelectionSort} from './algorithms/Sorting/selectionSort.js';
 import {insertionSort} from './algorithms/Sorting/insertionSort.js';
 import {mergeSort} from './algorithms/Sorting/mergeSort.js';
-import {DrawArray} from "./canvas.js"
+
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
@@ -10,6 +10,8 @@ const speedSlider = document.getElementById("speedSlider");
 const speedValue = document.getElementById("speedValue");
 const InputField = document.getElementById("customArrayInput");
 const navToggle = document.getElementById('navToggle');
+
+let isPlayed = false;
 
 
 navToggle.addEventListener('click', () => {
@@ -29,16 +31,14 @@ speedSlider.addEventListener("input", (e)=>{
 });
 
 
-
 let currentAlgorithm = BubbleSort;
 window.currentAlgorithm = currentAlgorithm;
-
 
 document.querySelectorAll(".algorithm-btn").forEach(btn=>{
   btn.addEventListener("click", (e)=>{
     document.querySelectorAll(".algorithm-btn").forEach(b=>b.classList.remove("active"));
     e.target.classList.add("active");
-    resetCanvas();
+    currentAlgorithm.reset();
     const alg = e.target.dataset.algorithm;
     switch(alg){
       case 'bubble-sort': currentAlgorithm = BubbleSort; break;
@@ -55,6 +55,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
 document.getElementById("applyArrayBtn").addEventListener("click", ()=>{
   console.log("apply ",currentAlgorithm);
   if(currentAlgorithm.isAnimating) return;
+  currentAlgorithm.reset();
   const input = InputField.value;
   const values = input.split(',').map(x=>x.trim()).filter(x=>x !== '');
   if(["Bubble Sort", "Selection Sort"].includes(currentAlgorithm.name) && values.length > 10){ 
@@ -67,20 +68,28 @@ document.getElementById("applyArrayBtn").addEventListener("click", ()=>{
 
 
 document.getElementById("playBtn").addEventListener("click", ()=>{
-  if((!currentAlgorithm.isAnimating || currentAlgorithm.isPause) && currentAlgorithm.objNodeArray.length > 0) {
-    currentAlgorithm.isPause = false;
-    currentAlgorithm.run();
-  }
+  isPlayed = true;
+    currentAlgorithm.Play();
 });
 
 document.getElementById("resetBtn").addEventListener("click", ()=>{
+  let btn = document.getElementById("playPauseBtn");
+  btn.innerHTML = `<span class="btn-icon">⏸</span> Pause`;
+  isPlayed = false;
   currentAlgorithm.reset();
 });
 
-document.getElementById("pauseBtn").addEventListener("click",()=>{
-  currentAlgorithm.Pause();
+document.getElementById("playPauseBtn").addEventListener("click",()=>{
+    if(!isPlayed) return;  
+  let btn = document.getElementById("playPauseBtn");
+    
+    if(currentAlgorithm.isPause){
+      currentAlgorithm.Resume();
+      btn.innerHTML = `<span class="btn-icon">⏸</span> Pause`;
+    }else{
+      currentAlgorithm.Pause();
+      btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+    }
 })
 
-function resetCanvas(){
-  currentAlgorithm.reset();
-}
+
