@@ -18,6 +18,39 @@ export class Circle {
   }
 }
 
+export class Sqare {
+  constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW=2) {
+    this.xPos1 = xPos1;
+    this.yPos1 = yPos1;
+    this.xPos2 = xPos2;
+    this.yPos2 = yPos2;
+    this.strokeW = strokeW;
+    this.col = col;
+  }
+
+  draw() {
+    rectMode(CENTER);
+
+    noFill();
+    stroke(this.col);
+    strokeWeight(this.strokeW); 
+
+    let w = Math.abs(this.xPos2 - this.xPos1);
+    let h = Math.abs(this.yPos2 - this.yPos1);
+
+    let centerX = (this.xPos1 + this.xPos2) / 2;
+    let centerY = (this.yPos1 + this.yPos2) / 2;
+
+    rect(centerX, centerY, w, h);
+    
+    
+    // noStroke();           
+    // fill(0);              
+    // textAlign(CENTER, CENTER);
+    // text(this.label, this.xPos, this.yPos);
+  }
+}
+
 export class PointerArrow {
   constructor(xPos, yPos, col, length, label) {
     this.xPos = xPos;

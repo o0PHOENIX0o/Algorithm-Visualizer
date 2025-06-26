@@ -1,6 +1,7 @@
 import {BubbleSort} from './algorithms/Sorting/bubbleSort.js';
 import {SelectionSort} from './algorithms/Sorting/selectionSort.js';
 import {insertionSort} from './algorithms/Sorting/insertionSort.js';
+import {mergeSort} from './algorithms/Sorting/mergeSort.js';
 import {DrawArray} from "./canvas.js"
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -43,6 +44,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
       case 'bubble-sort': currentAlgorithm = BubbleSort; break;
       case 'selection-sort': currentAlgorithm = SelectionSort; break;
       case 'insertion-sort': currentAlgorithm = insertionSort; break;
+      case 'merge-sort': currentAlgorithm = mergeSort; break;
       default: alert(`${alg} not implemented.`); return;
     }
     window.currentAlgorithm = currentAlgorithm;
@@ -51,7 +53,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn=>{
 
 
 document.getElementById("applyArrayBtn").addEventListener("click", ()=>{
-  // console.log("apply ",currentAlgorithm);
+  console.log("apply ",currentAlgorithm);
   if(currentAlgorithm.isAnimating) return;
   const input = InputField.value;
   const values = input.split(',').map(x=>x.trim()).filter(x=>x !== '');
@@ -78,8 +80,6 @@ document.getElementById("resetBtn").addEventListener("click", ()=>{
 document.getElementById("pauseBtn").addEventListener("click",()=>{
   currentAlgorithm.Pause();
 })
-
-
 
 function resetCanvas(){
   currentAlgorithm.reset();

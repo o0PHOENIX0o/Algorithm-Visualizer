@@ -7,22 +7,6 @@ class insertionSortClass extends BaseSort {
         this.i = null;
     }
 
-    animateY(obj1, arrows, dist) {
-        return new Promise((resolveY) => {
-            const startY1 = obj1.yPos;
-            let t = 0;
-            const animate = () => {
-                t = Math.min(t + (4 * this.AnimationSpeed), 1);
-                obj1.yPos = lerp(startY1, startY1 + dist, t);
-                clearCanvas();
-                DrawArray(arrows);
-                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
-                else resolveY();
-            };
-            animate();
-        });
-    }
-
     async run() {
         this.isAnimating = true;
         let start = this.i ?? 1;

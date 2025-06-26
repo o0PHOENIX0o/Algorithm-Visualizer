@@ -1,9 +1,10 @@
 import { clearCanvas, DrawArray, Circle, height, width } from "../../canvas.js";
 
 export class BaseSort {
-  constructor(name) {
+  constructor(name, spacing= 20, diameter= 50) {
     this.name = name;
     this.objNodeArray = [];
+    this.inputArray=[];
     this.BaseSpeed = 0.01;
     this.AnimationSpeed = 0.01;
     this.BaseDelay = 500;
@@ -14,28 +15,30 @@ export class BaseSort {
     this.sortedCol = "#4CAF50";
     this.isAnimating = false;
     this.isPause = false;
+    
+    this.spacing = spacing;
+    this.dia = diameter;
   }
 
-  generate(input) {
-    // console.log("generate");
+  generate(input, x = null, y=null){
+    this.inputArray = [...input];
+    y = (y==null) ? Number(height/2) : Number(y);
     clearCanvas();
     this.objNodeArray = [];
-    const spacing = 20;
-    const dia = 50;
-    const totalLength = input.length * (dia + spacing);
-    let x = (width / 2) - (totalLength / 2) + dia / 2;
+    const totalLength = input.length * (this.dia + this.spacing);
+    if(x==null) x = (width / 2) - (totalLength / 2) + this.dia / 2;
 
     input.forEach(val => {
-      const circle = new Circle(x, height / 2, dia, val, this.BaseCol);
+      const circle = new Circle(x, y, this.dia, val, this.BaseCol);
       this.objNodeArray.push({ value: val, obj: circle });
-      x += dia + spacing;
+      x += this.dia + this.spacing;
     });
     DrawArray();
   }
 
   async reset() {
-    
     this.objNodeArray = [];
+    this.inputArray = [];
     this.isAnimating = false;
     this.isPause = false;
     this.i = null;
@@ -44,15 +47,26 @@ export class BaseSort {
     DrawArray();
   }
 
-  Pause() {
-    this.isPause = true;
+  Pause() { this.isPause = true; }
+
+  delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+  animateY(obj1, arrows, dist, speedFactor = 4){
+    return new Promise((resolveY) => {
+      const startY1 = obj1.yPos;
+      console.log(startY1, startY1 + dist);
+      let t = 0;
+      const animate = () => {
+        t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
+        obj1.yPos = lerp(startY1, startY1 + dist, t);
+        DrawArray(arrows);
+        if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
+        else resolveY();
+      };
+      animate();
+    });
   }
 
-  delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  
   swapAnimation(obj1, obj2, arrows) {
     return new Promise(resolve => {
       const startX1 = obj1.xPos, startX2 = obj2.xPos;
@@ -61,7 +75,6 @@ export class BaseSort {
         t = min(t + this.AnimationSpeed, 1);
         obj1.xPos = lerp(startX1, startX2, t);
         obj2.xPos = lerp(startX2, startX1, t);
-        clearCanvas();
         DrawArray(arrows);
         if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
         else resolve();
