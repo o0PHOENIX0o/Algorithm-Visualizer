@@ -31,7 +31,7 @@ class insertionSortClass extends BaseSort {
     async run() {
         this.isAnimating = true;
         for (let i = 1; i < this.objNodeArray.length; i++) {
-            while (this.isPause) await this.delay(this.TimeoutDelay);
+            await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
             let a = this.objNodeArray[i];
@@ -39,21 +39,21 @@ class insertionSortClass extends BaseSort {
 
             await this.delay(this.TimeoutDelay);
 
-            while (this.isPause) await this.delay(this.TimeoutDelay);
+            await this.waitWhilePaused();
             await this.animateY(a.obj, this.arrows, -50);
-            while (this.isPause) await this.delay(this.TimeoutDelay);
+            await this.waitWhilePaused();
 
             let j = i - 1;
             let x = i;
 
             while (j >= 0 && compare(this.objNodeArray[j], a)) {
-                while (this.isPause) await this.delay(this.TimeoutDelay);
+                await this.waitWhilePaused();
                 if (!this.isAnimating) return;
 
                 const b = this.objNodeArray[j];
                 b.obj.col = this.HighlightCol;
 
-                while (this.isPause) await this.delay(this.TimeoutDelay);
+                await this.waitWhilePaused();
                 
                 this.arrows = [
                     new PointerArrow(a.obj.xPos, a.obj.yPos + 40, this.HighlightCol2, 20, "i"),
@@ -62,7 +62,7 @@ class insertionSortClass extends BaseSort {
                 DrawArray(this.arrows);
                 await this.delay(this.TimeoutDelay);
 
-                while (this.isPause) await this.delay(this.TimeoutDelay);
+                await this.waitWhilePaused();
                 if (!this.isAnimating) return;
 
                 await this.swapAnimation(this.objNodeArray[j].obj, this.objNodeArray[x].obj, this.arrows);
@@ -71,9 +71,9 @@ class insertionSortClass extends BaseSort {
                 b.obj.col = this.BaseCol;
                 x = j--;
             }
-            while (this.isPause) await this.delay(this.TimeoutDelay);
+            await this.waitWhilePaused();
             await this.animateY(a.obj, this.arrows, 50);
-            while (this.isPause) await this.delay(this.TimeoutDelay);
+            await this.waitWhilePaused();
 
             if (!this.isAnimating) return;
             this.objNodeArray[x].obj.col = this.sortedCol;

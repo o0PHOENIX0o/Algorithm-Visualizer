@@ -36,13 +36,20 @@ export class BaseSort {
     DrawArray();
   }
 
-  Pause(){ this.isPause = true;}
+  Pause() { this.isPause = true; }
   Resume() {
     if (this.isPause && this.isAnimating) {
-        console.log("Resuming...");
-        this.isPause = false;
+      console.log("Resuming...");
+      this.isPause = false;
     }
-}
+  }
+
+
+  async waitWhilePaused(){
+    while (this.isPause) {
+      await this.delay(this.TimeoutDelay);
+    }
+  }
 
   delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 

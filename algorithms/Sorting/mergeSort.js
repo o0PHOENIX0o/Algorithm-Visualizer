@@ -4,14 +4,7 @@ import { DrawArray, Sqare, clearCanvas } from '../../canvas.js';
 class mergeSortClass extends BaseSort {
     constructor() {
         super("Merge Sort", 8, 30);
-        this.i = null;
         this.squareArray = [];
-    }
-
-    async waitWhilePaused() {
-        while (this.isPause) {
-            await this.delay(this.TimeoutDelay);
-        }
     }
 
     Play() {
@@ -50,7 +43,7 @@ class mergeSortClass extends BaseSort {
             const animate = async () => {
                 if (!this.isAnimating) return;
 
-                t = min(t + (speedFactor * this.AnimationSpeed), 1);
+                t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
                 element.xPos = lerp(startX, x, t);
                 element.yPos = lerp(startY, y, t);
                 DrawArray(this.squareArray);

@@ -34,10 +34,10 @@ class BubbleSortClass extends BaseSort {
     let start = this.i ?? this.objNodeArray.length - 1;
 
     for (let i = start; i >= 0; i--) {
-      while (this.isPause) await this.delay(this.TimeoutDelay);
+      await this.waitWhilePaused();
 
       for (let j = 0; j < i; j++) {
-        while (this.isPause) await this.delay(this.TimeoutDelay);
+        await  this.waitWhilePaused();
         if (!this.isAnimating) return;
 
         const a = this.objNodeArray[j];
@@ -49,11 +49,11 @@ class BubbleSortClass extends BaseSort {
           new PointerArrow(b.obj.xPos, b.obj.yPos + 40, this.HighlightCol, 20, "j+1")
         ];
 
-        while (this.isPause) await this.delay(this.TimeoutDelay);
+        await  this.waitWhilePaused();
         DrawArray(this.arrows);
         await this.delay(this.TimeoutDelay);
 
-        while (this.isPause) await this.delay(this.TimeoutDelay);
+        await  this.waitWhilePaused();
         if (!this.isAnimating) return;
 
         if (compare(a, b)) {

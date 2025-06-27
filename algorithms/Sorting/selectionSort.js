@@ -28,14 +28,14 @@ class SelectionSortClass extends BaseSort {
     async run() {
         this.isAnimating = true;
         for (let i = 0; i < this.objNodeArray.length; i++) {
-            while (this.isPause) await this.delay(this.TimeoutDelay);
+            await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
             let min = i;
             let a = this.objNodeArray[min];
 
             for (let j = i + 1; j < this.objNodeArray.length; j++) {
-                while (this.isPause) await this.delay(this.TimeoutDelay);
+                await this.waitWhilePaused();
                 if (!this.isAnimating) return;
 
                 this.objNodeArray[i].obj.col = this.HighlightCol;
@@ -49,7 +49,7 @@ class SelectionSortClass extends BaseSort {
                     new PointerArrow(this.objNodeArray[min].obj.xPos, this.objNodeArray[min].obj.yPos + 40, this.HighlightCol, 20, "min"),
                 ];
 
-                while (this.isPause) await this.delay(this.TimeoutDelay);
+                await this.waitWhilePaused();
                 DrawArray(this.arrows);
 
                 if (!this.isAnimating) return;
@@ -66,7 +66,7 @@ class SelectionSortClass extends BaseSort {
 
             }
             if (this.isAnimating && min != i) {
-                while (this.isPause) await this.delay(this.TimeoutDelay);
+                await this.waitWhilePaused();
                 if (!this.isAnimating) return;
 
                 this.objNodeArray[min].obj.col = this.HighlightCol2;
@@ -76,7 +76,7 @@ class SelectionSortClass extends BaseSort {
                 ];
                 DrawArray(this.arrows);
                 await this.delay(this.TimeoutDelay);
-                while (this.isPause) await this.delay(this.TimeoutDelay);
+                await this.waitWhilePaused();
 
                 if (!this.isAnimating) return;
                 [this.objNodeArray[i], this.objNodeArray[min]] = [this.objNodeArray[min], this.objNodeArray[i]];
