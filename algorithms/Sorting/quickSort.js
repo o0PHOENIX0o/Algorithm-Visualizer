@@ -3,7 +3,7 @@ import { DrawArray, PointerArrow, Sqare, clearCanvas } from '../../canvas.js';
 
 class quickSortClass extends BaseSort {
     constructor() {
-        super("Quick Sort");
+        super("Quick Sort", 10, 40);
         this.arrows = [];
         this.squareArray = [];
     }
@@ -14,10 +14,6 @@ class quickSortClass extends BaseSort {
             this.isPause = false;
             this.run();
         }
-    }
-
-    async Pause() {
-        this.isPause = true;
     }
 
     async reset() {
@@ -70,7 +66,8 @@ class quickSortClass extends BaseSort {
             await this.delay(this.TimeoutDelay);
 
             if (!this.isAnimating) return;
-            if (compare(pivot, Array[i])) {
+            if (compare(pivot, Array[i])){
+                Array[i].obj.col = "#fff176";
                 await this.waitWhilePaused();
                 swapIndex++;
                 Array[swapIndex].obj.col = this.HighlightCol;

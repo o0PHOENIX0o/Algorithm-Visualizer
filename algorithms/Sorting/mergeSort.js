@@ -15,10 +15,6 @@ class mergeSortClass extends BaseSort {
         }
     }
 
-    async Pause() {
-        this.isPause = true;
-    }
-
     async reset() {
         this.objNodeArray = [];
         this.inputArray = [];
