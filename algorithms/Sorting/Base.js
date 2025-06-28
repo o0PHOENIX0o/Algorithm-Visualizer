@@ -69,6 +69,7 @@ export class BaseSort {
   }
 
   swapAnimation(obj1, obj2, arrows) {
+    if(obj1 == obj2) return;
     return new Promise(resolve => {
       const startX1 = obj1.xPos, startX2 = obj2.xPos;
       let t = 0;

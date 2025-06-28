@@ -3,8 +3,9 @@ import { DrawArray, PointerArrow, Sqare, clearCanvas } from '../../canvas.js';
 
 class quickSortClass extends BaseSort {
     constructor() {
-        super("Quick Sort", 8, 30);
+        super("Quick Sort");
         this.arrows = [];
+        this.squareArray = [];
     }
 
     Play() {
@@ -23,175 +24,136 @@ class quickSortClass extends BaseSort {
         this.objNodeArray = [];
         this.inputArray = [];
         this.arrows = [];
+        this.squareArray = [];
         this.isAnimating = false;
         this.isPause = false;
-        this.i = null;
         await this.delay(50);
         clearCanvas();
         DrawArray(null);
     }
 
+    async drawSquare(array, col = "#f44336") {
+        if (!this.isAnimating || array.length < 1) return;
 
+        let r = array[0].obj.dia / 2;
+        let x1 = array[0].obj.xPos - (r + (this.spacing / 2) - 1);
+        let y1 = array[0].obj.yPos + (r + this.spacing / 3);
 
-    // async move(element, x, y, speedFactor = 4) {
-    //     if (!this.isAnimating) return;
-    //     return new Promise(resolve => {
-    //         if (!this.isAnimating) return;
+        let x2 = array[array.length - 1].obj.xPos + (r + (this.spacing / 2) - 1);
+        let y2 = array[array.length - 1].obj.yPos - (r + this.spacing / 3);
 
-    //         const startX = element.xPos, startY = element.yPos;
-    //         let t = 0;
-    //         const animate = async () => {
-    //             if (!this.isAnimating) return;
-
-    //             t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
-    //             element.xPos = lerp(startX, x, t);
-    //             element.yPos = lerp(startY, y, t);
-    //             DrawArray(this.arrows);
-    //             if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
-    //             else resolve();
-    //         };
-    //         animate();
-    //     });
-
-    // }
-
-    // moveDiagonal(elements, angle, dir, depth, offsetY = 50) {
-    //     if (!this.isAnimating) return;
-    //     let i;
-    //     i = (dir > 0) ? 1 : elements.length;
-    //     return Promise.all(
-    //         elements.map((element) => {
-    //             if (!this.isAnimating) return;
-    //             const y = element.obj.yPos + offsetY;
-    //             const offsetX = Math.floor(y / Math.tan(angle));
-    //             const x = element.obj.xPos + ((i * dir * offsetX) / depth);
-    //             (dir > 0) ? i += 0.1 : i -= 0.1;
-    //             return this.move(element.obj, x, y, 4);
-    //         })
-    //     );
-    // };
-
-    // async drawSquare(array) {
-    //     if (!this.isAnimating) return;
-    //     let r = array[0].obj.dia / 2;
-    //     let x1 = array[0].obj.xPos - (r + 5);
-    //     let y1 = array[0].obj.yPos + (r + 10);
-
-    //     let x2 = array[array.length - 1].obj.xPos + (r + 5);
-    //     let y2 = array[array.length - 1].obj.yPos - (r + 10);
-
-    //     this.arrows.push(new Sqare(x1, y1, x2, y2, "#f44336"));
-
-    //     DrawArray(this.arrows);
-
-    //     await this.delay(this.TimeoutDelay);
-    // }
+        this.squareArray.push(new Sqare(x1, y1, x2, y2, col));
+        DrawArray([...this.arrows, ...this.squareArray]);
+        await this.delay(this.TimeoutDelay);
+    }
 
     async partition(Array, leftIndex, rightIndex) {
-        let pivotIndex = leftIndex;
-        let pivotElement = Array[pivotIndex];
-        let swapIndex = pivotIndex;
-        let i = 1;
-        this.arrows = [
-            new PointerArrow(pivotElement.obj.xPos, pivotElement.obj.yPos + 40, this.HighlightCol2, 20, "p"),
-            new PointerArrow(Array[swapIndex].obj.xPos, Array[swapIndex].obj.yPos + 70, this.HighlightCol2, 20, "s"),
-            new PointerArrow(Array[i].obj.xPos, Array[i].obj.yPos + 40, this.HighlightCol2, 20, "i")
-        ]
-        DrawArray(this.arrows);
-        await this.delay(this.TimeoutDelay);
+            if (!this.isAnimating) return;
 
-        while (i <= rightIndex) {
+        let pivotIndex = leftIndex;
+        let swapIndex = leftIndex;
+        let pivot = Array[pivotIndex];
+
+        pivot.obj.col = this.HighlightCol2;
+
+        for (let i = leftIndex + 1; i <= rightIndex; i++) {
+            if (!this.isAnimating) return;
+            await this.waitWhilePaused();
+
             this.arrows = [
-                new PointerArrow(pivotElement.obj.xPos, pivotElement.obj.yPos + 40, this.HighlightCol2, 20, "p"),
-                new PointerArrow(Array[swapIndex].obj.xPos, Array[swapIndex].obj.yPos + 70, this.HighlightCol2, 20, "s"),
-                new PointerArrow(Array[i].obj.xPos, Array[i].obj.yPos + 40, this.HighlightCol2, 20, "i")
+                new PointerArrow(pivot.obj.xPos, pivot.obj.yPos + 40, this.HighlightCol2, 20, "pivot"),
+                new PointerArrow(Array[swapIndex].obj.xPos, Array[swapIndex].obj.yPos + 80, this.HighlightCol, 20, "swap"),
+                new PointerArrow(Array[i].obj.xPos, Array[i].obj.yPos + 40, this.HighlightCol, 20, "i")
             ]
             Array[i].obj.col = this.HighlightCol;
-            DrawArray(this.arrows);
+            DrawArray([...this.arrows, ...this.squareArray]);
             await this.delay(this.TimeoutDelay);
 
-
-            if (compare(Array[i], pivotElement)) {
+            if (!this.isAnimating) return;
+            if (compare(pivot, Array[i])) {
+                await this.waitWhilePaused();
                 swapIndex++;
-                this.arrows[1] = new PointerArrow(Array[swapIndex].obj.xPos, Array[swapIndex].obj.yPos + 70, this.HighlightCol2, 20, "s")
                 Array[swapIndex].obj.col = this.HighlightCol;
-                DrawArray(this.arrows);
+                this.arrows[1] = new PointerArrow(Array[swapIndex].obj.xPos, Array[swapIndex].obj.yPos + 80, this.HighlightCol, 20, "swap")
+                DrawArray([...this.arrows, ...this.squareArray]);
                 await this.delay(this.TimeoutDelay);
+                if (!this.isAnimating) return;
 
-                await this.swapAnimation(Array[i].obj, Array[swapIndex].obj, this.arrows);
+
+                await this.swapAnimation(Array[i].obj, Array[swapIndex].obj, [...this.arrows, ...this.squareArray]);
                 [Array[i], Array[swapIndex]] = [Array[swapIndex], Array[i]];
+                await this.waitWhilePaused();
             }
+
+            await this.waitWhilePaused();
+            if (!this.isAnimating) return;
 
             Array[swapIndex].obj.col = this.BaseCol;
             Array[i].obj.col = this.BaseCol;
-            i++;
         }
 
-        Array[pivotIndex].obj.col = Array[swapIndex].obj.col = this.HighlightCol;
-        DrawArray(this.arrows);
-        await this.delay(this.TimeoutDelay);
+        await this.waitWhilePaused();
 
-
-        await this.swapAnimation(Array[pivotIndex].obj, Array[swapIndex].obj, this.arrows);
+        await this.swapAnimation(Array[pivotIndex].obj, Array[swapIndex].obj, [...this.arrows, ...this.squareArray]);
         [Array[pivotIndex], Array[swapIndex]] = [Array[swapIndex], Array[pivotIndex]];
-        console.log(swapIndex, Array[swapIndex]);
-        Array[swapIndex].obj.col = this.sortedCol;
+        await this.waitWhilePaused();
 
-        Array[pivotIndex].obj.col = Array[swapIndex].obj.col = this.HighlightCol;
-        DrawArray(this.arrows);
+
+        Array[swapIndex].obj.col = this.sortedCol;
+        DrawArray([...this.arrows, ...this.squareArray]);
         await this.delay(this.TimeoutDelay);
+        await this.waitWhilePaused();
+
 
         return swapIndex;
     }
 
 
-    async QuickSort(Array, leftIndex, rightIndex) {
+    async QuickSort(Array, leftIndex, rightIndex){
+        if (!this.isAnimating) return;
         await this.waitWhilePaused();
 
         if (leftIndex >= rightIndex) {
-            Array[0].obj.col = this.sortedCol;
-            DrawArray(this.arrows);
+            await this.waitWhilePaused();
+
+            if (Array[leftIndex]) {
+                Array[leftIndex].obj.col = this.sortedCol;
+                if (!this.isAnimating) return;
+                await this.drawSquare(this.objNodeArray.slice(leftIndex, rightIndex + 1), this.sortedCol);
+                DrawArray([...this.arrows, ...this.squareArray]);
+                await this.delay(this.TimeoutDelay);
+            }
             return;
         }
 
-        let pivotIndex = this.partition(Array, leftIndex, rightIndex);
-        this.QuickSort(Array, leftIndex, pivotIndex - 1);
-        this.QuickSort(Array, pivotIndex + 1, rightIndex);
 
-        // await this.waitWhilePaused();
-        // await this.drawSquare(leftArray);
-        // await this.drawSquare(rightArray);
-        // await this.waitWhilePaused();
+        await this.waitWhilePaused();
+        let pivotIndex = await this.partition(Array, leftIndex, rightIndex);
+        await this.waitWhilePaused();
 
-        // await this.waitWhilePaused();
-        // await this.moveDiagonal(leftArray, Math.PI / (2 + Array.length * 0.1), -1, depth, 70);
-        // await this.moveDiagonal(rightArray, Math.PI / (2 + Array.length * 0.1), 1, depth, 70);
-        // await this.waitWhilePaused();
-
-        // await this.delay(this.TimeoutDelay);
-        // await this.waitWhilePaused();
-
-        // let left = await this.mergeSortAlgo(leftArray, depth + 1);
-        // let right = await this.mergeSortAlgo(rightArray, depth + 1);
-
+        if (!this.isAnimating) return;
+        await this.drawSquare(this.objNodeArray.slice(pivotIndex, pivotIndex + 1), this.sortedCol);
+        await this.drawSquare(this.objNodeArray.slice(leftIndex, pivotIndex));
+        await this.drawSquare(this.objNodeArray.slice(pivotIndex + 1, rightIndex + 1));
         await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
-        // return await this.merge(left, right, depth);
+
+        await this.QuickSort(Array, leftIndex, pivotIndex - 1);
+        await this.waitWhilePaused();
+        await this.QuickSort(Array, pivotIndex + 1, rightIndex);
+        await this.waitWhilePaused();
+
+        await this.delay(this.TimeoutDelay);
     }
 
     async algoExecutor() {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
-
-        // await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 30), 2)));
-
-        let pivot = await this.partition(this.objNodeArray, 0, this.objNodeArray.length - 1);
-        console.log(pivot, this.objNodeArray);
-
-        await this.waitWhilePaused();
-        if (!this.isAnimating) return;
-
-        // await this.mergeSortAlgo(this.objNodeArray, 1);
+        await this.QuickSort(this.objNodeArray, 0, this.objNodeArray.length - 1);
+        this.arrows = [];
+        this.squareArray = [];
+        DrawArray();
+        await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
     }
 
@@ -199,7 +161,6 @@ class quickSortClass extends BaseSort {
         this.isAnimating = true;
 
         await this.algoExecutor();
-
         await this.delay(this.TimeoutDelay);
         if (!this.isAnimating) return;
         DrawArray(this.arrows);
