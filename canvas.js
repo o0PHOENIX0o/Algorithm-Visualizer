@@ -19,7 +19,7 @@ export class Circle {
 }
 
 export class Sqare {
-  constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW=2) {
+  constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW = 2) {
     this.xPos1 = xPos1;
     this.yPos1 = yPos1;
     this.xPos2 = xPos2;
@@ -33,7 +33,7 @@ export class Sqare {
 
     noFill();
     stroke(this.col);
-    strokeWeight(this.strokeW); 
+    strokeWeight(this.strokeW);
 
     let w = Math.abs(this.xPos2 - this.xPos1);
     let h = Math.abs(this.yPos2 - this.yPos1);
@@ -42,8 +42,8 @@ export class Sqare {
     let centerY = (this.yPos1 + this.yPos2) / 2;
 
     rect(centerX, centerY, w, h);
-    
-    
+
+
     // noStroke();           
     // fill(0);              
     // textAlign(CENTER, CENTER);
@@ -77,9 +77,27 @@ export class PointerArrow {
   }
 }
 
+export class Line {
+  constructor(x1, y1, x2, y2, col, strockW = 2) {
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+
+    this.col = col;
+    this.strockW = strockW;
+  }
+
+  draw() {
+    stroke(this.col);
+    strokeWeight(this.strockW);
+    line(this.x1, this.y1, this.x2, this.y2);
+  }
+}
+
 export function DrawArray(arrows = []) {
   clearCanvas();
-  if(arrows && arrows.length > 0) arrows.forEach(arrow => arrow.draw());
+  if (arrows && arrows.length > 0) arrows.forEach(arrow => arrow.draw());
   window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
 }
 
@@ -102,9 +120,9 @@ export function setupCanvas() {
 export function windowResized() {
   console.log("resized");
   const parent = document.getElementById("CanvasContainer");
-  resizeCanvas(parent.offsetWidth-64, parent.offsetHeight);
+  resizeCanvas(parent.offsetWidth - 64, parent.offsetHeight);
   DrawArray();
 }
 
 
-export {height,width}
+export { height, width }

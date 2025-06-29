@@ -3,6 +3,7 @@ import { SelectionSort } from './algorithms/Sorting/selectionSort.js';
 import { insertionSort } from './algorithms/Sorting/insertionSort.js';
 import { quickSort } from './algorithms/Sorting/quickSort.js';
 import { mergeSort } from './algorithms/Sorting/mergeSort.js';
+import { heapSort } from './algorithms/Sorting/heapSort.js';
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
@@ -46,6 +47,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'insertion-sort': currentAlgorithm = insertionSort; break;
       case 'quick-sort': currentAlgorithm = quickSort; break;
       case 'merge-sort': currentAlgorithm = mergeSort; break;
+      case 'heap-sort': currentAlgorithm = heapSort; break;
       default: alert(`${alg} not implemented.`); return;
     }
     window.currentAlgorithm = currentAlgorithm;
