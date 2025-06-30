@@ -1,5 +1,5 @@
 import { BaseSort, compare } from "./Base.js"
-import { DrawArray, Sqare, clearCanvas } from '../../canvas.js';
+import { DrawArray, Square, clearCanvas } from '../../canvas.js';
 
 class mergeSortClass extends BaseSort {
     constructor() {
@@ -76,7 +76,7 @@ class mergeSortClass extends BaseSort {
         let x2 = array[array.length - 1].obj.xPos + (r + 5);
         let y2 = array[array.length - 1].obj.yPos - (r + 10);
 
-        this.squareArray.push(new Sqare(x1, y1, x2, y2, "#f44336"));
+        this.squareArray.push(new Square(x1, y1, x2, y2, this.unsortedCol));
 
         DrawArray(this.squareArray);
 

@@ -1,5 +1,5 @@
 import { BaseSort, compare } from "./Base.js"
-import { DrawArray, PointerArrow, Sqare, clearCanvas } from '../../canvas.js';
+import { DrawArray, PointerArrow, Square, clearCanvas } from '../../canvas.js';
 
 class quickSortClass extends BaseSort {
     constructor() {
@@ -28,7 +28,7 @@ class quickSortClass extends BaseSort {
         DrawArray(null);
     }
 
-    async drawSquare(array, col = "#f44336") {
+    async drawSquare(array, col = this.unsortedCol) {
         if (!this.isAnimating || array.length < 1) return;
 
         let r = array[0].obj.dia / 2;
@@ -38,7 +38,7 @@ class quickSortClass extends BaseSort {
         let x2 = array[array.length - 1].obj.xPos + (r + (this.spacing / 2) - 1);
         let y2 = array[array.length - 1].obj.yPos - (r + this.spacing / 3);
 
-        this.squareArray.push(new Sqare(x1, y1, x2, y2, col));
+        this.squareArray.push(new Square(x1, y1, x2, y2, col));
         DrawArray([...this.arrows, ...this.squareArray]);
         await this.delay(this.TimeoutDelay);
     }

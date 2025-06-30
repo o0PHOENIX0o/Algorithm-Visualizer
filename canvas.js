@@ -14,11 +14,16 @@ export class Circle {
     noStroke();
     circle(this.xPos, this.yPos, this.dia);
     fill(0);
+    noStroke();
+    fill(0);
+    textFont('sans-serif');
+    textStyle(NORMAL);
+    textAlign(CENTER);
     text(this.label, this.xPos, this.yPos);
   }
 }
 
-export class Sqare {
+export class Square {
   constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW = 2) {
     this.xPos1 = xPos1;
     this.yPos1 = yPos1;
@@ -52,30 +57,45 @@ export class Sqare {
 }
 
 export class PointerArrow {
-  constructor(xPos, yPos, col, length, label) {
+  constructor(xPos, yPos, col, length, label, textS = 16, textY = 20) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.col = col;
     this.length = length;
     this.label = label;
+
+    this.textS = textS;
+    this.textY = textY;
   }
 
   draw() {
     const h = this.length / (2 * Math.sqrt(3));
-    const x1 = this.xPos + (this.length / 2);
-    const x2 = this.xPos;
-    const x3 = this.xPos - (this.length / 2);
-    const y1 = this.yPos + h;
-    const y2 = this.yPos - (2 * h);
-    const y3 = y1;
+    const x1 = this.length / 2;
+    const x2 = 0;
+    const x3 = -this.length / 2;
+    const y1 = h;
+    const y2 = -2 * h;
+    const y3 = h;
 
+    push();
+    translate(this.xPos, this.yPos);
+    noStroke(); 
     fill(this.col);
     triangle(x1, y1, x2, y2, x3, y3);
+    pop();
+
+    push();
+    noStroke();
     fill(0);
-    textSize(16);
-    text(this.label, this.xPos, this.yPos + 20);
+    textFont('sans-serif');
+    textStyle(NORMAL);
+    textSize(this.textS);
+    textAlign(CENTER);
+    text(this.label, this.xPos, this.yPos + this.textY);
+    pop();
   }
 }
+
 
 export class Line {
   constructor(x1, y1, x2, y2, col, strockW = 2) {
@@ -92,6 +112,29 @@ export class Line {
     stroke(this.col);
     strokeWeight(this.strockW);
     line(this.x1, this.y1, this.x2, this.y2);
+  }
+}
+
+export class Triangle {
+  constructor(x1, y1, x2, y2, x3, y3, x4, y4, col, strockW = 2) {
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.x3 = x3;
+    this.y3 = y3;
+    this.x4 = x4;
+    this.y4 = y4;
+
+    this.col = col;
+    this.strockW = strockW;
+  }
+
+  draw() {
+    noFill();
+    stroke(this.col);
+    strokeWeight(this.strockW)
+    quad(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3, this.x4, this.y4);
   }
 }
 

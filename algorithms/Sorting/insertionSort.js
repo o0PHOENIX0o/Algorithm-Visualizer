@@ -1,11 +1,12 @@
 import { BaseSort, compare } from "./Base.js"
-import { DrawArray, PointerArrow, clearCanvas } from '../../canvas.js';
+import { DrawArray, PointerArrow, Square, clearCanvas } from '../../canvas.js';
 
 class insertionSortClass extends BaseSort {
     constructor() {
         super("Insertion Sort");
         this.i = null;
         this.arrows = [];
+        this.squareArray = [];
     }
 
     Play() {
@@ -36,51 +37,81 @@ class insertionSortClass extends BaseSort {
 
             let a = this.objNodeArray[i];
             a.obj.col = this.HighlightCol2;
-
-            await this.delay(this.TimeoutDelay);
-
-            await this.waitWhilePaused();
-            await this.animateY(a.obj, this.arrows, -50);
-            await this.waitWhilePaused();
-
             let j = i - 1;
             let x = i;
+
+            let unsortedBoxX1 = a.obj.xPos - a.obj.dia / 2 - 5;
+            let unsortedBoxY1 = a.obj.yPos + a.obj.dia / 2 + 5;
+            let unsortedBoxX2 = this.objNodeArray[this.objNodeArray.length - 1].obj.xPos + a.obj.dia / 2 + 5;
+            let unsortedBoxY2 = this.objNodeArray[this.objNodeArray.length - 1].obj.yPos - a.obj.dia / 2 - 5;
+
+            let sortedBoxX1 = this.objNodeArray[0].obj.xPos - this.objNodeArray[0].obj.dia / 2 - 5;
+            let sortedBoxY1 = this.objNodeArray[0].obj.yPos + this.objNodeArray[0].obj.dia / 2 + 5;
+            let sortedBoxX2 = this.objNodeArray[i - 1].obj.xPos + a.obj.dia / 2 + 5;
+            let sortedBoxY2 = this.objNodeArray[i - 1].obj.yPos - a.obj.dia / 2 - 5;
+
+            this.squareArray = [
+                new Square(unsortedBoxX1, unsortedBoxY1, unsortedBoxX2, unsortedBoxY2, this.unsortedCol),
+                new Square(sortedBoxX1, sortedBoxY1, sortedBoxX2, sortedBoxY2, this.sortedCol),
+            ];
+
+            DrawArray([...this.arrows, ...this.squareArray]);
+            await this.delay(this.TimeoutDelay);
+
+            this.arrows = [
+                new PointerArrow(a.obj.xPos, a.obj.yPos + 40, this.HighlightCol2, 20, "i"),
+                new PointerArrow(this.objNodeArray[j].obj.xPos, this.objNodeArray[j].obj.yPos + 40, this.HighlightCol, 20, "j")
+            ];
+
+            DrawArray([...this.arrows, ...this.squareArray]);
+            await this.waitWhilePaused();
+
+            await this.waitWhilePaused();
+            await this.animateY(a.obj, [...this.arrows, ...this.squareArray], -50);
+            await this.waitWhilePaused();
+
 
             while (j >= 0 && compare(this.objNodeArray[j], a)) {
                 await this.waitWhilePaused();
                 if (!this.isAnimating) return;
 
                 const b = this.objNodeArray[j];
-                b.obj.col = this.HighlightCol;
+                if (b.obj.col != this.sortedCol) b.obj.col = this.HighlightCol;
 
                 await this.waitWhilePaused();
-                
                 this.arrows = [
-                    new PointerArrow(a.obj.xPos, a.obj.yPos + 40, this.HighlightCol2, 20, "i"),
+                    new PointerArrow(a.obj.xPos, a.obj.yPos + a.obj.dia + 40, this.HighlightCol2, 20, "i"),
                     new PointerArrow(b.obj.xPos, b.obj.yPos + 40, this.HighlightCol, 20, "j")
                 ];
-                DrawArray(this.arrows);
+                DrawArray([...this.arrows, ...this.squareArray]);
                 await this.delay(this.TimeoutDelay);
 
                 await this.waitWhilePaused();
                 if (!this.isAnimating) return;
 
-                await this.swapAnimation(this.objNodeArray[j].obj, this.objNodeArray[x].obj, this.arrows);
+                await this.swapAnimation(this.objNodeArray[j].obj, this.objNodeArray[x].obj, [...this.arrows, ...this.squareArray]);
                 [this.objNodeArray[x], this.objNodeArray[j]] = [this.objNodeArray[j], this.objNodeArray[x]];
 
-                b.obj.col = this.BaseCol;
+                if (b.obj.col != this.sortedCol) b.obj.col = this.BaseCol;
                 x = j--;
             }
             await this.waitWhilePaused();
-            await this.animateY(a.obj, this.arrows, 50);
+            await this.animateY(a.obj, [...this.arrows, ...this.squareArray], 50);
             await this.waitWhilePaused();
 
+            // for(let k = 0; k<i; k++){
+            //     this.objNodeArray[k].obj.col = this.sortedCol;
+            // }
+            // a.obj.col = this.sortedCol;
+
             if (!this.isAnimating) return;
+            this.objNodeArray[i].obj.col = this.sortedCol;
             this.objNodeArray[x].obj.col = this.sortedCol;
-            DrawArray();
+            DrawArray([...this.arrows, ...this.squareArray]);
+
             await this.delay(this.TimeoutDelay);
         }
-        this.objNodeArray.forEach(element => element.obj.col = this.sortedCol);
+        // this.objNodeArray.forEach(element => element.obj.col = this.sortedCol);
         DrawArray();
         this.isAnimating = false;
     }

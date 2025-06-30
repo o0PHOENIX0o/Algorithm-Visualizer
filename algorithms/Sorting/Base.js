@@ -13,6 +13,7 @@ export class BaseSort {
     this.HighlightCol = "#667eea";
     this.HighlightCol2 = "#09d3ff";
     this.sortedCol = "#4CAF50";
+    this.unsortedCol = "#f44336";
     this.isAnimating = false;
     this.isPause = false;
 
