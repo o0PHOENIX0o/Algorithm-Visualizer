@@ -268,7 +268,6 @@ class heapSortClass extends BaseSort {
         } else {
             this.triangleArray = [];
             this.arrows = [];
-
             parent.col = this.BaseCol;
             DrawArray(this.lineArray);
             return;
@@ -279,7 +278,6 @@ class heapSortClass extends BaseSort {
 
     async buildHeap(Array) {
         for (let i = Math.floor(Array.length / 2 - 1); i >= 0; i--) {
-
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
             await this.Heapify(Array, Array.length, i);
@@ -306,6 +304,7 @@ class heapSortClass extends BaseSort {
             if (!this.isAnimating) return;
 
             await this.Heapify(Array, i, 0);
+            DrawArray(this.lineArray);
         }
     }
 
