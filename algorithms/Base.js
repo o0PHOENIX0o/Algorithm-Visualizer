@@ -1,10 +1,11 @@
-import { clearCanvas, DrawArray, Circle, height, width } from "../../canvas.js";
+import { clearCanvas, DrawArray, Circle, height, width } from "../canvas.js";
 
-export class BaseSort {
+export class Base {
   constructor(name, spacing = 20, diameter = 50) {
     this.name = name;
     this.objNodeArray = [];
     this.inputArray = [];
+    this.key = null;
     this.BaseSpeed = 0.01;
     this.AnimationSpeed = 0.01;
     this.BaseDelay = 500;
@@ -21,19 +22,28 @@ export class BaseSort {
     this.dia = diameter;
   }
 
-  generate(input, x = null, y = null) {
+  generate(input, key = null, x = null, y = null) {
+    if(input.length<1) return;
     this.inputArray = [...input];
     y = (y == null) ? Number(height / 2) : Number(y);
     clearCanvas();
+    if (input.length > 0 && this.name.includes("Search")) {
+      if (key) this.key = key;
+      else {
+        alert("search key not provided!");
+        return;
+      }
+    }
     this.objNodeArray = [];
     const totalLength = input.length * (this.dia + this.spacing);
-    if (x == null) x = (width / 2) - (totalLength / 2) + this.dia / 2;
-
+    if (x == null) x = (width / 2) - (totalLength / 2) + this.dia / 2; 
     input.forEach(val => {
       const circle = new Circle(x, y, this.dia, val, this.BaseCol);
       this.objNodeArray.push({ value: val, obj: circle });
       x += this.dia + this.spacing;
     });
+    
+    console.log("key = ", this.key)
     DrawArray();
   }
 
@@ -46,7 +56,7 @@ export class BaseSort {
   }
 
 
-  async waitWhilePaused(){
+  async waitWhilePaused() {
     while (this.isPause) {
       await this.delay(this.TimeoutDelay);
     }
@@ -70,7 +80,7 @@ export class BaseSort {
   }
 
   swapAnimation(obj1, obj2, arrows) {
-    if(obj1 == obj2) return;
+    if (obj1 == obj2) return;
     return new Promise(resolve => {
       const startX1 = obj1.xPos, startX2 = obj2.xPos;
       let t = 0;
@@ -78,6 +88,26 @@ export class BaseSort {
         t = min(t + this.AnimationSpeed, 1);
         obj1.xPos = lerp(startX1, startX2, t);
         obj2.xPos = lerp(startX2, startX1, t);
+        DrawArray(arrows);
+        if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
+        else resolve();
+      };
+      animate();
+    });
+  }
+
+  async SwapNodes(obj1, obj2, arrows, speedFactor = 2) {
+    if (obj1 == obj2) return;
+    return new Promise(resolve => {
+      const startX1 = obj1.xPos, startX2 = obj2.xPos;
+      const startY1 = obj1.yPos, startY2 = obj2.yPos;
+      let t = 0;
+      const animate = () => {
+        t = min(t + this.AnimationSpeed * speedFactor, 1);
+        obj1.xPos = lerp(startX1, startX2, t);
+        obj1.yPos = lerp(startY1, startY2, t);
+        obj2.xPos = lerp(startX2, startX1, t);
+        obj2.yPos = lerp(startY2, startY1, t);
         DrawArray(arrows);
         if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
         else resolve();
@@ -97,48 +127,3 @@ export function compare(a, b) {
   if (isNaN(aNum) && isNaN(bNum)) return bVal < aVal;
   else return bNum < aNum;
 }
-
-
-
-
-//  animateY(obj1, obj2, arrows, dir) {
-//     return new Promise((resolveY) => {
-//       const startY1 = obj1.yPos, startY2 = obj2.yPos;
-//       let t = 0;
-//       const animate = () => {
-//         t = Math.min(t + this.AnimationSpeed, 1);
-//         obj1.yPos = lerp(startY1, startY1 + (dir * 40), t);
-//         obj2.yPos = lerp(startY2, startY2 - (dir * 40), t);
-//         clearCanvas();
-//         DrawArray(arrows);
-//         if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
-//         else resolveY();
-//       };
-//       animate();
-//     });
-//   };
-
-//   async swapAnimation(obj1, obj2, arrows) {
-//     const startX1 = obj1.xPos, startX2 = obj2.xPos;
-//     let t = 0;
-//     const animate = () => {
-//       return new Promise(resolve => {
-//         const swap = () => {
-//           t = min(t + this.AnimationSpeed, 1);
-//           obj1.xPos = lerp(startX1, startX2, t);
-//           obj2.xPos = lerp(startX2, startX1, t);
-//           clearCanvas();
-//           DrawArray(arrows);
-//           if (t < 1 && this.isAnimating) requestAnimationFrame(swap);
-//           else resolve();
-//         };
-//         swap();
-//       });
-//     };
-
-//     await this.animateY(obj1, obj2, arrows, +1);
-//     await this.delay(this.TimeoutDelay);
-//     await animate();
-//     await this.delay(this.TimeoutDelay);
-//     await this.animateY(obj1, obj2, arrows, -1);
-//   };

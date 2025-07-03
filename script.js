@@ -4,6 +4,7 @@ import { insertionSort } from './algorithms/Sorting/insertionSort.js';
 import { quickSort } from './algorithms/Sorting/quickSort.js';
 import { mergeSort } from './algorithms/Sorting/mergeSort.js';
 import { heapSort } from './algorithms/Sorting/heapSort.js';
+import { linearSearch } from './algorithms/Searching/linearSearch.js';
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
@@ -11,12 +12,14 @@ const speedSlider = document.getElementById("speedSlider");
 const speedValue = document.getElementById("speedValue");
 const InputField = document.getElementById("customArrayInput");
 const navToggle = document.getElementById('navToggle');
+const keyInput = document.getElementById("searchKey");
+const keyValue = document.getElementById("searchValue");
 
 let isPlayed = false;
 
 
 navToggle.addEventListener('click', () => {
-  sidebar.classList.toggle('active');
+  sidebar.classList.toggle('active'); 
 });
 
 controlsToggle.addEventListener('click', () => {
@@ -48,8 +51,11 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'quick-sort': currentAlgorithm = quickSort; break;
       case 'merge-sort': currentAlgorithm = mergeSort; break;
       case 'heap-sort': currentAlgorithm = heapSort; break;
+      case 'linear-search': currentAlgorithm = linearSearch; break;
       default: alert(`${alg} not implemented.`); return;
     }
+    if(currentAlgorithm.name == "Linear Search") keyInput.classList.add('active');
+    else keyInput.classList.remove('active');
     window.currentAlgorithm = currentAlgorithm;
   });
 });
@@ -61,11 +67,16 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
   currentAlgorithm.reset();
   const input = InputField.value;
   const values = input.split(',').map(x => x.trim()).filter(x => x !== '');
-  if (["Bubble Sort", "Selection Sort"].includes(currentAlgorithm.name) && values.length > 10) {
+  if (["Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort", "Quick Sort"].includes(currentAlgorithm.name) && values.length > 10) {
     alert("Use max 10 elements for visualization");
     return;
+  }else if(["Heap Sort"].includes(currentAlgorithm.name) && values.length > 15){
+    alert("Use max 15 elements for visualization");
+    return;
+
   }
-  currentAlgorithm.generate(values);
+  if(currentAlgorithm.name == "Linear Search") currentAlgorithm.generate(values, keyValue.value);
+  else currentAlgorithm.generate(values);
 });
 
 

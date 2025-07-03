@@ -1,7 +1,7 @@
-import { BaseSort, compare } from "./Base.js"
+import { Base, compare } from "../Base.js"
 import { DrawArray, Square, clearCanvas } from '../../canvas.js';
 
-class mergeSortClass extends BaseSort {
+class mergeSortClass extends Base {
     constructor() {
         super("Merge Sort", 8, 30);
         this.squareArray = [];

@@ -1,7 +1,7 @@
-import { BaseSort, compare } from "./Base.js"
+import { Base, compare } from "../Base.js"
 import { DrawArray, Square, Line, Triangle, clearCanvas, width, PointerArrow, height } from '../../canvas.js';
 
-class heapSortClass extends BaseSort {
+class heapSortClass extends Base {
     constructor() {
         super("Heap Sort", 8, 30);
         this.triangleArray = [];
@@ -168,25 +168,7 @@ class heapSortClass extends BaseSort {
         }
     }
 
-    async SwapNodes(obj1, obj2, arrows, speedFactor = 2) {
-        if (obj1 == obj2) return;
-        return new Promise(resolve => {
-            const startX1 = obj1.xPos, startX2 = obj2.xPos;
-            const startY1 = obj1.yPos, startY2 = obj2.yPos;
-            let t = 0;
-            const animate = () => {
-                t = min(t + this.AnimationSpeed * speedFactor, 1);
-                obj1.xPos = lerp(startX1, startX2, t);
-                obj1.yPos = lerp(startY1, startY2, t);
-                obj2.xPos = lerp(startX2, startX1, t);
-                obj2.yPos = lerp(startY2, startY1, t);
-                DrawArray(arrows);
-                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
-                else resolve();
-            };
-            animate();
-        });
-    }
+    
 
 
     async Heapify(Array, n, i) {

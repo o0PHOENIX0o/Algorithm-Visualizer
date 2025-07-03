@@ -182,14 +182,6 @@ body {
 }
 
 .controls-header {
-    /* display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #e0e0e0;
-    background: #667eea;
-    color: white;
-    border-radius: 12px 12px 0 0; */
     height: 2.3rem;
     width: 2rem;
     display: flex;
@@ -261,6 +253,13 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+#searchKey{
+    display: none;
+}
+#searchKey.active{
+    display: block;
 }
 
 .array-input {
