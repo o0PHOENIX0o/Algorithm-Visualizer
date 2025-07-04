@@ -5,6 +5,7 @@ import { quickSort } from './algorithms/Sorting/quickSort.js';
 import { mergeSort } from './algorithms/Sorting/mergeSort.js';
 import { heapSort } from './algorithms/Sorting/heapSort.js';
 import { linearSearch } from './algorithms/Searching/linearSearch.js';
+import { binarySearch } from './algorithms/Searching/binarySearch.js';
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
@@ -52,9 +53,10 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'merge-sort': currentAlgorithm = mergeSort; break;
       case 'heap-sort': currentAlgorithm = heapSort; break;
       case 'linear-search': currentAlgorithm = linearSearch; break;
+      case 'binary-search': currentAlgorithm = binarySearch; break;
       default: alert(`${alg} not implemented.`); return;
     }
-    if(currentAlgorithm.name == "Linear Search") keyInput.classList.add('active');
+    if(currentAlgorithm.name.includes("Search")) keyInput.classList.add('active');
     else keyInput.classList.remove('active');
     window.currentAlgorithm = currentAlgorithm;
   });
@@ -75,7 +77,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     return;
 
   }
-  if(currentAlgorithm.name == "Linear Search") currentAlgorithm.generate(values, keyValue.value);
+  if(currentAlgorithm.name.includes("Search")) currentAlgorithm.generate(values, keyValue.value);
   else currentAlgorithm.generate(values);
 });
 

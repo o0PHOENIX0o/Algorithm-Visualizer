@@ -57,13 +57,14 @@ export class Square {
 }
 
 export class PointerArrow {
-  constructor(xPos, yPos, col, length, label, textS = 16, textY = 20) {
+  constructor(xPos, yPos, col, length, label, textCol = 0,textS = 16, textY = 20) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.col = col;
     this.length = length;
     this.label = label;
 
+    this.textCol = textCol;
     this.textS = textS;
     this.textY = textY;
   }
@@ -86,7 +87,7 @@ export class PointerArrow {
 
     push();
     noStroke();
-    fill(0);
+    fill(this.textCol);
     textFont('sans-serif');
     textStyle(NORMAL);
     textSize(this.textS);
