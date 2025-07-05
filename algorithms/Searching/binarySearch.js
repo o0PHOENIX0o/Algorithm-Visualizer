@@ -32,7 +32,9 @@ class BinarySearchClass extends Base {
 
 
     async binarySearchAlgo(array, l, r, key) {
+        await this.waitWhilePaused();
         if (!this.isAnimating) return;
+        await this.delay(this.TimeoutDelay);
         if (l > r) {
             alert("key not found in dataset");
             DrawArray(this.keyCircle);
@@ -66,27 +68,29 @@ class BinarySearchClass extends Base {
         ];
 
         DrawArray([...this.squareArray, ...this.arrows, ...this.keyCircle]);
-        await this.delay(2 * this.TimeoutDelay);
+        await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
 
         if (Number(array[mid].value) === key) {
-            console.log("found at ", mid);
             array[mid].obj.col = this.sortedCol;
             this.arrows = [new PointerArrow(array[mid].obj.xPos, array[l].obj.yPos + 40, this.HighlightCol, 20, "key")];
             this.squareArray = [new Square(pointerBoxX1, pointerBoxY1, pointerBoxX2, pointerBoxY2, this.sortedCol)];
             DrawArray([...this.squareArray, ...this.arrows, ...this.keyCircle]);
-            await this.delay(2 * this.TimeoutDelay);
-            await this.waitWhilePaused();
+            await this.delay(this.TimeoutDelay);
             return;
+
         } else if (Number(array[mid].value) > key) {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
+            for (let i = mid; i <= r; i++) { array[i].obj.col = this.BaseCol; array[i].obj.textCol = "#6d6c6c"; }
             return await this.binarySearchAlgo(array, l, mid - 1, key)
+
         } else {  // go right
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
+            for (let i = 0; i <= mid; i++) { array[i].obj.col = this.BaseCol; array[i].obj.textCol = "#6d6c6c"; }
             return await this.binarySearchAlgo(array, mid + 1, r, key)
         }
     }

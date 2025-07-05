@@ -78,7 +78,6 @@ class linearSearchClass extends Base {
     DrawArray(this.keyCircle);
     await this.delay(this.TimeoutDelay);
     console.log("not found");
-    // alert("key not found in dataset")
   }
 
 

@@ -6,6 +6,8 @@ import { mergeSort } from './algorithms/Sorting/mergeSort.js';
 import { heapSort } from './algorithms/Sorting/heapSort.js';
 import { linearSearch } from './algorithms/Searching/linearSearch.js';
 import { binarySearch } from './algorithms/Searching/binarySearch.js';
+import { hashSearch } from './algorithms/Searching/hashing.js';
+
 
 const controlsToggle = document.getElementById('controlsToggle');
 const controlsPanel = document.getElementById('controlsPanel');
@@ -54,6 +56,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'heap-sort': currentAlgorithm = heapSort; break;
       case 'linear-search': currentAlgorithm = linearSearch; break;
       case 'binary-search': currentAlgorithm = binarySearch; break;
+      case 'hash-search': currentAlgorithm = hashSearch; break;
       default: alert(`${alg} not implemented.`); return;
     }
     if(currentAlgorithm.name.includes("Search")) keyInput.classList.add('active');
@@ -75,7 +78,6 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
   }else if(["Heap Sort"].includes(currentAlgorithm.name) && values.length > 15){
     alert("Use max 15 elements for visualization");
     return;
-
   }
   if(currentAlgorithm.name.includes("Search")) currentAlgorithm.generate(values, keyValue.value);
   else currentAlgorithm.generate(values);

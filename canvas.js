@@ -1,41 +1,48 @@
 let width, height;
 
 export class Circle {
-  constructor(xPos, yPos, dia, label, col) {
+  constructor(xPos, yPos, dia, label, col, textCol = 0) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.dia = dia;
     this.label = label;
     this.col = col;
+    this.textCol = textCol;
   }
 
   draw() {
+    push(); 
     fill(this.col);
     noStroke();
     circle(this.xPos, this.yPos, this.dia);
-    fill(0);
-    noStroke();
-    fill(0);
+
+    fill(this.textCol);
     textFont('sans-serif');
     textStyle(NORMAL);
-    textAlign(CENTER);
+    textAlign(CENTER, CENTER);
     text(this.label, this.xPos, this.yPos);
+
+    pop();
   }
 }
 
 export class Square {
-  constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW = 2) {
+  constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = 0, textYOffset = 0) {
     this.xPos1 = xPos1;
     this.yPos1 = yPos1;
     this.xPos2 = xPos2;
     this.yPos2 = yPos2;
     this.strokeW = strokeW;
     this.col = col;
+    this.text = text;
+    this.textCol = textCol;
+    this.textYOffset = textYOffset;
   }
 
   draw() {
     rectMode(CENTER);
 
+    push();
     noFill();
     stroke(this.col);
     strokeWeight(this.strokeW);
@@ -47,17 +54,21 @@ export class Square {
     let centerY = (this.yPos1 + this.yPos2) / 2;
 
     rect(centerX, centerY, w, h);
+    pop();
 
-
-    // noStroke();           
-    // fill(0);              
-    // textAlign(CENTER, CENTER);
-    // text(this.label, this.xPos, this.yPos);
+    if (this.text !== null) {
+      push();
+      noStroke();
+      fill(this.textCol);
+      textAlign(CENTER, CENTER);
+      text(this.text, centerX, centerY + this.textYOffset);
+      pop();
+    }
   }
 }
 
 export class PointerArrow {
-  constructor(xPos, yPos, col, length, label, textCol = 0,textS = 16, textY = 20) {
+  constructor(xPos, yPos, col, length, label, textCol = 0, textS = 16, textY = 20) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.col = col;
@@ -80,7 +91,7 @@ export class PointerArrow {
 
     push();
     translate(this.xPos, this.yPos);
-    noStroke(); 
+    noStroke();
     fill(this.col);
     triangle(x1, y1, x2, y2, x3, y3);
     pop();
@@ -110,9 +121,11 @@ export class Line {
   }
 
   draw() {
+    push();
     stroke(this.col);
     strokeWeight(this.strockW);
     line(this.x1, this.y1, this.x2, this.y2);
+    pop();
   }
 }
 
@@ -131,18 +144,25 @@ export class Triangle {
     this.strockW = strockW;
   }
 
-  draw() {
+  draw(){
+    push();
     noFill();
     stroke(this.col);
     strokeWeight(this.strockW)
     quad(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3, this.x4, this.y4);
+    pop();
   }
 }
 
-export function DrawArray(arrows = []) {
+export function DrawArray(objects = []) {
   clearCanvas();
-  if (arrows && arrows.length > 0) arrows.forEach(arrow => arrow.draw());
-  window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
+  if(window.currentAlgorithm.name == "Hash Search"){
+    window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
+    if (objects && objects.length > 0) objects.forEach(objects => objects.draw());
+  }else{
+    if (objects && objects.length > 0) objects.forEach(objects => objects.draw());
+    window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
+  }
 }
 
 export function clearCanvas() {

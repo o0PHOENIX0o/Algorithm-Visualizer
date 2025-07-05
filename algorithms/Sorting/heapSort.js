@@ -53,7 +53,6 @@ class heapSortClass extends Base {
             };
             animate();
         });
-
     }
 
     moveDiagonal(elements, angle, dir, depth, offsetY = 50) {
