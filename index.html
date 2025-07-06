@@ -57,43 +57,58 @@
                 <div class="algorithm-category">
                     <h3 class="category-title">Sorting Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn active" data-algorithm="bubble-sort">Bubble Sort</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="selection-sort">Selection Sort</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="insertion-sort">Insertion Sort</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="quick-sort">Quick Sort</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="merge-sort">Merge Sort</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="heap-sort">Heap Sort</button></li>
+                        <li><button class="algorithm-btn active" data-algo-type="Sorting"
+                                data-algorithm="bubble-sort">Bubble Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting"
+                                data-algorithm="selection-sort">Selection Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting"
+                                data-algorithm="insertion-sort">Insertion Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="quick-sort">Quick
+                                Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="merge-sort">Merge
+                                Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="heap-sort">Heap
+                                Sort</button></li>
                     </ul>
                 </div>
 
                 <div class="algorithm-category">
                     <h3 class="category-title">Search Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algorithm="linear-search">Linear Search</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="binary-search">Binary Search</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="hash-search">Hash Table</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="linear-search">Linear
+                                Search</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="binary-search">Binary
+                                Search</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="hash-search">Hash
+                                Table</button></li>
                     </ul>
                 </div>
 
                 <div class="algorithm-category">
                     <h3 class="category-title">Graph Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algorithm="dfs">DFS</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="bfs">BFS</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="dijkstra">Dijkstra's Algorithm</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="astar">A* Algorithm</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="kruskal">Kruskal's Algorithm</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="prim">Prim's Algorithm</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="dfs">DFS</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="bfs">BFS</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="dijkstra">Dijkstra's
+                                Algorithm</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="astar">A*
+                                Algorithm</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="kruskal">Kruskal's
+                                Algorithm</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="prim">Prim's
+                                Algorithm</button></li>
                     </ul>
                 </div>
 
                 <div class="algorithm-category">
                     <h3 class="category-title">Tree Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algorithm="binary-tree">Binary Tree Traversal</button>
-                        </li>
-                        <li><button class="algorithm-btn" data-algorithm="avl-tree">AVL Tree</button></li>
-                        <li><button class="algorithm-btn" data-algorithm="red-black">Red-Black Tree</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="binary-tree">Binary Tree
+                                Traversal</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="avl-tree">AVL
+                                Tree</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="red-black">Red-Black
+                                Tree</button></li>
                     </ul>
                 </div>
             </div>
@@ -120,17 +135,17 @@
             </button>
         </div>
         <div class="controls-content" id="controlsContent">
-
-            <div class="control-group">
-                <label for="customArrayInput">Custom Array (comma-separated)</label>
+            <div id="inputField" class="control-group">
                 <div class="input-group">
-                    <input type="text" id="customArrayInput" class="array-input"
-                        placeholder="eg: 64, 34, 25, 12, 22, 11, 90">
-                    <div id="searchKey">
-                        <input type="text" id="searchValue" class="array-input" placeholder="search key">
-                    </div>
-                    <button class="control-btn apply-btn" id="applyArrayBtn">Apply</button>
+                        <label for="customArrayInput">Custom Array (comma-separated)</label>
+                        <input type="text" id="customArrayInput" class="array-input"
+                            placeholder="eg: 64, 34, 25, 12, 22, 11, 90">
                 </div>
+                <div id="searchKey" class="input-group">
+                    <label for="customArrayInput">Search Key</label>
+                    <input type="text" id="searchValue" class="array-input" placeholder="search key">
+                </div>
+                <button class="control-btn apply-btn" id="applyArrayBtn">Apply</button>
             </div>
 
             <div class="control-group">
@@ -153,7 +168,6 @@
                     Reset
                 </button>
             </div>
-
         </div>
     </div>
 

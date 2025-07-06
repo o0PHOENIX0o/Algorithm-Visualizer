@@ -11,7 +11,7 @@ export class Circle {
   }
 
   draw() {
-    push(); 
+    push();
     fill(this.col);
     noStroke();
     circle(this.xPos, this.yPos, this.dia);
@@ -144,7 +144,7 @@ export class Triangle {
     this.strockW = strockW;
   }
 
-  draw(){
+  draw() {
     push();
     noFill();
     stroke(this.col);
@@ -154,12 +154,40 @@ export class Triangle {
   }
 }
 
+export class PointerTriangles {
+  constructor(x1, y1, x2, y2, x3, y3, col, angle, tx,ty) {
+    this.x1 = x1;
+    this.y1 = y1;
+    this.x2 = x2;
+    this.y2 = y2;
+    this.x3 = x3;
+    this.y3 = y3;
+
+    this.tx = tx;
+    this.ty = ty;
+
+    this.col = col;
+    this.angle = angle;
+  }
+
+  draw(){
+    push();
+    translate(this.tx, this.ty);
+    rotate(this.angle);
+    fill(this.col);
+    triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
+    pop();
+  }
+}
+
+
+
 export function DrawArray(objects = []) {
   clearCanvas();
-  if(window.currentAlgorithm.name == "Hash Search"){
+  if (window.currentAlgorithm.name == "Hash Search") {
     window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
     if (objects && objects.length > 0) objects.forEach(objects => objects.draw());
-  }else{
+  } else {
     if (objects && objects.length > 0) objects.forEach(objects => objects.draw());
     window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
   }
