@@ -17,7 +17,7 @@ import { DrawArray, Line, Circle, PointerTriangles, clearCanvas } from '../../ca
 
 class DFSClass extends Base {
     constructor() {
-        super("DFS", 10, 40);
+        super("BFS", 10, 40);
         this.edgeList = []; //raw edge input
         // this.inputArray = []; --> in base class, stores raw vertices input
 
@@ -113,7 +113,7 @@ class DFSClass extends Base {
     }
 
 
-    async DFS(Nodes, u) {
+    async BFS(Nodes, u) {
         let DFSOrder = [];
         let isSeen = Array(Nodes.length).fill(false);
 
@@ -183,11 +183,11 @@ class DFSClass extends Base {
 
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
-        await this.DFS(this.objNodeArray, this.key);
+        await this.BFS(this.objNodeArray, this.key);
 
 
         this.isAnimating = false;
     }
 };
 
-export const DFS = new DFSClass();
+export const BFS = new DFSClass();

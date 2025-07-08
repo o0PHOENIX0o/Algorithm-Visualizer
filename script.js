@@ -8,6 +8,7 @@ import { linearSearch } from './algorithms/Searching/linearSearch.js';
 import { binarySearch } from './algorithms/Searching/binarySearch.js';
 import { hashSearch } from './algorithms/Searching/hashing.js';
 import { DFS } from './algorithms/Graphs/DFS.js';
+import { BFS } from './algorithms/Graphs/BFS.js';
 
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -40,6 +41,7 @@ speedSlider.addEventListener("input", (e) => {
 
 
 let currentAlgorithm = BubbleSort;
+let curAlgoType = "Sorting";
 window.currentAlgorithm = currentAlgorithm;
 
 document.querySelectorAll(".algorithm-btn").forEach(btn => {
@@ -48,7 +50,11 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     e.target.classList.add("active");
     console.log("--> reset");
     currentAlgorithm.reset();
+    
+    if (document.getElementById('startVertexDiv')) document.getElementById('inputField').removeChild(document.getElementById('startVertexDiv'));
+
     const alg = e.target.dataset.algorithm;
+    curAlgoType = e.target.dataset.algoType;
     switch (alg) {
       case 'bubble-sort': currentAlgorithm = BubbleSort; break;
       case 'selection-sort': currentAlgorithm = SelectionSort; break;
@@ -60,12 +66,13 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'binary-search': currentAlgorithm = binarySearch; break;
       case 'hash-search': currentAlgorithm = hashSearch; break;
       case 'dfs': currentAlgorithm = DFS; break;
+      case 'bfs': currentAlgorithm = BFS; break;
       default: alert(`${alg} not implemented.`); return;
     }
 
     let inputLabel = document.querySelector(`label[for="${InputField.id}"]`);
     let [label, input] = [...keyInput.children];
-    if (currentAlgorithm.name.includes("Search")) {
+    if (curAlgoType == "Search") {
       keyInput.classList.add('active');
       inputLabel.innerText = "Custom Array (comma-separated)";
       InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
@@ -73,7 +80,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       label.innerText = "Search Key";
       input.setAttribute("placeholder", "Search Key");
     }
-    else if (currentAlgorithm.name.includes("DFS")) {
+    else if (curAlgoType == "Graph"){
       keyInput.classList.add('active');
       label.innerText = "Edges (src - dest - weight)";
       inputLabel.innerText = "Vertices (comma-separated)";
@@ -81,14 +88,17 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       input.setAttribute("placeholder", "eg: (A-B), (C-D)");
       InputField.setAttribute("placeholder", "eg: A,B,C,D");
 
-      const temp = document.createElement('div');
-      temp.classList = "input-group";
-      let element = `
-                <label for="startVertex">Start Vertex</label>
-                <input type="text" id="startVertex" class="array-input" placeholder="Start Vertex">
-              `;
-      temp.innerHTML = element;
-      keyInput.after(temp);
+      if(!document.getElementById('startVertex')){
+        const temp = document.createElement('div');
+        temp.classList = "input-group";
+        temp.id = "startVertexDiv"
+        let element = `
+                  <label for="startVertex">Start Vertex</label>
+                  <input type="text" id="startVertex" class="array-input" placeholder="eg: A">
+                `;
+        temp.innerHTML = element;
+        keyInput.after(temp);
+      }
     } else {
       keyInput.classList.remove('active');
       inputLabel.innerText = "Custom Array (comma-separated)";
@@ -113,9 +123,9 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     alert("Use max 15 elements for visualization");
     return;
   }
-  if (currentAlgorithm.name.includes("Search")) currentAlgorithm.generate(values, keyValue.value);
-  else if (currentAlgorithm.name.includes("DFS")) {
-
+  console.log("cur algo type ",curAlgoType);
+  if (curAlgoType == "Search") currentAlgorithm.generate(values, keyValue.value);
+  else if (curAlgoType == "Graph"){
     let edges = keyValue.value.replace(/\s+/g, '').split(",").map(Element => Element.replaceAll("(", "").replaceAll(")", "").split("-"));
     let indexMap = {};
     values.forEach((v, i) => indexMap[v.trim()] = i);
