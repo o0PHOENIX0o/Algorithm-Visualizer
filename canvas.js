@@ -1,27 +1,33 @@
 let width, height;
 
 export class Circle {
-  constructor(xPos, yPos, dia, label, col, textCol = 0) {
+  constructor(xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.dia = dia;
     this.label = label;
     this.col = col;
     this.textCol = textCol;
+    this.strokeCol = (strokeCol) ? strokeCol : col;
+    this.strokeW = strokeW;
   }
 
   draw() {
     push();
+    // console.log(this.strokeCol)
+    stroke(this.strokeCol);
+    strokeWeight(this.strokeW);
     fill(this.col);
-    noStroke();
     circle(this.xPos, this.yPos, this.dia);
+    pop();
 
+    push();
+    noStroke();
     fill(this.textCol);
     textFont('sans-serif');
     textStyle(NORMAL);
     textAlign(CENTER, CENTER);
     text(this.label, this.xPos, this.yPos);
-
     pop();
   }
 }
@@ -110,27 +116,50 @@ export class PointerArrow {
 
 
 export class Line {
-  constructor(x1, y1, x2, y2, col, strockW = 2) {
+  constructor(x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
     this.y2 = y2;
 
     this.col = col;
-    this.strockW = strockW;
+    this.strokeW = strokeW;
+
+    this.label = label;
+    this.textCol = textCol;
+    this.textS = textS;
+    this.textY = textY;
   }
 
   draw() {
     push();
     stroke(this.col);
-    strokeWeight(this.strockW);
+    strokeWeight(this.strokeW);
+
     line(this.x1, this.y1, this.x2, this.y2);
     pop();
+
+    if (this.label) {
+      push(); 
+      let midX = (this.x1 + this.x2) / 2;
+      let midY = (this.y1 + this.y2) / 2;
+
+      noStroke();
+      fill(this.textCol);
+      textFont('sans-serif');
+      textStyle(BOLD);
+      textSize(this.textS);
+      textAlign(CENTER);
+      text(this.label, midX, midY);
+      pop();
+    }
   }
 }
 
+
+
 export class Triangle {
-  constructor(x1, y1, x2, y2, x3, y3, x4, y4, col, strockW = 2) {
+  constructor(x1, y1, x2, y2, x3, y3, x4, y4, col, strokeW = 2) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -141,21 +170,21 @@ export class Triangle {
     this.y4 = y4;
 
     this.col = col;
-    this.strockW = strockW;
+    this.strokeW = strokeW;
   }
 
   draw() {
     push();
     noFill();
     stroke(this.col);
-    strokeWeight(this.strockW)
+    strokeWeight(this.strokeW)
     quad(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3, this.x4, this.y4);
     pop();
   }
 }
 
 export class PointerTriangles {
-  constructor(x1, y1, x2, y2, x3, y3, col, angle, tx,ty) {
+  constructor(x1, y1, x2, y2, x3, y3, col, angle, tx, ty) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -170,7 +199,7 @@ export class PointerTriangles {
     this.angle = angle;
   }
 
-  draw(){
+  draw() {
     push();
     translate(this.tx, this.ty);
     rotate(this.angle);
@@ -184,12 +213,16 @@ export class PointerTriangles {
 
 export function DrawArray(objects = []) {
   clearCanvas();
-  if (window.currentAlgorithm.name == "Hash Search") {
-    window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
-    if (objects && objects.length > 0) objects.forEach(objects => objects.draw());
+
+  const algo = window.currentAlgorithm;
+  const nodes = algo?.objNodeArray;
+
+  if (algo?.name === "Hash Search") {
+    nodes?.forEach(({ obj }) => obj?.draw());
+    objects?.forEach(obj => obj?.draw());
   } else {
-    if (objects && objects.length > 0) objects.forEach(objects => objects.draw());
-    window.currentAlgorithm.objNodeArray.forEach(({ obj }) => obj.draw());
+    objects?.forEach(obj => obj?.draw());
+    nodes?.forEach(({ obj }) => obj?.draw());
   }
 }
 

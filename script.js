@@ -69,7 +69,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       keyInput.classList.add('active');
       inputLabel.innerText = "Custom Array (comma-separated)";
       InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
-      
+
       label.innerText = "Search Key";
       input.setAttribute("placeholder", "Search Key");
     }
@@ -81,6 +81,14 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       input.setAttribute("placeholder", "eg: (A-B), (C-D)");
       InputField.setAttribute("placeholder", "eg: A,B,C,D");
 
+      const temp = document.createElement('div');
+      temp.classList = "input-group";
+      let element = `
+                <label for="startVertex">Start Vertex</label>
+                <input type="text" id="startVertex" class="array-input" placeholder="Start Vertex">
+              `;
+      temp.innerHTML = element;
+      keyInput.after(temp);
     } else {
       keyInput.classList.remove('active');
       inputLabel.innerText = "Custom Array (comma-separated)";
@@ -117,11 +125,14 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     console.log(indexMap);
     edges.forEach(edge => {
       let [src, dest, w] = [...edge];
-      console.log(src,dest, w, indexMap[src], indexMap[dest]);
-      adjMatrix[indexMap[src]][indexMap[dest]] = (w && !isNaN(Number(w)))? Number(w) : 1;
+      console.log(src, dest, w, indexMap[src], indexMap[dest]);
+      adjMatrix[indexMap[src]][indexMap[dest]] = (w && !isNaN(Number(w))) ? Number(w) : 1;
     })
-    
-    currentAlgorithm.generate(values, edges, adjMatrix); 
+    let startVertex = document.getElementById('startVertex').value;
+    console.log(startVertex, indexMap[startVertex]);
+    let startIndex = (startVertex && startVertex.length === 1 && !isNaN(indexMap[startVertex])) ? indexMap[startVertex] : -1;
+    console.log(startIndex);
+    currentAlgorithm.generate(values, edges, startIndex, adjMatrix);
 
   } else currentAlgorithm.generate(values);
 });
