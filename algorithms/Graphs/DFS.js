@@ -1,16 +1,3 @@
-// let vertices = ['A',  'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', "J"];
-// let edges = [
-//   ['A', 'B'],
-//   ['A', 'C'],
-//   ['B', 'D'],
-//   ['B', 'E'],
-//   ['C', 'F'],
-//   ['E', 'G'],
-//   ['F', 'H'],
-//   ['F', 'I'],
-//   ['H', 'J']
-// ];
-
 import { Base, compare } from "../Base.js"
 import { DrawArray, Line, Circle, PointerTriangles, clearCanvas } from '../../canvas.js';
 
@@ -42,7 +29,6 @@ class DFSClass extends Base {
         this.adjMatrix = [];
         this.directedEdges = [];
         this.indexMap = {};
-
 
         this.isAnimating = false;
         this.isPause = false;
@@ -86,7 +72,6 @@ class DFSClass extends Base {
             this.objNodeArray.push({ index: this.indexMap[element], obj: circle });
         });
 
-
         let centerX = width / 2;
         let centerY = height / 2;
 
@@ -105,7 +90,6 @@ class DFSClass extends Base {
             let arrow = this.createArrow(posA, posB, (w) ? w : 1, from, to);
             this.directedEdges[this.indexMap[from]][this.indexMap[to]] = arrow;
         }
-
 
         let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
         console.log("call draw arry", objects);
@@ -153,8 +137,6 @@ class DFSClass extends Base {
                     } else {
                         this.objNodeArray[v].obj.strokeCol = this.sortedCol;
                     }
-
-                    // DrawArray(objects);
                 }
             }
             this.objNodeArray[u].obj.col = this.sortedCol;
@@ -168,11 +150,9 @@ class DFSClass extends Base {
 
         console.log(u);
         if (u === -1) {
-            for (let u = 0; u < Nodes.length; u++) {
+            for (let u = 0; u < Nodes.length; u++)
                 if (!isSeen[u]) await DFSvisit(Nodes, u);
-            }
         } else await DFSvisit(Nodes, u);
-
 
         console.log(DFSOrder);
     }

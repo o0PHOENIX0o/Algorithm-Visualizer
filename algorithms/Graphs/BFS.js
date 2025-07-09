@@ -1,16 +1,3 @@
-// let vertices = ['A',  'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', "J"];
-// let edges = [
-//   ['A', 'B'],
-//   ['A', 'C'],
-//   ['B', 'D'],
-//   ['B', 'E'],
-//   ['C', 'F'],
-//   ['E', 'G'],
-//   ['F', 'H'],
-//   ['F', 'I'],
-//   ['H', 'J']
-// ];
-
 import { Base, compare } from "../Base.js"
 import { DrawArray, Line, Circle, PointerTriangles, clearCanvas } from '../../canvas.js';
 
@@ -114,10 +101,10 @@ class DFSClass extends Base {
 
 
     async BFS(Nodes, u) {
-        let DFSOrder = [];
+        let BFSOrder = [];
         let isSeen = Array(Nodes.length).fill(false);
 
-        const DFSvisit = async (array, u) => {
+        const BFSvisit = async (array, u) => {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
             this.objNodeArray[u].obj.col = this.BaseCol;
