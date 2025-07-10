@@ -87,7 +87,7 @@ class DFSClass extends Base {
         for (let [from, to, w] of edges) {
             let posA = { xPos: this.objNodeArray[this.indexMap[from]].obj.xPos, yPos: this.objNodeArray[this.indexMap[from]].obj.yPos };
             let posB = { xPos: this.objNodeArray[this.indexMap[to]].obj.xPos, yPos: this.objNodeArray[this.indexMap[to]].obj.yPos }
-            let arrow = this.createArrow(posA, posB, (w) ? w : 1, from, to);
+            let arrow = this.createArrow(posA, posB, w ?? 1);
             this.directedEdges[this.indexMap[from]][this.indexMap[to]] = arrow;
         }
 

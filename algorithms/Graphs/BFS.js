@@ -107,59 +107,22 @@ class DFSClass extends Base {
         const BFSvisit = async (array, u) => {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
-            this.objNodeArray[u].obj.col = this.BaseCol;
-            let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
-            DrawArray(objects);
-            await this.delay(this.TimeoutDelay);
-            await this.waitWhilePaused();
-            if (!this.isAnimating) return;
-            isSeen[u] = true;
-            DFSOrder.push(u);
-
-            for (let v = 0; v < this.adjMatrix[u].length; v++) {
-                if (this.adjMatrix[u][v]) {
-                    console.log("adj of ", u, " -> ", v)
-                    this.objNodeArray[v].obj.strokeCol = this.unsortedCol;
-                    this.objNodeArray[v].obj.strokeW = 4;
-                    let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
-                    DrawArray(objects);
-                    await this.delay(2 * this.TimeoutDelay);
-                    await this.waitWhilePaused();
-                    if (!this.isAnimating) return;
-
-                    if (!isSeen[v]) {
-                        let { line, arrow } = { ...this.directedEdges[u][v] };
-                        line.col = arrow.col = this.sortedCol;
-                        line.strokeW = 3;
-                        let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
-                        DrawArray(objects);
-                        await this.delay(this.TimeoutDelay);
-                        await this.waitWhilePaused();
-                        if (!this.isAnimating) return;
-                        await DFSvisit(array, v);
-                    } else {
-                        this.objNodeArray[v].obj.strokeCol = this.sortedCol;
-                    }
-
-                    // DrawArray(objects);
-                }
-            }
-            this.objNodeArray[u].obj.col = this.sortedCol;
-            this.objNodeArray[u].obj.strokeCol = this.sortedCol;
-            objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
-            DrawArray(objects);
-            await this.delay(1.5 * this.TimeoutDelay)
-            await this.waitWhilePaused();
-            if (!this.isAnimating) return;
+            
+            // }
+            // this.objNodeArray[u].obj.col = this.sortedCol;
+            // this.objNodeArray[u].obj.strokeCol = this.sortedCol;
+            // objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
+            // DrawArray(objects);
+            // await this.delay(1.5 * this.TimeoutDelay)
+            // await this.waitWhilePaused();
+            // if (!this.isAnimating) return;
         }
 
         console.log(u);
         if (u === -1) {
-            for (let u = 0; u < Nodes.length; u++) {
+            for (let u = 0; u < Nodes.length; u++)
                 if (!isSeen[u]) await DFSvisit(Nodes, u);
-            }
         } else await DFSvisit(Nodes, u);
-
 
         console.log(DFSOrder);
     }
