@@ -1,15 +1,11 @@
+import { Base, compare } from "../Base.js"
 import { DrawArray, Line, Circle, PointerTriangles, clearCanvas } from '../../canvas.js';
-import { GraphBase } from './GraphBase.js';
 
-class DFSClass extends GraphBase {
+
+class DFSClass extends Base {
     constructor() {
         super("BFS", 10, 40);
     }
-
-
-
-
-
 
     async BFS(Nodes, u) {
         let BFSOrder = [];
@@ -27,6 +23,7 @@ class DFSClass extends GraphBase {
             array[u].obj.col = this.BaseCol;
             array[u].obj.strokeCol = this.BaseCol;
             this.drawAll();
+
             await this.delay(1.5 * this.TimeoutDelay)
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
@@ -35,11 +32,9 @@ class DFSClass extends GraphBase {
             while (Queue.length > 0) {
                 console.log(" Queue: ", Queue);
                 let v = Queue.shift();
-                array[v].obj.col = this.sortedCol;
-                array[v].obj.strokeCol = this.sortedCol;
-                this.drawAll();
-
-                await this.delay(1.5 * this.TimeoutDelay);
+                console.log("BFS visit --> ", v);
+                // await this.delay(1.5 * this.TimeoutDelay)
+                // await this.waitWhilePaused();
                 if (!this.isAnimating) return;
                 for (let w = 0; w < array.length; w++) {
                     if (this.adjMatrix[v][w] && !isSeen[w]) {
@@ -52,17 +47,22 @@ class DFSClass extends GraphBase {
                         line.col = arrow.col = this.sortedCol;
                         line.strokeW = 3;
                         line.label = dist[w];
+
+                        this.drawAll();
+
+                        await this.delay(1.5 * this.TimeoutDelay)
                         await this.waitWhilePaused();
                         if (!this.isAnimating) return;
+
                         Queue.push(w);
                     }
                 }
-                this.drawAll();
-                await this.delay(1.5 * this.TimeoutDelay)
-
-                
+                array[v].obj.col = this.sortedCol;
+                array[v].obj.strokeCol = this.sortedCol;
                 BFSOrder.push(v);
-                
+                this.drawAll();
+
+                await this.delay(1.5 * this.TimeoutDelay);
             }
 
             this.directedEdges.forEach((row, i) => {
@@ -70,8 +70,9 @@ class DFSClass extends GraphBase {
                     if (edge !== null && edge.line.label === "") this.directedEdges[i][j] = null;
                 })
             })
+            console.log("Final directed edges: ", this.directedEdges);
             this.drawAll();
-
+            await this.delay(this.TimeoutDelay);
 
             console.log("BFS Order: ", BFSOrder);
 
