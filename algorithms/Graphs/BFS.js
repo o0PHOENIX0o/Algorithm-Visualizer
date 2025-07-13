@@ -49,7 +49,7 @@ class DFSClass extends Base {
         let endX = posB.xPos - offset * cos(angle);
         let endY = posB.yPos - offset * sin(angle);
 
-        let line = new Line(startX, startY, endX, endY, 0, 1, w, this.unsortedCol);
+        let line = new Line(startX, startY, endX, endY, 0, 1, (w) ? w : "", this.unsortedCol);
         let pointerTriangle = new PointerTriangles(0, 0, -8, -5, -8, 5, 0, angle, endX, endY);
         let arrow = { line: line, arrow: pointerTriangle };
         return arrow;
@@ -89,7 +89,7 @@ class DFSClass extends Base {
         for (let [from, to, w] of edges) {
             let posA = { xPos: this.objNodeArray[this.indexMap[from]].obj.xPos, yPos: this.objNodeArray[this.indexMap[from]].obj.yPos };
             let posB = { xPos: this.objNodeArray[this.indexMap[to]].obj.xPos, yPos: this.objNodeArray[this.indexMap[to]].obj.yPos }
-            let arrow = this.createArrow(posA, posB, (w) ? w : 1, from, to);
+            let arrow = this.createArrow(posA, posB, w, from, to);
             this.directedEdges[this.indexMap[from]][this.indexMap[to]] = arrow;
         }
 
@@ -102,29 +102,79 @@ class DFSClass extends Base {
 
     async BFS(Nodes, u) {
         let BFSOrder = [];
+        let Queue = [];
+        let dist = Array(Nodes.length).fill(Infinity);
         let isSeen = Array(Nodes.length).fill(false);
 
         const BFSvisit = async (array, u) => {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
-            
-            // }
-            // this.objNodeArray[u].obj.col = this.sortedCol;
-            // this.objNodeArray[u].obj.strokeCol = this.sortedCol;
-            // objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
-            // DrawArray(objects);
-            // await this.delay(1.5 * this.TimeoutDelay)
-            // await this.waitWhilePaused();
-            // if (!this.isAnimating) return;
+
+            Queue.push(u);
+            isSeen[u] = true;
+            dist[u] = 0;
+            array[u].obj.col = this.BaseCol;
+            array[u].obj.strokeCol = this.BaseCol;
+            let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
+            DrawArray(objects);
+            await this.delay(1.5 * this.TimeoutDelay)
+            await this.waitWhilePaused();
+            if (!this.isAnimating) return;
+
+
+            while (Queue.length > 0){
+                console.log(" Queue: ", Queue);
+                let v = Queue.shift();
+                console.log("BFS visit --> ", v);
+                // await this.delay(1.5 * this.TimeoutDelay)
+                // await this.waitWhilePaused();
+                if (!this.isAnimating) return;
+                for (let w = 0; w < array.length; w++) {
+                    if (this.adjMatrix[v][w] && !isSeen[w]){
+                        isSeen[w] = true;
+                        dist[w] = dist[v] + 1;
+                        array[w].obj.col = this.BaseCol;
+                        array[w].obj.strokeCol = this.unsortedCol;
+
+                        let { line, arrow } = { ...this.directedEdges[v][w] };
+                        line.col = arrow.col = this.sortedCol;
+                        line.label = dist[w];
+
+                        objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
+                        DrawArray(objects);
+                        await this.delay(1.5 * this.TimeoutDelay)
+                        await this.waitWhilePaused();
+                        if (!this.isAnimating) return;
+
+                        Queue.push(w);
+                    }
+                }
+                array[v].obj.col = this.sortedCol;
+                array[v].obj.strokeCol = this.sortedCol;
+                BFSOrder.push(v);
+                objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
+                DrawArray(objects);
+                await this.delay(1.5 * this.TimeoutDelay);
+            }
+
+            this.directedEdges.forEach((row,i)=>{
+                row.forEach((edge,j)=>{
+                    if(edge !== null && edge.line.label === "") this.directedEdges[i][j] = null;
+                  })
+            })
+            console.log("Final directed edges: ", this.directedEdges);
+            objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
+            DrawArray(objects);
+
+            console.log("BFS Order: ", BFSOrder);
+
         }
 
         console.log(u);
-        if (u === -1) {
-            for (let u = 0; u < Nodes.length; u++)
-                if (!isSeen[u]) await DFSvisit(Nodes, u);
-        } else await DFSvisit(Nodes, u);
+        if (u === -1) await BFSvisit(Nodes, 0);
+        else await BFSvisit(Nodes, u);
 
-        console.log(DFSOrder);
+        console.log(BFSOrder);
     }
 
 

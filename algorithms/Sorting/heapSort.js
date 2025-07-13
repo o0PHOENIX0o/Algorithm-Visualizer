@@ -124,7 +124,7 @@ class heapSortClass extends Base {
 
 
 
-    async buildTree(Array) { // dir -ve: for odd index, +ve for even 
+    async buildBTree(Array) { // dir -ve: for odd index, +ve for even 
         const buildBranch = async (Array, i, offsetX, dir, depth) => {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
@@ -303,7 +303,7 @@ class heapSortClass extends Base {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
-        await this.buildTree(this.objNodeArray);
+        await this.buildBTree(this.objNodeArray);
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
