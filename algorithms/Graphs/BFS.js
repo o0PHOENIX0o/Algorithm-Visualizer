@@ -1,8 +1,7 @@
-import { Base, compare } from "../Base.js"
-import { DrawArray, Line, Circle, PointerTriangles, clearCanvas } from '../../canvas.js';
+import { GraphBase } from "./GraphBase.js";
 
 
-class DFSClass extends Base {
+class DFSClass extends GraphBase {
     constructor() {
         super("BFS", 10, 40);
     }

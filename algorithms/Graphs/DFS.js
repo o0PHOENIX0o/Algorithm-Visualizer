@@ -1,4 +1,3 @@
-import { DrawArray, Line, Circle, PointerTriangles, clearCanvas } from '../../canvas.js';
 import { GraphBase } from './GraphBase.js';
 
 
@@ -13,7 +12,6 @@ class DFSClass extends GraphBase {
         let isSeen = Array(Nodes.length).fill(false);
 
         const DFSvisit = async (array, u, highlightColor) => {
-            console.log(highlightColor)
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
             array[u].obj.col = this.BaseCol;
@@ -58,7 +56,6 @@ class DFSClass extends GraphBase {
             if (!this.isAnimating) return;
         }
 
-        console.log(u);
         if (u === -1) {
             const highlightColors = ['#FFD54F', '#4FC3F7', '#81C784', '#FF8A65', '#BA68C8', '#F06292', '#A1887F', '#9575CD', '#64B5F6', '#E57373'];
             for (let u = 0; u < Nodes.length; u++)
