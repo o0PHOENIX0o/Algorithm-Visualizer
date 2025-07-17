@@ -19,11 +19,12 @@ class DFSClass extends GraphBase {
             Queue.push(u);
             isSeen[u] = true;
             dist[u] = 0;
-            array[u].obj.col = this.BaseCol;
-            array[u].obj.strokeCol = this.BaseCol;
+            // let startColor = this.highlightColors[ Math.floor(Math.random() * this.highlightColors.length) ];
+            array[u].obj.col = this.sortedCol;
+            array[u].obj.strokeCol = this.sortedCol;
             this.drawAll();
 
-            await this.delay(1.5 * this.TimeoutDelay)
+            await this.delay(this.TimeoutDelay)
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
@@ -31,19 +32,21 @@ class DFSClass extends GraphBase {
             while (Queue.length > 0) {
                 console.log(" Queue: ", Queue);
                 let v = Queue.shift();
-                console.log("BFS visit --> ", v);
-                // await this.delay(1.5 * this.TimeoutDelay)
-                // await this.waitWhilePaused();
+                // array[v].obj.col = startColor;
+                // array[v].obj.strokeCol = startColor;
+                await this.delay(this.TimeoutDelay)
+                await this.waitWhilePaused();
                 if (!this.isAnimating) return;
+                let col = this.highlightColors[(dist[v]) % this.highlightColors.length];
                 for (let w = 0; w < array.length; w++) {
                     if (this.adjMatrix[v][w] && !isSeen[w]) {
                         isSeen[w] = true;
                         dist[w] = dist[v] + 1;
-                        array[w].obj.col = this.BaseCol;
-                        array[w].obj.strokeCol = this.unsortedCol;
+                        array[w].obj.col = col;
+                        array[w].obj.strokeCol = col;
 
                         let { line, arrow } = { ...this.directedEdges[v][w] };
-                        line.col = arrow.col = this.sortedCol;
+                        line.col = arrow.col = array[w].obj.col;
                         line.strokeW = 3;
                         line.label = dist[w];
 
@@ -56,12 +59,11 @@ class DFSClass extends GraphBase {
                         Queue.push(w);
                     }
                 }
-                array[v].obj.col = this.sortedCol;
-                array[v].obj.strokeCol = this.sortedCol;
+                // array[v].obj.col = this.sortedCol;
+                // array[v].obj.strokeCol = this.sortedCol;
                 BFSOrder.push(v);
                 this.drawAll();
 
-                await this.delay(1.5 * this.TimeoutDelay);
             }
 
             this.directedEdges.forEach((row, i) => {

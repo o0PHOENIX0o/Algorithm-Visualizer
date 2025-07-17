@@ -10,6 +10,8 @@ export class GraphBase extends Base {
         this.directedEdges = [];
         this.indexMap = {};
         this.radius = radius;
+        this.highlightColors = ['#FFD54F', '#4FC3F7', '#6858f8ff', '#FF8A65', '#BA68C8', '#F06292', '#A1887F', '#9575CD', '#64B5F6', '#E57373'];
+
     }
 
     Play() {
@@ -101,6 +103,7 @@ export class GraphBase extends Base {
         DrawArray(objects);
     }
 
+    getRandomColor(){ return this.highlightColors[Math.floor(Math.random() * this.highlightColors.length)];}
 
 }
 

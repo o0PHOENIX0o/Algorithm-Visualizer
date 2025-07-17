@@ -86,7 +86,8 @@ export class PointerArrow {
     this.textY = textY;
   }
 
-  draw() {
+
+  draw(){
     const h = this.length / (2 * Math.sqrt(3));
     const x1 = this.length / 2;
     const x2 = 0;
@@ -140,9 +141,16 @@ export class Line {
     pop();
 
     if (this.label) {
-      push(); 
+      push();
+
+      let slope = (this.y2 - this.y1) / (this.x2 - this.x1);
+      let angle = atan(slope);
+      let offset = max(0, dist(this.x1, this.y1, this.x2, this.y2) / 4);
       let midX = (this.x1 + this.x2) / 2;
       let midY = (this.y1 + this.y2) / 2;
+
+      let x = midX + offset * cos(angle);
+      let y = midY + offset * sin(angle);
 
       noStroke();
       fill(this.textCol);
@@ -150,7 +158,7 @@ export class Line {
       textStyle(BOLD);
       textSize(this.textS);
       textAlign(CENTER);
-      text(this.label, midX, midY);
+      text(this.label, x, y);
       pop();
     }
   }

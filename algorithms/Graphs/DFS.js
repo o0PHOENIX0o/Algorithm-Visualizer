@@ -12,6 +12,7 @@ class DFSClass extends GraphBase {
         let isSeen = Array(Nodes.length).fill(false);
 
         const DFSvisit = async (array, u, highlightColor) => {
+            console.log("Visiting node: ", u, highlightColor);
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
             array[u].obj.col = this.BaseCol;
@@ -26,13 +27,14 @@ class DFSClass extends GraphBase {
                 if (adjM[u][v]) {
                     array[v].obj.strokeCol = this.unsortedCol;
                     array[v].obj.strokeW = 4;
+                    
                     this.drawAll();
 
                     await this.delay(2 * this.TimeoutDelay);
                     await this.waitWhilePaused();
                     if (!this.isAnimating) return;
 
-                    if (!isSeen[v]) {
+                    if(!isSeen[v]) {
                         let { line, arrow } = { ...this.directedEdges[u][v] };
                         line.col = arrow.col = highlightColor;
                         line.strokeW = 3;
@@ -55,13 +57,16 @@ class DFSClass extends GraphBase {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
         }
-
+        
         if (u === -1) {
-            const highlightColors = ['#FFD54F', '#4FC3F7', '#81C784', '#FF8A65', '#BA68C8', '#F06292', '#A1887F', '#9575CD', '#64B5F6', '#E57373'];
-            for (let u = 0; u < Nodes.length; u++)
-                if (!isSeen[u]) await DFSvisit(Nodes, u, highlightColors[u % highlightColors.length]);
-            
-        } else await DFSvisit(Nodes, u);
+            for (let u = 0; u < Nodes.length; u++) {
+                let highlightColor = this.highlightColors[u % this.highlightColors.length];
+                if (!isSeen[u]) await DFSvisit(Nodes, u, highlightColor);
+            }
+
+        } else {
+            await DFSvisit(Nodes, u, this.highlightColors[ Math.floor(Math.random() * this.highlightColors.length) ]);
+        }
 
         this.directedEdges.forEach((row, i) => {
             row.forEach((edge, j) => {
