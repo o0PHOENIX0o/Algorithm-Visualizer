@@ -32,6 +32,28 @@ export class Circle {
   }
 }
 
+export class Text {
+  constructor(xPos, yPos, label, textSize = 16, textCol = 0) {
+    this.xPos = xPos;
+    this.yPos = yPos;
+    this.label = label;
+    this.textS = textSize;
+    this.textCol = textCol;
+  }
+
+  draw() {
+    push();
+    noStroke();
+    textFont('sans-serif');
+    textSize(this.textS);
+    fill(this.textCol);
+    textStyle(NORMAL);
+    textAlign(CENTER, CENTER);
+    text(this.label, this.xPos, this.yPos);
+    pop();
+  }
+}
+
 export class Square {
   constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = 0, textYOffset = 0) {
     this.xPos1 = xPos1;
@@ -58,6 +80,7 @@ export class Square {
 
     let centerX = (this.xPos1 + this.xPos2) / 2;
     let centerY = (this.yPos1 + this.yPos2) / 2;
+    console.log("Drawing square at: ", centerX, centerY, w, h);
 
     rect(centerX, centerY, w, h);
     pop();

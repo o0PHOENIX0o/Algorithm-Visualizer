@@ -9,6 +9,7 @@ import { binarySearch } from './algorithms/Searching/binarySearch.js';
 import { hashSearch } from './algorithms/Searching/hashing.js';
 import { DFS } from './algorithms/Graphs/DFS.js';
 import { BFS } from './algorithms/Graphs/BFS.js';
+import { Dijkstra } from './algorithms/Graphs/Dijkstra.js';
 
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -67,6 +68,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'hash-search': currentAlgorithm = hashSearch; break;
       case 'dfs': currentAlgorithm = DFS; break;
       case 'bfs': currentAlgorithm = BFS; break;
+      case 'dijkstra': currentAlgorithm = Dijkstra; break;
       default: alert(`${alg} not implemented.`); return;
     }
 

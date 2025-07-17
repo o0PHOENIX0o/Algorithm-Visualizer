@@ -1,5 +1,5 @@
-import {Base} from '../Base.js';
-import { DrawArray, Line, Circle, PointerTriangles, clearCanvas } from '../../canvas.js';
+import { Base } from '../Base.js';
+import { DrawArray, Line, Circle, PointerTriangles, clearCanvas, height, width } from '../../canvas.js';
 
 
 export class GraphBase extends Base {
@@ -10,7 +10,7 @@ export class GraphBase extends Base {
         this.directedEdges = [];
         this.indexMap = {};
         this.radius = radius;
-        this.highlightColors = ['#FFD54F', '#4FC3F7', '#6858f8ff', '#FF8A65', '#BA68C8', '#F06292', '#A1887F', '#9575CD', '#64B5F6', '#E57373'];
+        this.highlightColors = ['#FFD54F', '#4FC3F7', '#6858f8ff', '#FF8A65', '#BA68C8', '#F06292', '#e6ad98ff', '#9575CD', '#64B5F6', '#E57373'];
 
     }
 
@@ -36,9 +36,10 @@ export class GraphBase extends Base {
         DrawArray(null);
     }
 
-    drawAll(){
+    drawAll(otherObjects = []) {
         let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
-        DrawArray(objects);
+        if (otherObjects.length > 0) DrawArray([...objects, ...otherObjects]);
+        else DrawArray(objects);
     }
 
     createArrow(posA, posB, w) {
@@ -103,8 +104,55 @@ export class GraphBase extends Base {
         DrawArray(objects);
     }
 
-    getRandomColor(){ return this.highlightColors[Math.floor(Math.random() * this.highlightColors.length)];}
+    getRandomColor() { return this.highlightColors[Math.floor(Math.random() * this.highlightColors.length)]; }
 
 }
 
 
+export class PriorityQueue {
+    constructor() {
+        this.elements = [];
+    }
+
+    initialize(array, priority = Infinity) {
+        this.elements = array.map(item => ({ item, priority }))
+    }
+
+
+    enqueue(item, priority) {
+        this.elements.push({ item, priority });
+        this.elements.sort((a, b) => a.priority - b.priority)
+    }
+
+    deQueue() {
+        if (this.isEmpty()) return null;
+        return this.elements.shift();
+    }
+
+    decreaseKey(index, newPriority) {
+        for (let element of this.elements) {
+            if (element.item.index === index) {
+                element.priority = newPriority;
+                break;
+            }
+        }
+        this.elements.sort((a, b) => a.priority - b.priority);
+    }
+
+    getElementAt(index) {
+        return this.elements.find(element => element.item.index === index);
+    }
+
+    getPriorityOf(index) {
+       return this.elements.find(element => element.item.index === index).priority;
+    }
+
+    isEmpty() { return this.elements.length === 0; }
+
+    size() { return this.elements.length; }
+
+    getElements() {
+        return this.elements;
+    }
+
+}
