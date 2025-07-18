@@ -80,7 +80,6 @@ export class Square {
 
     let centerX = (this.xPos1 + this.xPos2) / 2;
     let centerY = (this.yPos1 + this.yPos2) / 2;
-    console.log("Drawing square at: ", centerX, centerY, w, h);
 
     rect(centerX, centerY, w, h);
     pop();

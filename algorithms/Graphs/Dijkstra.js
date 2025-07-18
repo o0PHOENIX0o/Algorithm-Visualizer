@@ -26,6 +26,40 @@ class DijkstraClass extends GraphBase {
         DrawArray(null);
     }
 
+    async moveSquare(element, xc, yc, speedFactor = 4) {
+        let offset = 5 + this.objNodeArray[0].obj.dia/2;
+        let targetX1 = xc - offset;
+        let targetY1 = yc + offset;
+        let targetX2 = xc + offset;
+        let targetY2 = yc - offset;
+        
+        if (!this.isAnimating) return;
+        return new Promise(resolve => {
+            if (!this.isAnimating) return;
+
+            // const startX = element.xPos, startY = element.yPos;
+            let startX1 = element.xPos1 ;
+            let startY1 = element.yPos1; 
+            let startX2 = element.xPos2;
+            let startY2 = element.yPos2;
+            let t = 0;
+            const animate = async () => {
+                if (!this.isAnimating) return;
+
+                t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
+                element.xPos1 = lerp(startX1, targetX1, t);
+                element.yPos1 = lerp(startY1, targetY1, t);
+                element.xPos2 = lerp(startX2, targetX2, t);
+                element.yPos2 = lerp(startY2, targetY2, t);
+                this.drawAll([...this.textArray, element]);
+
+                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
+                else resolve();
+            };
+            animate();
+        });
+    }
+
     drawDist(Nodes) {
         if (Nodes.length < 1) return;
 
@@ -51,8 +85,8 @@ class DijkstraClass extends GraphBase {
         this.drawAll(this.textArray);
     }
 
-    BoxAround(index, Nodes) {
-        let offset = Nodes[index].obj.dia / 2 + 5;
+    BoxAround(index, Nodes, Boxtext) {
+        let offset = 5 + Nodes[index].obj.dia / 2;
 
         let BoxX1 = Nodes[index].obj.xPos - offset;
         let BoxY1 = Nodes[index].obj.yPos + offset;
@@ -60,7 +94,9 @@ class DijkstraClass extends GraphBase {
         let BoxX2 = Nodes[index].obj.xPos + offset;
         let BoxY2 = Nodes[index].obj.yPos - offset;
 
-        let box = new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.HighlightCol2);
+        let BoxH = Math.abs(BoxY2 - BoxY1);
+
+        let box = new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.HighlightCol2, 2, Boxtext, 0, -(10 + BoxH / 2));
 
         return box;
     }
@@ -84,13 +120,13 @@ class DijkstraClass extends GraphBase {
         dist[vi] = 0;
         this.drawAll(this.textArray);
 
+        let box = this.BoxAround(vi, Nodes, "min");
 
         while (!this.Pqueue.isEmpty()) {
             let u = this.Pqueue.deQueue();
             if (u.priority === Infinity) break;
 
             let uIndex = u.item.index;
-            let box = this.BoxAround(uIndex, Nodes);
             // console.log("box around: ", box);
             Nodes[uIndex].obj.col = this.HighlightCol2;
             Nodes[uIndex].obj.strokeCol = this.sortedCol;
@@ -101,6 +137,8 @@ class DijkstraClass extends GraphBase {
                 line.strokeW = 3;
             }
 
+            await this.moveSquare(box, Nodes[uIndex].obj.xPos, Nodes[uIndex].obj.yPos);
+            console.log("Moving box around: ", box);
             console.log([...this.textArray, box])
             this.drawAll([...this.textArray, box]);
             await this.delay(2 * this.TimeoutDelay);
@@ -118,11 +156,11 @@ class DijkstraClass extends GraphBase {
                     if (this.Pqueue.getPriorityOf(v) > u.priority + weight) {
                         await this.waitWhilePaused();
                         if (!this.isAnimating) return;
-                        
+
                         this.Pqueue.decreaseKey(v, u.priority + weight);
                         src[v] = uIndex;
                         dist[v] = u.priority + weight;
-                        
+
                         let { line, arrow } = { ...this.directedEdges[uIndex][v] };
                         line.col = arrow.col = this.HighlightCol2;
                         line.strokeW = 3;
