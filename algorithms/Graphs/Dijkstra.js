@@ -107,13 +107,11 @@ class DijkstraClass extends GraphBase {
         this.Pqueue.initialize(Nodes);
         this.Pqueue.decreaseKey(vi, 0)
 
-        console.log(Nodes)
         let dist = Array(Nodes.length).fill(Infinity);
         let src = Array(Nodes.length).fill(-1);
         this.drawDist(Nodes);
 
         await this.delay(this.TimeoutDelay);
-        console.log(this.textArray)
 
         Nodes[vi].obj.col = this.sortedCol;
         this.textArray[vi].label = 0;
@@ -127,7 +125,6 @@ class DijkstraClass extends GraphBase {
             if (u.priority === Infinity) break;
 
             let uIndex = u.item.index;
-            // console.log("box around: ", box);
             Nodes[uIndex].obj.col = this.HighlightCol2;
             Nodes[uIndex].obj.strokeCol = this.sortedCol;
             this.textArray[uIndex].textCol = this.sortedCol;
@@ -138,8 +135,6 @@ class DijkstraClass extends GraphBase {
             }
 
             await this.moveSquare(box, Nodes[uIndex].obj.xPos, Nodes[uIndex].obj.yPos);
-            console.log("Moving box around: ", box);
-            console.log([...this.textArray, box])
             this.drawAll([...this.textArray, box]);
             await this.delay(2 * this.TimeoutDelay);
             await this.waitWhilePaused();
@@ -183,8 +178,6 @@ class DijkstraClass extends GraphBase {
 
         }
 
-        console.log("Final distances: ", dist);
-        console.log("Final sources: ", src);
 
         for (let i = 0; i < Nodes.length; i++) {
             for (let j = 0; j < Nodes.length; j++) {
@@ -194,7 +187,6 @@ class DijkstraClass extends GraphBase {
             }
         }
 
-        console.log("Final directed edges: ", this.directedEdges);
         this.drawAll(this.textArray);
         await this.delay(this.TimeoutDelay);
 

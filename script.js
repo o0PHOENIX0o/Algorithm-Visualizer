@@ -10,6 +10,7 @@ import { hashSearch } from './algorithms/Searching/hashing.js';
 import { DFS } from './algorithms/Graphs/DFS.js';
 import { BFS } from './algorithms/Graphs/BFS.js';
 import { Dijkstra } from './algorithms/Graphs/Dijkstra.js';
+import { prim } from './algorithms/Graphs/Prim.js';
 
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -69,6 +70,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'dfs': currentAlgorithm = DFS; break;
       case 'bfs': currentAlgorithm = BFS; break;
       case 'dijkstra': currentAlgorithm = Dijkstra; break;
+      case 'prim': currentAlgorithm = prim; break;
       default: alert(`${alg} not implemented.`); return;
     }
 
@@ -84,10 +86,10 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     }
     else if (curAlgoType == "Graph"){
       keyInput.classList.add('active');
-      label.innerText = "Edges (src - dest - weight)";
+      label.innerText = "Edges (src , dest , weight)";
       inputLabel.innerText = "Vertices (comma-separated)";
 
-      input.setAttribute("placeholder", "eg: (A-B), (C-D)");
+      input.setAttribute("placeholder", "eg: (A,B), (C,D)");
       InputField.setAttribute("placeholder", "eg: A,B,C,D");
 
       if(!document.getElementById('startVertex')){
@@ -128,22 +130,39 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
   console.log("cur algo type ",curAlgoType);
   if (curAlgoType == "Search") currentAlgorithm.generate(values, keyValue.value);
   else if (curAlgoType == "Graph"){
-    let edges = keyValue.value.replace(/\s+/g, '').split(",").map(Element => Element.replaceAll("(", "").replaceAll(")", "").split("-"));
+
+    const regex = /\((\w),(\w),?(-?\d+)?\)/g;
+    const edges = [];
+    let match;
+    while ((match = regex.exec(keyValue.value)) !== null) {
+      const [_, src, dest, weight] = match;
+      edges.push([src, dest, Number(weight)]);
+      if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") edges.push([dest, src, Number(weight)]);
+    }
+
     let indexMap = {};
     values.forEach((v, i) => indexMap[v.trim()] = i);
     let n = values.length;
     let adjMatrix = Array.from({ length: n }, () => Array(n).fill(0));
 
-    console.log(indexMap);
     edges.forEach(edge => {
       let [src, dest, w] = [...edge];
-      console.log(src, dest, w, indexMap[src], indexMap[dest]);
-      adjMatrix[indexMap[src]][indexMap[dest]] = (w && !isNaN(Number(w))) ? Number(w) : 1;
+      let weight = (w && !isNaN(Number(w))) ? Number(w) : 1
+      if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") {
+        adjMatrix[indexMap[src]][indexMap[dest]] = adjMatrix[indexMap[dest]][indexMap[src]] = weight;
+      }else {
+        adjMatrix[indexMap[src]][indexMap[dest]] = weight;
+      }
+
     })
+
     let startVertex = document.getElementById('startVertex').value;
-    console.log(startVertex, indexMap[startVertex]);
-    let startIndex = (startVertex && startVertex.length === 1 && !isNaN(indexMap[startVertex])) ? indexMap[startVertex] : -1;
-    console.log(startIndex);
+    let startIndex;
+    if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") startIndex = 0; 
+    else startIndex = (startVertex && startVertex.length === 1 && !isNaN(indexMap[startVertex])) ? indexMap[startVertex] : -1;
+    
+    console.log("initial-> ",adjMatrix, startVertex, indexMap[startVertex]);
+    
     currentAlgorithm.generate(values, edges, startIndex, adjMatrix);
 
   } else currentAlgorithm.generate(values);

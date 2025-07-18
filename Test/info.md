@@ -49,7 +49,7 @@
   sorting data: 29, 10, 14, 37, 13, 25, 1, 17, 5, 8
   graph data: 
   V = A, B, C, D, E, F, G, H, I, J
-  E = (A-B), (A-C), (B-E), (C-F), (E-F), (E-G), (G-H), (F-H), (H-I), (I-J), (J-G)
+  E = (A,B), (A,C), (B,E), (C,F), (E,F), (E,G), (G,H), (F,H), (H,I), (I,J), (J,G)
 
   ```
 

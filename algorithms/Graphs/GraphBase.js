@@ -36,8 +36,37 @@ export class GraphBase extends Base {
         DrawArray(null);
     }
 
+
+    isGraphConnected() {
+        const visited = new Array(this.inputArray.length).fill(false);
+        const queue = [0];
+
+        while (queue.length) {
+            const node = queue.shift();
+            if (visited[node]) continue;
+            visited[node] = true;
+
+            for (let neighbor = 0; neighbor < this.inputArray.length; neighbor++) {
+                if (this.directedEdges[node][neighbor] || this.directedEdges[neighbor][node]) {
+                    if (!visited[neighbor]) queue.push(neighbor);
+                }
+            }
+        }
+
+        for (let i = 0; i < visited.length; i++) {
+            if (!visited[i]) {
+                console.warn(`Vertex ${this.inputArray[i]} is not connected to the graph.`);
+                alert(`Vertex ${this.inputArray[i]} is not connected to the graph.\n"Prim's algorithm requires a connected graph."`);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     drawAll(otherObjects = []) {
-        let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
+        let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow? edge.arrow : null]);
         if (otherObjects.length > 0) DrawArray([...objects, ...otherObjects]);
         else DrawArray(objects);
     }
@@ -94,13 +123,20 @@ export class GraphBase extends Base {
         for (let [from, to, w] of edges) {
             let posA = { xPos: this.objNodeArray[this.indexMap[from]].obj.xPos, yPos: this.objNodeArray[this.indexMap[from]].obj.yPos };
             let posB = { xPos: this.objNodeArray[this.indexMap[to]].obj.xPos, yPos: this.objNodeArray[this.indexMap[to]].obj.yPos }
-            let arrow = this.createArrow(posA, posB, w, from, to);
-            this.directedEdges[this.indexMap[from]][this.indexMap[to]] = arrow;
+
+            if(this.name === "prim" || this.name === "krushkal") {
+                let line = {line: new Line(posA.xPos, posA.yPos, posB.xPos,posB.yPos, 0, 1, w ?? "", this.unsortedCol), arrow: null}
+                this.directedEdges[this.indexMap[from]][this.indexMap[to]] = line;
+                this.directedEdges[this.indexMap[to]][this.indexMap[from]] = line;
+            }else{
+                let arrow = this.createArrow(posA, posB, w, from, to);
+                this.directedEdges[this.indexMap[from]][this.indexMap[to]] = arrow;
+            }
         }
 
+        console.log("Directed Edges: ", this.directedEdges);
 
         let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
-        console.log("call draw arry", objects);
         DrawArray(objects);
     }
 
@@ -144,7 +180,7 @@ export class PriorityQueue {
     }
 
     getPriorityOf(index) {
-       return this.elements.find(element => element.item.index === index).priority;
+        return this.elements.find(element => element.item.index === index).priority;
     }
 
     isEmpty() { return this.elements.length === 0; }

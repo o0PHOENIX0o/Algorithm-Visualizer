@@ -62,6 +62,7 @@ export class Square {
     this.yPos2 = yPos2;
     this.strokeW = strokeW;
     this.col = col;
+    this.strokeCol = col;
     this.text = text;
     this.textCol = textCol;
     this.textYOffset = textYOffset;
@@ -72,7 +73,7 @@ export class Square {
 
     push();
     noFill();
-    stroke(this.col);
+    stroke(this.strokeCol);
     strokeWeight(this.strokeW);
 
     let w = Math.abs(this.xPos2 - this.xPos1);
@@ -146,6 +147,7 @@ export class Line {
     this.y2 = y2;
 
     this.col = col;
+    this.strokeCol = col;
     this.strokeW = strokeW;
 
     this.label = label;
@@ -200,13 +202,14 @@ export class Triangle {
     this.y4 = y4;
 
     this.col = col;
+    this.strokeCol = col;
     this.strokeW = strokeW;
   }
 
   draw() {
     push();
     noFill();
-    stroke(this.col);
+    stroke(this.strokeCol);
     strokeWeight(this.strokeW)
     quad(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3, this.x4, this.y4);
     pop();
