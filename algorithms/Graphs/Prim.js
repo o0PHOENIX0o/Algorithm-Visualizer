@@ -37,7 +37,6 @@ class PrimClass extends GraphBase {
         return new Promise(resolve => {
             if (!this.isAnimating) return;
 
-            // const startX = element.xPos, startY = element.yPos;
             let startX1 = element.xPos1;
             let startY1 = element.yPos1;
             let startX2 = element.xPos2;
@@ -185,9 +184,6 @@ class PrimClass extends GraphBase {
 
         }
 
-        console.log("Final distances: ", dist);
-        console.log("Final sources: ", src);
-
         for (let i = 0; i < Nodes.length; i++) {
             for (let j = 0; j < Nodes.length; j++) {
                 if (src[j] !== i && this.directedEdges[i][j] !== null) {
@@ -196,11 +192,8 @@ class PrimClass extends GraphBase {
             }
         }
 
-        console.log("Final directed edges: ", this.directedEdges);
         this.drawAll(this.textArray);
         await this.delay(this.TimeoutDelay);
-
-
     }
 
 

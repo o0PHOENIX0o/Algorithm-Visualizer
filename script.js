@@ -102,6 +102,10 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
                 `;
         temp.innerHTML = element;
         keyInput.after(temp);
+        if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") {
+          document.getElementById('startVertex').value = "A";
+          document.getElementById('startVertex').setAttribute("disabled", "true");
+        }
       }
     } else {
       keyInput.classList.remove('active');
