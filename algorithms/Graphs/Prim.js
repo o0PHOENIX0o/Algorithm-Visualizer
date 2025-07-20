@@ -2,9 +2,6 @@ import { GraphBase, PriorityQueue } from './GraphBase.js';
 import { DrawArray, Text, Square, clearCanvas, height, width } from '../../canvas.js';
 
 
-
-
-
 class PrimClass extends GraphBase {
     constructor() {
         super("prim", 10, 40);

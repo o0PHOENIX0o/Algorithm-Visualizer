@@ -2,9 +2,6 @@ import { GraphBase, PriorityQueue } from './GraphBase.js';
 import { DrawArray, Text, Square, clearCanvas, height, width } from '../../canvas.js';
 
 
-
-
-
 class DijkstraClass extends GraphBase {
     constructor() {
         super("DijkstraClass", 10, 40);
@@ -37,7 +34,6 @@ class DijkstraClass extends GraphBase {
         return new Promise(resolve => {
             if (!this.isAnimating) return;
 
-            // const startX = element.xPos, startY = element.yPos;
             let startX1 = element.xPos1 ;
             let startY1 = element.yPos1; 
             let startX2 = element.xPos2;

@@ -74,9 +74,8 @@ export class GraphBase extends Base {
     createArrow(posA, posB, w) {
         let dx = posB.xPos - posA.xPos;
         let dy = posB.yPos - posA.yPos;
-        let angle = atan2(dy, dx); // slope
-
-        // avoid line inside the circle 
+        let angle = atan2(dy, dx);
+ 
         let offset = this.dia / 2;
         let startX = posA.xPos + offset * cos(angle);
         let startY = posA.yPos + offset * sin(angle);
@@ -92,7 +91,7 @@ export class GraphBase extends Base {
     generate(input, edges, startVertex, adjMatrix) {
         if (input.length < 1) return;
         this.inputArray = [...input];
-        this.key = startVertex; // index of start vertex
+        this.key = startVertex; 
         this.edgeList = structuredClone(edges);
         this.adjMatrix = structuredClone(adjMatrix);
         console.log(this.adjMatrix);
@@ -133,8 +132,6 @@ export class GraphBase extends Base {
                 this.directedEdges[this.indexMap[from]][this.indexMap[to]] = arrow;
             }
         }
-
-        console.log("Directed Edges: ", this.directedEdges);
 
         let objects = this.directedEdges.flat().filter(element => element != null).flatMap(edge => [edge.line, edge.arrow]);
         DrawArray(objects);

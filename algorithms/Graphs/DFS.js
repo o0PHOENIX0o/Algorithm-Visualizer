@@ -27,14 +27,14 @@ class DFSClass extends GraphBase {
                 if (adjM[u][v]) {
                     array[v].obj.strokeCol = this.unsortedCol;
                     array[v].obj.strokeW = 4;
-                    
+
                     this.drawAll();
 
                     await this.delay(2 * this.TimeoutDelay);
                     await this.waitWhilePaused();
                     if (!this.isAnimating) return;
 
-                    if(!isSeen[v]) {
+                    if (!isSeen[v]) {
                         let { line, arrow } = { ...this.directedEdges[u][v] };
                         line.col = arrow.col = highlightColor;
                         line.strokeW = 3;
@@ -44,9 +44,8 @@ class DFSClass extends GraphBase {
                         await this.waitWhilePaused();
                         if (!this.isAnimating) return;
                         await DFSvisit(array, v, highlightColor);
-                    } else {
-                        array[v].obj.strokeCol = highlightColor;
-                    }
+                    } else array[v].obj.strokeCol = highlightColor;
+                    
                 }
             }
             array[u].obj.col = highlightColor;
@@ -57,15 +56,14 @@ class DFSClass extends GraphBase {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
         }
-        
+
         if (u === -1) {
             for (let u = 0; u < Nodes.length; u++) {
                 let highlightColor = this.highlightColors[u % this.highlightColors.length];
                 if (!isSeen[u]) await DFSvisit(Nodes, u, highlightColor);
             }
-
         } else {
-            await DFSvisit(Nodes, u, this.highlightColors[ Math.floor(Math.random() * this.highlightColors.length) ]);
+            await DFSvisit(Nodes, u, this.highlightColors[Math.floor(Math.random() * this.highlightColors.length)]);
         }
 
         this.directedEdges.forEach((row, i) => {
@@ -73,7 +71,6 @@ class DFSClass extends GraphBase {
                 if (edge !== null && edge.line.col == 0) this.directedEdges[i][j] = null;
             })
         })
-        console.log("Final directed edges: ", this.directedEdges);
         this.drawAll();
         await this.delay(this.TimeoutDelay);
 

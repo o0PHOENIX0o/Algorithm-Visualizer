@@ -19,7 +19,6 @@ class DFSClass extends GraphBase {
             Queue.push(u);
             isSeen[u] = true;
             dist[u] = 0;
-            // let startColor = this.highlightColors[ Math.floor(Math.random() * this.highlightColors.length) ];
             array[u].obj.col = this.sortedCol;
             array[u].obj.strokeCol = this.sortedCol;
             this.drawAll();
@@ -32,8 +31,6 @@ class DFSClass extends GraphBase {
             while (Queue.length > 0) {
                 console.log(" Queue: ", Queue);
                 let v = Queue.shift();
-                // array[v].obj.col = startColor;
-                // array[v].obj.strokeCol = startColor;
                 await this.delay(this.TimeoutDelay)
                 await this.waitWhilePaused();
                 if (!this.isAnimating) return;
@@ -59,8 +56,6 @@ class DFSClass extends GraphBase {
                         Queue.push(w);
                     }
                 }
-                // array[v].obj.col = this.sortedCol;
-                // array[v].obj.strokeCol = this.sortedCol;
                 BFSOrder.push(v);
                 this.drawAll();
 
@@ -71,7 +66,6 @@ class DFSClass extends GraphBase {
                     if (edge !== null && edge.line.label === "") this.directedEdges[i][j] = null;
                 })
             })
-            console.log("Final directed edges: ", this.directedEdges);
             this.drawAll();
             await this.delay(this.TimeoutDelay);
 
@@ -93,7 +87,6 @@ class DFSClass extends GraphBase {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
         await this.BFS(this.objNodeArray, this.key);
-
 
         this.isAnimating = false;
     }
