@@ -123,7 +123,7 @@ export class GraphBase extends Base {
             let posA = { xPos: this.objNodeArray[this.indexMap[from]].obj.xPos, yPos: this.objNodeArray[this.indexMap[from]].obj.yPos };
             let posB = { xPos: this.objNodeArray[this.indexMap[to]].obj.xPos, yPos: this.objNodeArray[this.indexMap[to]].obj.yPos }
 
-            if(this.name === "prim" || this.name === "krushkal") {
+            if(this.name === "prim" || this.name === "kruskal") {
                 let line = {line: new Line(posA.xPos, posA.yPos, posB.xPos,posB.yPos, 0, 1, w ?? "", this.unsortedCol), arrow: null}
                 this.directedEdges[this.indexMap[from]][this.indexMap[to]] = line;
                 this.directedEdges[this.indexMap[to]][this.indexMap[from]] = line;

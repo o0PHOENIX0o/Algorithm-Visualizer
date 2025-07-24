@@ -1,6 +1,7 @@
 let width, height;
 
 export class Circle {
+  // constructor({xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2} = {}) {
   constructor(xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2) {
     this.xPos = xPos;
     this.yPos = yPos;
@@ -73,7 +74,7 @@ export class Square {
 
     push();
     noFill();
-    stroke(this.strokeCol);
+    stroke(this.col);
     strokeWeight(this.strokeW);
 
     let w = Math.abs(this.xPos2 - this.xPos1);
@@ -243,7 +244,6 @@ export class PointerTriangles {
 }
 
 
-
 export function DrawArray(objects = []) {
   clearCanvas();
 
@@ -279,6 +279,7 @@ export function windowResized() {
   console.log("resized");
   const parent = document.getElementById("CanvasContainer");
   resizeCanvas(parent.offsetWidth - 64, parent.offsetHeight);
+  width = parent.offsetWidth - 64;
   DrawArray();
 }
 

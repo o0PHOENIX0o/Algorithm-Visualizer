@@ -10,6 +10,7 @@ import { hashSearch } from './algorithms/Searching/hashing.js';
 import { DFS } from './algorithms/Graphs/DFS.js';
 import { BFS } from './algorithms/Graphs/BFS.js';
 import { Dijkstra } from './algorithms/Graphs/Dijkstra.js';
+import { kruskal } from './algorithms/Graphs/Kruskal.js';
 import { prim } from './algorithms/Graphs/Prim.js';
 
 
@@ -48,11 +49,16 @@ window.currentAlgorithm = currentAlgorithm;
 
 document.querySelectorAll(".algorithm-btn").forEach(btn => {
   btn.addEventListener("click", (e) => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+
     document.querySelectorAll(".algorithm-btn").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
     console.log("--> reset");
     currentAlgorithm.reset();
-    
+
     if (document.getElementById('startVertexDiv')) document.getElementById('inputField').removeChild(document.getElementById('startVertexDiv'));
 
     const alg = e.target.dataset.algorithm;
@@ -70,6 +76,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'dfs': currentAlgorithm = DFS; break;
       case 'bfs': currentAlgorithm = BFS; break;
       case 'dijkstra': currentAlgorithm = Dijkstra; break;
+      case 'kruskal': currentAlgorithm = kruskal; break;
       case 'prim': currentAlgorithm = prim; break;
       default: alert(`${alg} not implemented.`); return;
     }
@@ -84,7 +91,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       label.innerText = "Search Key";
       input.setAttribute("placeholder", "Search Key");
     }
-    else if (curAlgoType == "Graph"){
+    else if (curAlgoType == "Graph") {
       keyInput.classList.add('active');
       label.innerText = "Edges (src , dest , weight)";
       inputLabel.innerText = "Vertices (comma-separated)";
@@ -92,7 +99,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       input.setAttribute("placeholder", "eg: (A,B), (C,D)");
       InputField.setAttribute("placeholder", "eg: A,B,C,D");
 
-      if(!document.getElementById('startVertex')){
+      if (!document.getElementById('startVertex')) {
         const temp = document.createElement('div');
         temp.classList = "input-group";
         temp.id = "startVertexDiv"
@@ -102,7 +109,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
                 `;
         temp.innerHTML = element;
         keyInput.after(temp);
-        if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") {
+        if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") {
           document.getElementById('startVertex').value = "A";
           document.getElementById('startVertex').setAttribute("disabled", "true");
         }
@@ -118,6 +125,10 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
 
 
 document.getElementById("applyArrayBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   console.log("apply ", currentAlgorithm);
   if (currentAlgorithm.isAnimating) return;
   currentAlgorithm.reset();
@@ -131,9 +142,9 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     alert("Use max 15 elements for visualization");
     return;
   }
-  console.log("cur algo type ",curAlgoType);
+  console.log("cur algo type ", curAlgoType);
   if (curAlgoType == "Search") currentAlgorithm.generate(values, keyValue.value);
-  else if (curAlgoType == "Graph"){
+  else if (curAlgoType == "Graph") {
 
     const regex = /\((\w),(\w),?(-?\d+)?\)/g;
     const edges = [];
@@ -141,7 +152,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     while ((match = regex.exec(keyValue.value)) !== null) {
       const [_, src, dest, weight] = match;
       edges.push([src, dest, Number(weight)]);
-      if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") edges.push([dest, src, Number(weight)]);
+      if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") edges.push([dest, src, Number(weight)]);
     }
 
     let indexMap = {};
@@ -152,9 +163,9 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     edges.forEach(edge => {
       let [src, dest, w] = [...edge];
       let weight = (w && !isNaN(Number(w))) ? Number(w) : 1
-      if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") {
+      if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") {
         adjMatrix[indexMap[src]][indexMap[dest]] = adjMatrix[indexMap[dest]][indexMap[src]] = weight;
-      }else {
+      } else {
         adjMatrix[indexMap[src]][indexMap[dest]] = weight;
       }
 
@@ -162,11 +173,11 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
     let startVertex = document.getElementById('startVertex').value;
     let startIndex;
-    if(currentAlgorithm.name == "prim" || currentAlgorithm.name == "krushkal") startIndex = 0; 
+    if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") startIndex = 0;
     else startIndex = (startVertex && startVertex.length === 1 && !isNaN(indexMap[startVertex])) ? indexMap[startVertex] : -1;
-    
-    console.log("initial-> ",adjMatrix, startVertex, indexMap[startVertex]);
-    
+
+    console.log("initial-> ", adjMatrix, startVertex, indexMap[startVertex]);
+
     currentAlgorithm.generate(values, edges, startIndex, adjMatrix);
 
   } else currentAlgorithm.generate(values);
@@ -175,11 +186,19 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
 
 document.getElementById("playBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   isPlayed = true;
   currentAlgorithm.Play();
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   let btn = document.getElementById("playPauseBtn");
   btn.innerHTML = `<span class="btn-icon">⏸</span> Pause`;
   isPlayed = false;
@@ -187,6 +206,10 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 });
 
 document.getElementById("playPauseBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   if (!isPlayed) return;
   let btn = document.getElementById("playPauseBtn");
 
