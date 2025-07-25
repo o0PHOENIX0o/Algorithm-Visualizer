@@ -1,5 +1,5 @@
 import { Base, compare } from "../Base.js"
-import { DrawArray, PointerArrow, Circle, Square, Line, width, height, clearCanvas } from '../../canvas.js';
+import { DrawArray, Circle, Square, Line, width, height, clearCanvas } from '../../canvas.js';
 
 
 class hashSearchClass extends Base {
@@ -42,7 +42,6 @@ class hashSearchClass extends Base {
 
 
   async move(element, x, y, speedFactor = 4) {
-    // console.log("move ", element);
     if (!this.isAnimating) return;
     return new Promise(resolve => {
       if (!this.isAnimating) return;
@@ -76,7 +75,7 @@ class hashSearchClass extends Base {
     let BoxY1 = this.objNodeArray[0].obj.yPos + yOffset;
     let BoxX2 = (width / 2) + (2 * boxLength)
     let BoxY2 = BoxY1 - boxLength;
-    this.hashBox = new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.HighlightCol2, 2, "Hash Function");
+    this.hashBox = new Square({xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.HighlightCol2, strokeW: 2, text: "Hash Function"});
 
     let x1 = (width / 2) - (totalLength / 2) + (boxLength / 2);
     let y1 = BoxY1 + yOffset;
@@ -85,7 +84,7 @@ class hashSearchClass extends Base {
 
     for (let i = 0; i < this.bucketSize; i++) {
       if (!this.isAnimating) return;
-      this.bucketArray.push(new Square(x1, y1, x2, y2, this.HighlightCol, 2, i))
+      this.bucketArray.push( new Square({xPos1: x1, yPos1: y1, xPos2: x2, yPos2: y2, col: this.HighlightCol, strokeW: 2, text: i}) );
       x1 += (boxLength + this.spacing);
       x2 += (boxLength + this.spacing);
     }
@@ -121,19 +120,22 @@ class hashSearchClass extends Base {
       Object.assign(BucketPositions[index], { x: BucketPositions[index].x, y: BucketPositions[index].y + element.obj.dia + this.spacing - 5 });
 
       this.lineArray = [
-        new Line(element.obj.xPos, element.obj.yPos, this.hashBox.xPos1 + hashBoxWidth / 2, this.hashBox.yPos1 - hashBoxHeight / 2, 0),
+       new Line({x1: element.obj.xPos, y1: element.obj.yPos, x2: (this.hashBox.xPos1 + hashBoxWidth / 2), y2: (this.hashBox.yPos1 - hashBoxHeight / 2), col: 0})
       ];
       DrawArray([...this.bucketArray, this.hashBox, ...this.lineArray]);
 
-
       await this.delay(this.TimeoutDelay);
       await this.waitWhilePaused();
       if (!this.isAnimating) return;
+      
       await this.move(element.obj, this.hashBox.xPos1 + hashBoxWidth / 2, this.hashBox.yPos1 - hashBoxHeight / 2);
+      
       await this.delay(this.TimeoutDelay);
       await this.waitWhilePaused();
       if (!this.isAnimating) return;
-      this.lineArray.push(new Line(this.hashBox.xPos1 + hashBoxWidth / 2, this.hashBox.yPos1 - hashBoxHeight / 2, targetX, targetY, this.HighlightCol2));
+
+      this.lineArray.push(new Line({x1: (this.hashBox.xPos1 + hashBoxWidth / 2), y1: (this.hashBox.yPos1 - hashBoxHeight / 2), x2: targetX, y2: targetY, col: this.HighlightCol2}));
+      
       DrawArray([...this.bucketArray, this.hashBox, ...this.lineArray]);
       await this.waitWhilePaused();
       if (!this.isAnimating) return;
@@ -205,14 +207,14 @@ class hashSearchClass extends Base {
     let targetX = this.bucketArray[keyIndex].xPos1 + bucketWidth / 2;
     let targetY = this.bucketArray[keyIndex].yPos1 - bucketHeight / 2;
 
-    this.keyCircle = [new Circle(width / 2, 30, array[0].obj.dia, key, this.sortedCol)];
+    this.keyCircle = [ new Circle({xPos: width / 2, yPos: 30, dia: array[0].obj.dia, label: key, col: this.sortedCol}) ];
     DrawArray([...this.bucketArray, this.hashBox, ...this.keyCircle]);
 
     await this.waitWhilePaused();
     if (!this.isAnimating) return;
 
     this.lineArray = [
-      new Line(this.keyCircle[0].xPos, this.keyCircle[0].yPos, this.hashBox.xPos1 + hashBoxWidth / 2, this.hashBox.yPos1 - hashBoxHeight / 2, 0),
+      new Line({x1: this.keyCircle[0].xPos, y1: this.keyCircle[0].yPos, x2: (this.hashBox.xPos1 + hashBoxWidth / 2), y2: (this.hashBox.yPos1 - hashBoxHeight / 2), col: 0})
     ];
     DrawArray([...this.bucketArray, this.hashBox, ...this.lineArray, ...this.keyCircle]);
 
@@ -227,7 +229,7 @@ class hashSearchClass extends Base {
     await this.waitWhilePaused();
     if (!this.isAnimating) return;
 
-    this.lineArray.push(new Line(this.hashBox.xPos1 + hashBoxWidth / 2, this.hashBox.yPos1 - hashBoxHeight / 2, targetX, targetY, this.HighlightCol2));
+    this.lineArray.push(new Line({x1: (this.hashBox.xPos1 + hashBoxWidth / 2), y1: (this.hashBox.yPos1 - hashBoxHeight / 2), x2: targetX, y2: targetY, col: this.HighlightCol2}));
 
     for (let i = 0; i < this.hashTable.length; i++) {
       if (this.hashTable[i] && i !== keyIndex) {
@@ -264,7 +266,7 @@ class hashSearchClass extends Base {
       targetbuckets[i].obj.col = this.HighlightCol;
 
       this.keyCircle = [
-        new Circle(targetbuckets[i].obj.xPos - targetbuckets[i].obj.dia - this.spacing, targetbuckets[i].obj.yPos, targetbuckets[i].obj.dia, key, this.sortedCol)
+        new Circle({xPos: (targetbuckets[i].obj.xPos - targetbuckets[i].obj.dia - this.spacing), yPos: targetbuckets[i].obj.yPos, dia: targetbuckets[i].obj.dia, label: key, col: this.sortedCol})
       ];
 
       let BoxX1 = this.keyCircle[0].xPos - this.keyCircle[0].dia / 2 - 5;
@@ -273,7 +275,7 @@ class hashSearchClass extends Base {
       let BoxY2 = targetbuckets[i].obj.yPos - targetbuckets[i].obj.dia / 2 - 5;
 
       this.squareArray = [
-        new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.unsortedCol),
+        new Square({xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.unsortedCol})
       ];
 
 

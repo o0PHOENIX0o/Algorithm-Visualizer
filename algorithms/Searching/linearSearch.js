@@ -36,10 +36,10 @@ class linearSearchClass extends Base {
       if (!this.isAnimating) return;
       array[i].obj.col = this.HighlightCol;
       this.arrows = [
-        new PointerArrow(array[i].obj.xPos, this.objNodeArray[i].obj.yPos + 40, this.HighlightCol, 20, "i")
+        new PointerArrow({xPos: array[i].obj.xPos, yPos: (this.objNodeArray[i].obj.yPos + 40), col: this.HighlightCol, length: 20, label: "i"})
       ];
       this.keyCircle = [
-        new Circle(array[i].obj.xPos, array[i].obj.yPos - array[i].obj.dia - this.spacing, this.dia, key, this.sortedCol)
+        new Circle({xPos: array[i].obj.xPos, yPos: (array[i].obj.yPos - array[i].obj.dia - this.spacing), dia: this.dia, label: key, col: this.sortedCol})
       ];
 
       let BoxX1 = this.keyCircle[0].xPos - this.keyCircle[0].dia / 2 - 5;
@@ -48,7 +48,7 @@ class linearSearchClass extends Base {
       let BoxY2 = array[i].obj.yPos + array[i].obj.dia / 2 + 5;
 
       this.squareArray = [
-        new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.unsortedCol),
+        new Square({xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.unsortedCol}),
       ];
 
       DrawArray([...this.arrows, ...this.squareArray, ...this.keyCircle]);

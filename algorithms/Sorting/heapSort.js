@@ -1,5 +1,5 @@
 import { Base, compare } from "../Base.js"
-import { DrawArray, Square, Line, Triangle, clearCanvas, width, PointerArrow, height } from '../../canvas.js';
+import { DrawArray, Line, Triangle, clearCanvas, width, PointerArrow, height } from '../../canvas.js';
 
 class heapSortClass extends Base {
     constructor() {
@@ -34,7 +34,6 @@ class heapSortClass extends Base {
 
 
     async move(element, x, y, speedFactor = 4) {
-        // console.log("move ", element);
         if (!this.isAnimating) return;
         return new Promise(resolve => {
             if (!this.isAnimating) return;
@@ -117,7 +116,7 @@ class heapSortClass extends Base {
             y4 = y3;
         }
 
-        this.triangleArray = [new Triangle(x1, y1, x2, y2, x3, y3, x4, y4, this.unsortedCol)];
+        this.triangleArray = [new Triangle({x1: x1, y1: y1, x2: x2, y2: y2, x3: x3, y3: y3, x4: x4, y4: y4, col: this.unsortedCol})];
         DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
         await this.delay(this.TimeoutDelay);
     }
@@ -146,7 +145,7 @@ class heapSortClass extends Base {
             await this.move(element.obj, targetX, targetY, 4);
             await this.waitWhilePaused();
 
-            this.lineArray.push(new Line(curX, curY, targetX, targetY, 0));
+            this.lineArray.push(new Line({x1: curX, y1: curY, x2: targetX, y2: targetY, col: 0}));
             DrawArray([...this.triangleArray, ...this.lineArray]);
             await this.waitWhilePaused();
 
@@ -174,7 +173,6 @@ class heapSortClass extends Base {
         let left = 2 * i + 1;
         let right = 2 * i + 2;
 
-        // console.log(i, left, right);
 
         let parent = Array[i].obj, leftChild = (left < n && Array[left]) ? Array[left].obj : null, rightChild = (right < n && Array[right]) ? Array[right].obj : null;
 
@@ -188,8 +186,8 @@ class heapSortClass extends Base {
 
         parent.col = this.HighlightCol2;
         this.arrows = [
-            new PointerArrow(parent.xPos, parent.yPos + 25, this.HighlightCol, 10, "i", 12, 12),
-            new PointerArrow(parent.xPos, parent.yPos + 45, this.HighlightCol, 10, "max", 12, 12),
+            new PointerArrow({xPos: parent.xPos, yPos: parent.yPos + 25, col: this.HighlightCol, length: 10, label: "i", textCol: 12, textS: 12}),
+            new PointerArrow({xPos: parent.xPos, yPos: parent.yPos + 45, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12})
         ]
 
         await this.drawTriangle(parent, left, leftChild, rightChild);
@@ -204,8 +202,7 @@ class heapSortClass extends Base {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-
-            this.arrows[1] = new PointerArrow(leftChild.xPos, leftChild.yPos + 25, this.HighlightCol, 10, "max", 12, 12);
+            this.arrows[1] = new PointerArrow({xPos: leftChild.xPos, yPos: leftChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12});
             leftChild.col = this.HighlightCol;
 
             DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
@@ -218,11 +215,12 @@ class heapSortClass extends Base {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-
             max = right;
             leftChild.col = this.BaseCol;
             rightChild.col = this.HighlightCol;
-            this.arrows[1] = new PointerArrow(rightChild.xPos, rightChild.yPos + 25, this.HighlightCol, 10, "max", 12, 12);
+
+            this.arrows[1] = new PointerArrow({xPos: rightChild.xPos, yPos: rightChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12});
+
             DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
             await this.delay(this.TimeoutDelay)
             await this.waitWhilePaused();
@@ -232,7 +230,6 @@ class heapSortClass extends Base {
         if (max != i) {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
-
 
             await this.SwapNodes(Array[max].obj, Array[i].obj, [...this.triangleArray, ...this.lineArray], 3);
             [Array[max], Array[i]] = [Array[i], Array[max]];

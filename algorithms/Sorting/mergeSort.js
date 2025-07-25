@@ -76,7 +76,7 @@ class mergeSortClass extends Base {
         let x2 = array[array.length - 1].obj.xPos + (r + 5);
         let y2 = array[array.length - 1].obj.yPos - (r + 10);
 
-        this.squareArray.push(new Square(x1, y1, x2, y2, this.unsortedCol));
+        this.squareArray.push(new Square({xPos1: x1, yPos1: y1, xPos2: x2, yPos2: y2, col: this.unsortedCol}));
 
         DrawArray(this.squareArray);
 

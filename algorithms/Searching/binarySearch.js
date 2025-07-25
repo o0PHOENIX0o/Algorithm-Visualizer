@@ -1,4 +1,4 @@
-import { Base, compare } from "../Base.js"
+import { Base } from "../Base.js"
 import { DrawArray, PointerArrow, Circle, Square, clearCanvas } from '../../canvas.js';
 
 
@@ -43,7 +43,7 @@ class BinarySearchClass extends Base {
         };
         let mid = Math.floor((l + r) / 2);
 
-        this.keyCircle = [new Circle(array[mid].obj.xPos, array[mid].obj.yPos - array[mid].obj.dia - this.spacing, this.dia, key, this.sortedCol)];
+        this.keyCircle = [ new Circle({xPos: array[mid].obj.xPos, yPos: (array[mid].obj.yPos - array[mid].obj.dia - this.spacing), dia: this.dia, label: key, col: this.sortedCol}) ];
 
         let BoxX1 = array[l].obj.xPos - array[l].obj.dia / 2 - 5;
         let BoxY1 = array[l].obj.yPos + array[l].obj.dia / 2 + 5;
@@ -56,15 +56,15 @@ class BinarySearchClass extends Base {
         let pointerBoxY2 = array[mid].obj.yPos + array[mid].obj.dia / 2 + 5;
 
         this.squareArray = [
-            new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.HighlightCol),
-            new Square(pointerBoxX1, pointerBoxY1, pointerBoxX2, pointerBoxY2, this.unsortedCol),
+            new Square({xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.HighlightCol}),
+            new Square({xPos1: pointerBoxX1, yPos1: pointerBoxY1, xPos2: pointerBoxX2, yPos2: pointerBoxY2, col: this.unsortedCol})
         ];
 
         let offset = (l === mid || r === mid) ? 90 : 40;
         this.arrows = [
-            new PointerArrow(array[l].obj.xPos, array[l].obj.yPos + 40, this.HighlightCol, 20, "left"),
-            new PointerArrow(array[r].obj.xPos, array[r].obj.yPos + 40, this.HighlightCol, 20, "right"),
-            new PointerArrow(array[mid].obj.xPos, array[mid].obj.yPos + offset, this.HighlightCol, 20, "mid"),
+            new PointerArrow({xPos: array[l].obj.xPos, yPos: array[l].obj.yPos + 40, col: this.HighlightCol, length: 20, label: "left"}),
+            new PointerArrow({xPos: array[r].obj.xPos, yPos: array[r].obj.yPos + 40, col: this.HighlightCol, length: 20, label: "right"}),
+            new PointerArrow({xPos: array[mid].obj.xPos, yPos: array[mid].obj.yPos + offset, col: this.HighlightCol, length: 20, label: "mid"}),
         ];
 
         DrawArray([...this.squareArray, ...this.arrows, ...this.keyCircle]);
@@ -75,13 +75,14 @@ class BinarySearchClass extends Base {
 
         if (Number(array[mid].value) === key) {
             array[mid].obj.col = this.sortedCol;
-            this.arrows = [new PointerArrow(array[mid].obj.xPos, array[l].obj.yPos + 40, this.HighlightCol, 20, "key")];
-            this.squareArray = [new Square(pointerBoxX1, pointerBoxY1, pointerBoxX2, pointerBoxY2, this.sortedCol)];
+            this.arrows = [new PointerArrow({xPos: array[mid].obj.xPos, yPos: array[l].obj.yPos + 40, col: this.HighlightCol, length: 20, label: "key"})];
+
+            this.squareArray = [new Square({xPos1: pointerBoxX1, yPos1: pointerBoxY1, xPos2: pointerBoxX2, yPos2: pointerBoxY2, col: this.sortedCol})];
             DrawArray([...this.squareArray, ...this.arrows, ...this.keyCircle]);
             await this.delay(this.TimeoutDelay);
             return;
 
-        } else if (Number(array[mid].value) > key) {
+        } else if (Number(array[mid].value) > key) { // go left
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
             for (let i = mid; i <= r; i++) { array[i].obj.col = this.BaseCol; array[i].obj.textCol = "#6d6c6c"; }

@@ -59,7 +59,7 @@ class KruskalClass extends GraphBase {
         DrawArray(null);
     }
 
-    async moveSquare(element, xc, yc, otherElements, speedFactor = 4) {
+    async moveSquare({ element, xc, yc, otherElements, speedFactor = 4 } = {}) {
         let offset = 5 + this.objNodeArray[0].obj.dia / 2;
         let targetX1 = xc - offset;
         let targetY1 = yc + offset;
@@ -92,8 +92,7 @@ class KruskalClass extends GraphBase {
         });
     }
 
-    async move(element, x, y, otherElements, speedFactor = 4) {
-        // console.log("move ", element);
+    async move({ element, x, y, otherElements, speedFactor = 4 } = {}) {
         if (!this.isAnimating) return;
         return new Promise(resolve => {
             if (!this.isAnimating) return;
@@ -112,23 +111,6 @@ class KruskalClass extends GraphBase {
             };
             animate();
         });
-    }
-
-
-    BoxAround(index, Nodes, Boxtext = "") {
-        let offset = 5 + Nodes[index].obj.dia / 2;
-
-        let BoxX1 = Nodes[index].obj.xPos - offset;
-        let BoxY1 = Nodes[index].obj.yPos + offset;
-
-        let BoxX2 = Nodes[index].obj.xPos + offset;
-        let BoxY2 = Nodes[index].obj.yPos - offset;
-
-        let BoxH = Math.abs(BoxY2 - BoxY1);
-
-        let box = new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.HighlightCol2, 2, Boxtext, 0, -(10 + BoxH / 2));
-
-        return box;
     }
 
 
@@ -157,7 +139,7 @@ class KruskalClass extends GraphBase {
             this.edgeBoxes.push(
                 {
                     position: { xPos: (boxX2 + boxX1) / 2, yPos: (boxY1 + boxY2) / 2 },
-                    obj: new Square(boxX1, boxY1, boxX2, boxY2, "#000000", 2, label)
+                    obj: new Square({xPos1: boxX1, yPos1: boxY1, xPos2: boxX2, yPos2: boxY2, col: "#000000", strokeW: 2, text: label})
                 }
             )
         })
@@ -189,11 +171,11 @@ class KruskalClass extends GraphBase {
                 }
             }
         }
- 
+
         edges.sort((a, b) => a.weight - b.weight);
 
         await this.setBoxes(edges, Nodes);
-        let pointer = new PointerArrow(this.edgeBoxes[0].position.xPos, this.edgeBoxes[0].position.yPos + 25, this.HighlightCol2, 10, "min Edge");
+        let pointer = new PointerArrow({xPos: this.edgeBoxes[0].position.xPos, yPos: this.edgeBoxes[0].position.yPos + 25, col: this.HighlightCol2, length: 10, label: "min Edge"});
         let pointerBox = [
             this.BoxAround(0, Nodes, "u"),
             this.BoxAround(1, Nodes, "v"),
@@ -203,19 +185,19 @@ class KruskalClass extends GraphBase {
         let MST = [];
         let totalWeight = 0;
         for (let [i, { u, v, weight, line }] of edges.entries()) {
-            this.move(pointer, this.edgeBoxes[i].position.xPos, this.edgeBoxes[i].position.yPos + 25, [...pointerBox]);
+            this.move({ element: pointer, x: this.edgeBoxes[i].position.xPos, y: this.edgeBoxes[i].position.yPos + 25, otherElements: [...pointerBox] });
 
             await Promise.all([
-                this.moveSquare(pointerBox[0], Nodes[u].obj.xPos, Nodes[u].obj.yPos, [pointer, pointerBox[1], ...this.edgeBoxes.map(box => box.obj)]),
-                this.moveSquare(pointerBox[1], Nodes[v].obj.xPos, Nodes[v].obj.yPos, [pointer, pointerBox[0], ...this.edgeBoxes.map(box => box.obj)])
+                this.moveSquare({ element: pointerBox[0], xc: Nodes[u].obj.xPos, yc: Nodes[u].obj.yPos, otherElements: [pointer, pointerBox[1], ...this.edgeBoxes.map(box => box.obj)] }),
+                this.moveSquare({ element: pointerBox[1], xc: Nodes[v].obj.xPos, yc: Nodes[v].obj.yPos, otherElements: [pointer, pointerBox[0], ...this.edgeBoxes.map(box => box.obj)] })
             ]);
 
             await this.waitWhilePaused();
 
             this.edgeBoxes[i].obj.col = this.HighlightCol2;
 
-            if( Nodes[u].obj.col !== this.sortedCol || Nodes[v].obj.col !== this.sortedCol) Nodes[u].obj.col = Nodes[v].obj.col = this.HighlightCol2;
-            
+            if (Nodes[u].obj.col !== this.sortedCol || Nodes[v].obj.col !== this.sortedCol) Nodes[u].obj.col = Nodes[v].obj.col = this.HighlightCol2;
+
             line.col = this.HighlightCol2;
             line.strokeW = 3;
             this.drawAll([pointer, ...pointerBox, ...this.edgeBoxes.map(box => box.obj)]);

@@ -23,7 +23,7 @@ export class Base {
   }
 
   generate(input, key = null, x = null, y = null) {
-    if(input.length<1) return;
+    if (input.length < 1) return;
     this.inputArray = [...input];
     y = (y == null) ? Number(height / 2) : Number(y);
     clearCanvas();
@@ -35,14 +35,22 @@ export class Base {
       }
     }
     this.objNodeArray = [];
-    const totalLength = input.length * (this.dia + this.spacing);
-    if (x == null) x = (width / 2) - (totalLength / 2) + this.dia / 2; 
+    let totalLength = input.length * (this.dia + this.spacing);
+
+    let availableWidth = width * 0.9; 
+    const scaleFactor = Math.min(1, availableWidth / totalLength);
+    this.dia = this.dia * scaleFactor;
+    this.spacing = this.spacing * scaleFactor;
+
+    totalLength = input.length * (this.dia + this.spacing);
+
+    if (x == null) x = (width / 2) - (totalLength / 2) + this.dia / 2;
     input.forEach(val => {
-      const circle = new Circle(x, y, this.dia, val, this.BaseCol);
+      const circle = new Circle({ xPos: x, yPos: y, dia: this.dia, label: val, col: this.BaseCol });
       this.objNodeArray.push({ value: val, obj: circle });
       x += this.dia + this.spacing;
     });
-    
+
     console.log("key = ", this.key)
     DrawArray();
   }

@@ -45,8 +45,8 @@ class BubbleSortClass extends Base {
         a.obj.col = b.obj.col = this.HighlightCol;
 
         this.arrows = [
-          new PointerArrow(a.obj.xPos, a.obj.yPos + 40, this.HighlightCol, 20, "j"),
-          new PointerArrow(b.obj.xPos, b.obj.yPos + 40, this.HighlightCol, 20, "j+1")
+          new PointerArrow({xPos: a.obj.xPos, yPos: (a.obj.yPos + this.dia), col: this.HighlightCol, length: this.dia/2, label: "j"}),
+          new PointerArrow({xPos: b.obj.xPos, yPos: (b.obj.yPos + this.dia), col: this.HighlightCol, length: this.dia/2, label: "j+1"}) 
         ];
 
         await  this.waitWhilePaused();

@@ -1,5 +1,5 @@
 import { GraphBase, PriorityQueue } from './GraphBase.js';
-import { DrawArray, Text, Square, clearCanvas, height, width } from '../../canvas.js';
+import { DrawArray, Text, clearCanvas, height, width } from '../../canvas.js';
 
 
 class PrimClass extends GraphBase {
@@ -62,7 +62,7 @@ class PrimClass extends GraphBase {
         for (let i = 0; i < Nodes.length; i++) {
             let label = '∞';
             let size = 30;
-            let t = new Text(0, 0, label, size, this.unsortedCol);
+            let t = new Text({xPos: 0, yPos: 0, label: label, textSize: size, textCol: this.unsortedCol});
             this.textArray.push(t);
         }
 
@@ -81,21 +81,7 @@ class PrimClass extends GraphBase {
         this.drawAll(this.textArray);
     }
 
-    BoxAround(index, Nodes, Boxtext) {
-        let offset = 5 + Nodes[index].obj.dia / 2;
-
-        let BoxX1 = Nodes[index].obj.xPos - offset;
-        let BoxY1 = Nodes[index].obj.yPos + offset;
-
-        let BoxX2 = Nodes[index].obj.xPos + offset;
-        let BoxY2 = Nodes[index].obj.yPos - offset;
-
-        let BoxH = Math.abs(BoxY2 - BoxY1);
-
-        let box = new Square(BoxX1, BoxY1, BoxX2, BoxY2, this.HighlightCol2, 2, Boxtext, 0, -(10 + BoxH / 2));
-
-        return box;
-    }
+    
 
     async PrimAlgo(Nodes, adjM, vi) {
         this.Pqueue = new PriorityQueue();

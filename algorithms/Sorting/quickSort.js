@@ -38,7 +38,8 @@ class quickSortClass extends Base {
         let x2 = array[array.length - 1].obj.xPos + (r + (this.spacing / 2) - 1);
         let y2 = array[array.length - 1].obj.yPos - (r + this.spacing / 3);
 
-        this.squareArray.push(new Square(x1, y1, x2, y2, col));
+        this.squareArray.push(new Square({xPos1: x1, yPos1: y1, xPos2: x2, yPos2: y2, col: col}));
+
         DrawArray([...this.arrows, ...this.squareArray]);
         await this.delay(this.TimeoutDelay);
     }
@@ -57,9 +58,9 @@ class quickSortClass extends Base {
             await this.waitWhilePaused();
 
             this.arrows = [
-                new PointerArrow(pivot.obj.xPos, pivot.obj.yPos + 40, this.HighlightCol2, 20, "pivot"),
-                new PointerArrow(Array[swapIndex].obj.xPos, Array[swapIndex].obj.yPos + 80, this.HighlightCol, 20, "swap"),
-                new PointerArrow(Array[i].obj.xPos, Array[i].obj.yPos + 40, this.HighlightCol, 20, "i")
+                new PointerArrow({xPos: pivot.obj.xPos, yPos: (pivot.obj.yPos + 40), col: this.HighlightCol2, length: 20, label: "pivot"}),
+                new PointerArrow({xPos: Array[swapIndex].obj.xPos, yPos: (Array[swapIndex].obj.yPos + 80), col: this.HighlightCol, length: 20, label: "swap"}),
+                new PointerArrow({xPos: Array[i].obj.xPos, yPos: (Array[i].obj.yPos + 40), col: this.HighlightCol, length: 20, label: "i"})
             ]
             Array[i].obj.col = this.HighlightCol;
             DrawArray([...this.arrows, ...this.squareArray]);
@@ -70,12 +71,13 @@ class quickSortClass extends Base {
                 Array[i].obj.col = "#fff176";
                 await this.waitWhilePaused();
                 swapIndex++;
+                
                 Array[swapIndex].obj.col = this.HighlightCol;
-                this.arrows[1] = new PointerArrow(Array[swapIndex].obj.xPos, Array[swapIndex].obj.yPos + 80, this.HighlightCol, 20, "swap")
+                this.arrows[1] = new PointerArrow({xPos: Array[swapIndex].obj.xPos, yPos: (Array[swapIndex].obj.yPos + 80), col: this.HighlightCol, length: 20, label: "swap"});
+
                 DrawArray([...this.arrows, ...this.squareArray]);
                 await this.delay(this.TimeoutDelay);
                 if (!this.isAnimating) return;
-
 
                 await this.swapAnimation(Array[i].obj, Array[swapIndex].obj, [...this.arrows, ...this.squareArray]);
                 [Array[i], Array[swapIndex]] = [Array[swapIndex], Array[i]];

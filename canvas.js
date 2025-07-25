@@ -1,8 +1,10 @@
 let width, height;
 
+let baseWidth, baseHeight;
+let scaleFactorW = 1, scaleFactorH =1;
+
 export class Circle {
-  // constructor({xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2} = {}) {
-  constructor(xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2) {
+  constructor({xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2} = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.dia = dia;
@@ -15,7 +17,6 @@ export class Circle {
 
   draw() {
     push();
-    // console.log(this.strokeCol)
     stroke(this.strokeCol);
     strokeWeight(this.strokeW);
     fill(this.col);
@@ -34,7 +35,7 @@ export class Circle {
 }
 
 export class Text {
-  constructor(xPos, yPos, label, textSize = 16, textCol = 0) {
+  constructor({xPos, yPos, label, textSize = 16, textCol = 0} = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.label = label;
@@ -56,7 +57,7 @@ export class Text {
 }
 
 export class Square {
-  constructor(xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = 0, textYOffset = 0) {
+  constructor({xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = 0, textYOffset = 0} = {}) {
     this.xPos1 = xPos1;
     this.yPos1 = yPos1;
     this.xPos2 = xPos2;
@@ -98,7 +99,7 @@ export class Square {
 }
 
 export class PointerArrow {
-  constructor(xPos, yPos, col, length, label, textCol = 0, textS = 16, textY = 20) {
+  constructor({xPos, yPos, col, length, label, textCol = 0, textS = 16, textY = 20} = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.col = col;
@@ -141,7 +142,7 @@ export class PointerArrow {
 
 
 export class Line {
-  constructor(x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20) {
+  constructor({x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20} = {}) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -192,7 +193,7 @@ export class Line {
 
 
 export class Triangle {
-  constructor(x1, y1, x2, y2, x3, y3, x4, y4, col, strokeW = 2) {
+  constructor({x1, y1, x2, y2, x3, y3, x4, y4, col, strokeW = 2} = {}) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -218,7 +219,7 @@ export class Triangle {
 }
 
 export class PointerTriangles {
-  constructor(x1, y1, x2, y2, x3, y3, col, angle, tx, ty) {
+  constructor({x1, y1, x2, y2, x3, y3, col, angle, tx, ty}) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -265,10 +266,18 @@ export function clearCanvas() {
 }
 
 export function setupCanvas() {
+  console.log("Setting up canvas...");
+
   const parent = document.getElementById("CanvasContainer");
   const canvas = createCanvas(parent.offsetWidth, parent.offsetHeight);
+
   height = canvas.height;
   width = canvas.width;
+
+  baseHeight = height;
+  baseWidth = width;
+  scaleFactorH = scaleFactorW = 1;
+
   canvas.parent("CanvasContainer");
   textAlign(CENTER, CENTER);
   textSize(16);
@@ -278,10 +287,19 @@ export function setupCanvas() {
 export function windowResized() {
   console.log("resized");
   const parent = document.getElementById("CanvasContainer");
-  resizeCanvas(parent.offsetWidth - 64, parent.offsetHeight);
-  width = parent.offsetWidth - 64;
+  resizeCanvas(parent.offsetWidth, parent.offsetHeight);
+
+  scaleFactorW = (parent.offsetWidth) / baseWidth;
+  width = parent.offsetWidth;
+  
+  scaleFactorH = parent.offsetHeight / baseHeight;
+  height = parent.offsetHeight;
+
+  console.log("width, height", width, height);
+  console.log("scaleFactorW, scaleFactorH", scaleFactorW, scaleFactorH);
+
   DrawArray();
 }
 
 
-export { height, width }
+export { height, width, scaleFactorH, scaleFactorW };

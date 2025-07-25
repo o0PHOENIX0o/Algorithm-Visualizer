@@ -63,7 +63,7 @@ class DFSClass extends GraphBase {
 
             this.directedEdges.forEach((row, i) => {
                 row.forEach((edge, j) => {
-                    if (edge !== null && edge.line.label === "") this.directedEdges[i][j] = null;
+                    if (edge !== null && edge.line.col == 0) this.directedEdges[i][j] = null;
                 })
             })
             this.drawAll();

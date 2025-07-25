@@ -2,6 +2,8 @@ import './script.js';
 import { DrawArray, setupCanvas, windowResized } from './canvas.js';
 import { BubbleSort } from './algorithms/Sorting/bubbleSort.js';
 
+
+
 export let currentAlgorithm = BubbleSort;
 window.currentAlgorithm = currentAlgorithm;
 

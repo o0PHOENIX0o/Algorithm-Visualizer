@@ -26,12 +26,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <title>Algorithm Visualizer</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+    <script type="module" src="./sketch.js"></script>
+
+
+
 </head>
 
 <body>
@@ -52,7 +58,7 @@
     <!-- Main Container -->
     <div class="main-container">
         <!-- Side Navigation -->
-        <aside class="sidebar" id="sidebar">
+        <aside class="sidebar" id="sidebar" data-lenis-prevent>
             <div class="sidebar-content">
                 <div class="algorithm-category">
                     <h3 class="category-title">Sorting Algorithms</h3>
@@ -118,9 +124,9 @@
         <main class="main-content">
             <div class="canvas-container">
                 <div class="canvas-header">
-                    <h2 id="algorithmTitle">Select an Algorithm</h2>
+                    <h2 id="algorithmTitle">Bubble Sort</h2>
                     <div class="canvas-info">
-                        <span id="algorithmInfo">Choose an algorithm from the sidebar to begin visualization</span>
+                        <span id="algorithmInfo">Time Complexity: O(n²) | Space Complexity: O(1) | Stable: Yes</span>
                     </div>
                 </div>
                 <div id="CanvasContainer"></div>
@@ -137,14 +143,16 @@
         <div class="controls-content" id="controlsContent">
             <div id="inputField" class="control-group">
                 <div class="input-group">
-                        <label for="customArrayInput">Custom Array (comma-separated)</label>
-                        <input type="text" id="customArrayInput" class="array-input" placeholder="eg: 64, 34, 25, 12, 22, 11, 90">
+                    <label for="customArrayInput">Custom Array (comma-separated)</label>
+                    <input type="text" id="customArrayInput" class="array-input"
+                        placeholder="eg: 64, 34, 25, 12, 22, 11, 90">
                 </div>
                 <div id="searchKey" class="input-group">
                     <label for="searchValue">Search Key</label>
                     <input type="text" id="searchValue" class="array-input" placeholder="search key">
                 </div>
                 <button class="control-btn apply-btn" id="applyArrayBtn">Apply</button>
+                <button class="control-btn generate-btn" id="generate">Example</button>
             </div>
 
             <div class="control-group">
@@ -183,7 +191,21 @@
     </footer>
 
     <script type="module" src="./script.js"></script>
-    <script type="module" src="./sketch.js"></script>
+    
+    <script>
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                smooth: true,
+            })
+    
+            function raf(time) {
+                lenis.raf(time)
+                requestAnimationFrame(raf)
+            }
+    
+            requestAnimationFrame(raf)
+    </script>
 </body>
 
 </html>

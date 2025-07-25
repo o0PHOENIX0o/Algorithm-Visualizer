@@ -20,7 +20,7 @@ class SelectionSortClass extends Base {
         this.arrows = [];
         this.isAnimating = false;
         this.isPause = false;
-        await this.delay(50);
+        await this.delay(50); 
         clearCanvas();
         DrawArray(null);
     }
@@ -44,9 +44,9 @@ class SelectionSortClass extends Base {
                 this.objNodeArray[min].obj.col = this.HighlightCol2;
 
                 this.arrows = [
-                    new PointerArrow(this.objNodeArray[i].obj.xPos, this.objNodeArray[i].obj.yPos + 40, this.HighlightCol, 20, "i"),
-                    new PointerArrow(b.obj.xPos, b.obj.yPos + 40, this.HighlightCol, 20, "j"),
-                    new PointerArrow(this.objNodeArray[min].obj.xPos, this.objNodeArray[min].obj.yPos + 40, this.HighlightCol, 20, "min"),
+                    new PointerArrow({xPos: this.objNodeArray[i].obj.xPos, yPos: (this.objNodeArray[i].obj.yPos + 40), col: this.HighlightCol, length: 20, label: "i"}),
+                    new PointerArrow({xPos: b.obj.xPos, yPos: (b.obj.yPos + 40), col: this.HighlightCol, length: 20, label: "j"}),
+                    new PointerArrow({xPos: this.objNodeArray[min].obj.xPos, yPos: (this.objNodeArray[min].obj.yPos + 40), col: this.HighlightCol2, length: 20, label: "min"})
                 ];
 
                 await this.waitWhilePaused();
@@ -71,8 +71,8 @@ class SelectionSortClass extends Base {
 
                 this.objNodeArray[min].obj.col = this.HighlightCol2;
                 this.arrows = [
-                    new PointerArrow(this.objNodeArray[i].obj.xPos, this.objNodeArray[i].obj.yPos + 40, this.HighlightCol, 20, "i"),
-                    new PointerArrow(this.objNodeArray[min].obj.xPos, this.objNodeArray[min].obj.yPos + 40, this.HighlightCol2, 20, "min"),
+                    new PointerArrow({xPos: this.objNodeArray[i].obj.xPos, yPos: (this.objNodeArray[i].obj.yPos + 40), col: this.HighlightCol, length: 20, label: "i"}),
+                    new PointerArrow({xPos: this.objNodeArray[min].obj.xPos, yPos: (this.objNodeArray[min].obj.yPos + 40), col: this.HighlightCol2, length: 20, label: "min"})
                 ];
                 DrawArray(this.arrows);
                 await this.delay(this.TimeoutDelay);

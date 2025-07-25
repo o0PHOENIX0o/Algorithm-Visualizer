@@ -51,16 +51,16 @@ class insertionSortClass extends Base {
             let sortedBoxY2 = this.objNodeArray[i - 1].obj.yPos - a.obj.dia / 2 - 5;
 
             this.squareArray = [
-                new Square(unsortedBoxX1, unsortedBoxY1, unsortedBoxX2, unsortedBoxY2, this.unsortedCol),
-                new Square(sortedBoxX1, sortedBoxY1, sortedBoxX2, sortedBoxY2, this.sortedCol),
+                new Square({xPos1: sortedBoxX1, yPos1: sortedBoxY1, xPos2: sortedBoxX2, yPos2: sortedBoxY2, col: this.sortedCol}),
+                new Square({xPos1: sortedBoxX1, yPos1: sortedBoxY1, xPos2: sortedBoxX2, yPos2: sortedBoxY2, col: this.sortedCol}),
             ];
 
             DrawArray([...this.arrows, ...this.squareArray]);
             await this.delay(this.TimeoutDelay);
 
             this.arrows = [
-                new PointerArrow(a.obj.xPos, a.obj.yPos + 40, this.HighlightCol2, 20, "i"),
-                new PointerArrow(this.objNodeArray[j].obj.xPos, this.objNodeArray[j].obj.yPos + 40, this.HighlightCol, 20, "j")
+                new PointerArrow({xPos: a.obj.xPos, yPos: (a.obj.yPos + 40), col: this.HighlightCol2, length: 20, label: "i"}),
+                new PointerArrow({xPos: this.objNodeArray[j].obj.xPos, yPos: (this.objNodeArray[j].obj.yPos + 40), col: this.HighlightCol, length: 20, label: "j"}  )
             ];
 
             DrawArray([...this.arrows, ...this.squareArray]);
@@ -80,8 +80,8 @@ class insertionSortClass extends Base {
 
                 await this.waitWhilePaused();
                 this.arrows = [
-                    new PointerArrow(a.obj.xPos, a.obj.yPos + a.obj.dia + 40, this.HighlightCol2, 20, "i"),
-                    new PointerArrow(b.obj.xPos, b.obj.yPos + 40, this.HighlightCol, 20, "j")
+                    new PointerArrow({xPos: a.obj.xPos, yPos: (a.obj.yPos + a.obj.dia + 40), col: this.HighlightCol2, length: 20, label: "i"}),
+                    new PointerArrow({xPos: b.obj.xPos, yPos: (b.obj.yPos + 40), col: this.HighlightCol, length: 20, label: "j"})
                 ];
                 DrawArray([...this.arrows, ...this.squareArray]);
                 await this.delay(this.TimeoutDelay);
@@ -99,11 +99,6 @@ class insertionSortClass extends Base {
             await this.animateY(a.obj, [...this.arrows, ...this.squareArray], 50);
             await this.waitWhilePaused();
 
-            // for(let k = 0; k<i; k++){
-            //     this.objNodeArray[k].obj.col = this.sortedCol;
-            // }
-            // a.obj.col = this.sortedCol;
-
             if (!this.isAnimating) return;
             this.objNodeArray[i].obj.col = this.sortedCol;
             this.objNodeArray[x].obj.col = this.sortedCol;
@@ -111,7 +106,6 @@ class insertionSortClass extends Base {
 
             await this.delay(this.TimeoutDelay);
         }
-        // this.objNodeArray.forEach(element => element.obj.col = this.sortedCol);
         DrawArray();
         this.isAnimating = false;
     }
