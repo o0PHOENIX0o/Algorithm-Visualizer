@@ -32,7 +32,6 @@
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
 
     <script type="module" src="./sketch.js"></script>
 
@@ -58,7 +57,7 @@
     <!-- Main Container -->
     <div class="main-container">
         <!-- Side Navigation -->
-        <aside class="sidebar" id="sidebar" data-lenis-prevent>
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-content">
                 <div class="algorithm-category">
                     <h3 class="category-title">Sorting Algorithms</h3>
@@ -191,21 +190,7 @@
     </footer>
 
     <script type="module" src="./script.js"></script>
-    
-    <script>
-            const lenis = new Lenis({
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                smooth: true,
-            })
-    
-            function raf(time) {
-                lenis.raf(time)
-                requestAnimationFrame(raf)
-            }
-    
-            requestAnimationFrame(raf)
-    </script>
+
 </body>
 
 </html>

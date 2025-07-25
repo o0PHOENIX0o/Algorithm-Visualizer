@@ -78,7 +78,10 @@ window.currentAlgorithm = currentAlgorithm;
 
 document.querySelectorAll(".algorithm-btn").forEach(btn => {
   btn.addEventListener("click", (e) => {
-    lenis.scrollTo(0)
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
 
     document.querySelectorAll(".algorithm-btn").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
@@ -170,7 +173,10 @@ document.getElementById("generate").addEventListener("click", () => {
 
 
 document.getElementById("applyArrayBtn").addEventListener("click", () => {
-  lenis.scrollTo(0)
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   console.log("apply ", currentAlgorithm);
   if (currentAlgorithm.isAnimating) return;
   currentAlgorithm.reset();
@@ -228,13 +234,19 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
 
 document.getElementById("playBtn").addEventListener("click", () => {
-  lenis.scrollTo(0)
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   isPlayed = true;
   currentAlgorithm.Play();
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
-  lenis.scrollTo(0)
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   let btn = document.getElementById("playPauseBtn");
   btn.innerHTML = `<span class="btn-icon">⏸</span> Pause`;
   isPlayed = false;
@@ -242,7 +254,10 @@ document.getElementById("resetBtn").addEventListener("click", () => {
 });
 
 document.getElementById("playPauseBtn").addEventListener("click", () => {
-  lenis.scrollTo(0)
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
   if (!isPlayed) return;
   let btn = document.getElementById("playPauseBtn");
 

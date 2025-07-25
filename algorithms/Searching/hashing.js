@@ -66,8 +66,9 @@ class hashSearchClass extends Base {
   async generateBucket() {
     if (!this.isAnimating) return;
     let yOffset = 70;
-    let boxLength = this.objNodeArray[0].obj.dia + (1.1 * this.spacing);
-    let totalLength = (boxLength + this.spacing) * this.bucketSize;
+    let spacing = this.spacing * 0.5
+    let boxLength = this.objNodeArray[0].obj.dia + (spacing);
+    let totalLength = (boxLength + spacing) * this.bucketSize;
 
 
     //hash box
@@ -85,8 +86,8 @@ class hashSearchClass extends Base {
     for (let i = 0; i < this.bucketSize; i++) {
       if (!this.isAnimating) return;
       this.bucketArray.push( new Square({xPos1: x1, yPos1: y1, xPos2: x2, yPos2: y2, col: this.HighlightCol, strokeW: 2, text: i}) );
-      x1 += (boxLength + this.spacing);
-      x2 += (boxLength + this.spacing);
+      x1 += (boxLength + spacing);
+      x2 += (boxLength + spacing);
     }
 
     DrawArray([...this.bucketArray, this.hashBox]);
