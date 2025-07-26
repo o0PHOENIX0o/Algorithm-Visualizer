@@ -123,8 +123,14 @@ class KruskalClass extends GraphBase {
         let BoxSpace = 5;
 
         let totalBoxWidth = edges.length * (boxWidth + BoxSpace);
-
+        let availableHeight = height * 0.9;
+        let sf = Math.min(1, availableHeight/ totalBoxWidth);
+        boxWidth *= sf;
+        BoxSpace *= sf;
+        
+        totalBoxWidth = edges.length * (boxWidth + BoxSpace);
         let startX = (width - totalBoxWidth + boxWidth) / 2;
+
 
 
         edges.forEach(({ u, v, weight, line }, i) => {
@@ -139,7 +145,7 @@ class KruskalClass extends GraphBase {
             this.edgeBoxes.push(
                 {
                     position: { xPos: (boxX2 + boxX1) / 2, yPos: (boxY1 + boxY2) / 2 },
-                    obj: new Square({xPos1: boxX1, yPos1: boxY1, xPos2: boxX2, yPos2: boxY2, col: "#000000", strokeW: 2, text: label})
+                    obj: new Square({xPos1: boxX1, yPos1: boxY1, xPos2: boxX2, yPos2: boxY2, col: "#000000", strokeW: 2 *sf, text: label, textSize: 16 * sf})
                 }
             )
         })
@@ -179,7 +185,6 @@ class KruskalClass extends GraphBase {
         let pointerBox = [
             this.BoxAround(0, Nodes, "u"),
             this.BoxAround(1, Nodes, "v"),
-
         ]
 
         let MST = [];

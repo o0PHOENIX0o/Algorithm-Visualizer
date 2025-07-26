@@ -69,11 +69,12 @@ class DijkstraClass extends GraphBase {
 
         let centerX = width / 2;
         let centerY = height / 2;
-        let offset = 10 + Nodes[0].obj.dia / 1.8;
+        let sclaedRadius = this.radius * this.scaleFactor;
+        let offset = 10 + (Nodes[0].obj.dia * this.scaleFactor) / 1.8;
         for (let i = 0; i < Nodes.length; i++) {
             let angle = map(i, 0, Nodes.length, 0, TWO_PI);
-            let x = centerX + (this.radius + offset) * 1.5 * cos(angle);
-            let y = centerY + (this.radius + offset) * sin(angle);
+            let x = centerX + (sclaedRadius + offset) * 1.5 * cos(angle);
+            let y = centerY + (sclaedRadius + offset) * sin(angle);
             this.textArray[i].xPos = x;
             this.textArray[i].yPos = y;
         }

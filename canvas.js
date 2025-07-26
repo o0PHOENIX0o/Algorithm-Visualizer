@@ -1,10 +1,10 @@
 let width, height;
 
 let baseWidth, baseHeight;
-let scaleFactorW = 1, scaleFactorH =1;
+let scaleFactorW = 1, scaleFactorH = 1;
 
 export class Circle {
-  constructor({xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2} = {}) {
+  constructor({ xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2 } = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.dia = dia;
@@ -35,7 +35,7 @@ export class Circle {
 }
 
 export class Text {
-  constructor({xPos, yPos, label, textSize = 16, textCol = 0} = {}) {
+  constructor({ xPos, yPos, label, textSize = 16, textCol = 0 } = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.label = label;
@@ -57,7 +57,7 @@ export class Text {
 }
 
 export class Square {
-  constructor({xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = 0, textYOffset = 0} = {}) {
+  constructor({ xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = 0, textSize = 16, textYOffset = 0 } = {}) {
     this.xPos1 = xPos1;
     this.yPos1 = yPos1;
     this.xPos2 = xPos2;
@@ -67,6 +67,7 @@ export class Square {
     this.strokeCol = col;
     this.text = text;
     this.textCol = textCol;
+    this.textS = textSize;
     this.textYOffset = textYOffset;
   }
 
@@ -90,6 +91,7 @@ export class Square {
     if (this.text !== null) {
       push();
       noStroke();
+      textSize(this.textS);
       fill(this.textCol);
       textAlign(CENTER, CENTER);
       text(this.text, centerX, centerY + this.textYOffset);
@@ -99,7 +101,7 @@ export class Square {
 }
 
 export class PointerArrow {
-  constructor({xPos, yPos, col, length, label, textCol = 0, textS = 16, textY = 20} = {}) {
+  constructor({ xPos, yPos, col, length, label, textCol = 0, textS = 16, textY = 20 } = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.col = col;
@@ -112,7 +114,7 @@ export class PointerArrow {
   }
 
 
-  draw(){
+  draw() {
     const h = this.length / (2 * Math.sqrt(3));
     const x1 = this.length / 2;
     const x2 = 0;
@@ -142,7 +144,7 @@ export class PointerArrow {
 
 
 export class Line {
-  constructor({x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20} = {}) {
+  constructor({ x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20 } = {}) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -193,7 +195,7 @@ export class Line {
 
 
 export class Triangle {
-  constructor({x1, y1, x2, y2, x3, y3, x4, y4, col, strokeW = 2} = {}) {
+  constructor({ x1, y1, x2, y2, x3, y3, x4, y4, col, strokeW = 2 } = {}) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -219,7 +221,7 @@ export class Triangle {
 }
 
 export class PointerTriangles {
-  constructor({x1, y1, x2, y2, x3, y3, col, angle, tx, ty}) {
+  constructor({ x1, y1, x2, y2, x3, y3, col, angle, tx, ty }) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -240,6 +242,56 @@ export class PointerTriangles {
     rotate(this.angle);
     fill(this.col);
     triangle(this.x1, this.y1, this.x2, this.y2, this.x3, this.y3);
+    pop();
+  }
+}
+
+
+export class CurvedArrow {
+  constructor({ x1, y1, cpX, cpY, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20 } = {}) {
+    this.x1 = x1;
+    this.y1 = y1;
+
+    this.cpX = cpX;
+    this.cpY = cpY;
+
+    this.x2 = x2;
+    this.y2 = y2;
+
+    this.col = col;
+    this.strokeCol = col;
+    this.strokeW = strokeW;
+
+    this.label = label;
+    this.textCol = textCol;
+    this.textS = textS;
+    this.textY = textY;
+  }
+
+  draw() {
+    push();
+      stroke(0);
+      noFill();
+      beginShape();
+      vertex(this.x1, this.x2);
+      quadraticVertex(cpX, cpY, this.x2, this.y2);
+      endShape();
+
+      let dx = this.x2 - cpX;
+      let dy = this.y2 - cpY;
+
+      let angle = atan2(dy, dx);
+
+      let arrow = new PointerTriangles({
+        x1:  0, y1: 0,
+        x2: -8, y2:-5,
+        x3: -8, y3: 5,
+        col: this.col,
+        angle: angle,
+        tx: this.x2, ty: this.y2
+      });
+
+      arrow.draw();
     pop();
   }
 }
@@ -291,7 +343,7 @@ export function windowResized() {
 
   scaleFactorW = (parent.offsetWidth) / baseWidth;
   width = parent.offsetWidth;
-  
+
   scaleFactorH = parent.offsetHeight / baseHeight;
   height = parent.offsetHeight;
 

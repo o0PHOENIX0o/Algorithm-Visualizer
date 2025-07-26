@@ -11,7 +11,7 @@ export class GraphBase extends Base {
         this.indexMap = {};
         this.radius = radius;
         this.highlightColors = ['#FFD54F', '#4FC3F7', '#6858f8ff', '#FF8A65', '#BA68C8', '#F06292', '#e6ad98ff', '#9575CD', '#64B5F6', '#E57373'];
-
+        this.scaleFactor = 1;
     }
 
     Play() {
@@ -71,12 +71,12 @@ export class GraphBase extends Base {
         else DrawArray(objects);
     }
 
-    createArrow(posA, posB, w) {
+    createArrow(posA, posB, w, sf=1) {
         let dx = posB.xPos - posA.xPos;
         let dy = posB.yPos - posA.yPos;
         let angle = atan2(dy, dx);
 
-        let offset = this.dia / 2;
+        let offset = (this.dia * this.scaleFactor) / 2;
         let startX = posA.xPos + offset * cos(angle);
         let startY = posA.yPos + offset * sin(angle);
         let endX = posB.xPos - offset * cos(angle);
@@ -96,7 +96,7 @@ export class GraphBase extends Base {
     }
 
     BoxAround(index, Nodes, Boxtext) {
-        let offset = 5 + Nodes[index].obj.dia / 2;
+        let offset = 5 + (Nodes[index].obj.dia * this.scaleFactor) / 2;
 
         let BoxX1 = Nodes[index].obj.xPos - offset;
         let BoxY1 = Nodes[index].obj.yPos + offset;
@@ -122,21 +122,30 @@ export class GraphBase extends Base {
 
         input.forEach((v, i) => this.indexMap[v] = i);
 
+        let centerX = width / 2;
+        let centerY = height / 2;
+
+        let availableWidth = width * 0.9; 
+        let totalLength = 2 * (this.radius + this.dia * 2);
+        this.scaleFactor = Math.min(1, availableWidth/ totalLength);
+
+        let sclaedRadius = this.radius * this.scaleFactor
+        let scaledDia = this.dia * this.scaleFactor;
+
         this.objNodeArray = [];
 
         input.forEach(element => {
-            const circle = new Circle({ xPos: 0, yPos: 0, dia: this.dia, label: element, col: "#ffffff", textCol: "#000000", strokeCol: "#000000" });
+            const circle = new Circle({ xPos: 0, yPos: 0, dia: scaledDia, label: element, col: "#ffffff", textCol: "#000000", strokeCol: "#000000" });
             this.objNodeArray.push({ index: this.indexMap[element], obj: circle });
         });
 
 
-        let centerX = width / 2;
-        let centerY = height / 2;
+        
 
         for (let i = 0; i < input.length; i++) {
             let angle = map(i, 0, input.length, 0, TWO_PI);
-            let x = centerX + this.radius * 1.5 * cos(angle);
-            let y = centerY + this.radius * sin(angle);
+            let x = centerX + sclaedRadius * 1.5 * cos(angle);
+            let y = centerY + sclaedRadius * sin(angle);
             this.objNodeArray[i].obj.xPos = x;
             this.objNodeArray[i].obj.yPos = y;
         }
@@ -155,7 +164,7 @@ export class GraphBase extends Base {
                 this.directedEdges[this.indexMap[from]][this.indexMap[to]] = line;
                 this.directedEdges[this.indexMap[to]][this.indexMap[from]] = line;
             } else {
-                let arrow = this.createArrow(posA, posB, w, from, to);
+                let arrow = this.createArrow(posA, posB, w);
                 this.directedEdges[this.indexMap[from]][this.indexMap[to]] = arrow;
             }
         }
