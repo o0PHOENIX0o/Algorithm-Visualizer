@@ -144,7 +144,7 @@ export class PointerArrow {
 
 
 export class Line {
-  constructor({ x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20 } = {}) {
+  constructor({ x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20, textPos = 'auto' } = {}) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -156,6 +156,7 @@ export class Line {
 
     this.label = label;
     this.textCol = textCol;
+    this.textPos = textPos;
     this.textS = textS;
     this.textY = textY;
   }
@@ -174,11 +175,13 @@ export class Line {
       let slope = (this.y2 - this.y1) / (this.x2 - this.x1);
       let angle = atan(slope);
       let offset = max(0, dist(this.x1, this.y1, this.x2, this.y2) / 4);
-      let midX = (this.x1 + this.x2) / 2;
-      let midY = (this.y1 + this.y2) / 2;
+      let x = (this.x1 + this.x2) / 2;
+      let y = (this.y1 + this.y2) / 2;
 
-      let x = midX + offset * cos(angle);
-      let y = midY + offset * sin(angle);
+      if(this.textPos === 'auto') {
+        x +=  offset * cos(angle);
+        y +=  offset * sin(angle);
+      }
 
       noStroke();
       fill(this.textCol);

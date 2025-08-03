@@ -3,7 +3,7 @@ import { DrawArray, Line, Triangle, clearCanvas, width, PointerArrow, height } f
 
 class heapSortClass extends Base {
     constructor() {
-        super("Heap Sort", 8, 30);
+        super("Heap Sort", 10, 30);
         this.triangleArray = [];
         this.lineArray = [];
         this.arrows = [];
@@ -53,22 +53,6 @@ class heapSortClass extends Base {
             animate();
         });
     }
-
-    moveDiagonal(elements, angle, dir, depth, offsetY = 50) {
-        if (!this.isAnimating) return;
-        let i;
-        i = (dir > 0) ? 1 : elements.length;
-        return Promise.all(
-            elements.map((element) => {
-                if (!this.isAnimating) return;
-                const y = element.obj.yPos + offsetY;
-                const offsetX = Math.floor(y / Math.tan(angle));
-                const x = element.obj.xPos + ((i * dir * offsetX) / depth);
-                (dir > 0) ? i += 0.1 : i -= 0.1;
-                return this.move(element.obj, x, y, 4);
-            })
-        );
-    };
 
     async drawTriangle(parent, left, leftChild, rightChild) {
         if (!this.isAnimating) return;
@@ -123,8 +107,8 @@ class heapSortClass extends Base {
 
 
 
-    async buildBTree(Array) { // dir -ve: for odd index, +ve for even 
-        const buildBranch = async (Array, i, offsetX, dir, depth) => {
+    async buildBTree(Array) { 
+        const buildBranch = async (Array, i, offsetX, dir, depth) => { // dir -ve: for odd index -> left node, +ve for even -> right node 
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
@@ -155,13 +139,24 @@ class heapSortClass extends Base {
 
         let dia = Array[0].obj.dia;
         let d = 1;
+        let maxD= 4;
+        let totalwidth = 0;
+        for(let i = 0; i<maxD; i++){
+            totalwidth += 36* Math.pow(2, i);
+        }
+        console.log('total width', totalwidth)
+        console.log('available width', width * 0.9);
+
+        let scalingFactor = Math.min(1, (width * 0.9) / totalwidth);
+        let Gap = 36 * scalingFactor;
+
         for (let i = 0; i < Array.length; i++) {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
             let dir = (i % 2) ? -1 : 1;
             if ((i + 1) > Math.pow(2, d) - 1) d++;
-            await buildBranch(Array, i, (this.spacing + dia + 250) / (Math.pow(2, d - 1)), dir, d);
+            await buildBranch(Array, i,  (Gap * (Math.pow(2, maxD - d))), dir, d);
             await this.delay(this.TimeoutDelay);
         }
     }
@@ -290,7 +285,7 @@ class heapSortClass extends Base {
         await this.waitWhilePaused();
 
         if (!this.isAnimating) return;
-        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 30), 2)));
+        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 30), 2))); //animateY -> move all nodes to the top of the canvas (in base class)
         await this.waitWhilePaused();
         await this.delay(this.TimeoutDelay);
         if (!this.isAnimating) return;

@@ -17,6 +17,7 @@ export class Base {
     this.unsortedCol = "#f44336";
     this.isAnimating = false;
     this.isPause = false;
+    this.scaleFactor = 1;
 
     this.spacing = spacing;
     this.dia = diameter;
@@ -34,16 +35,26 @@ export class Base {
         return;
       }
     }
+
+    if(input.length > 0 && this.name.includes("Tree") ){
+      if (key) this.key = key;
+      else {
+        alert("Traversal type not provided!");
+        return;
+      }
+    }
+
     this.objNodeArray = [];
     let totalLength = input.length * (this.dia + this.spacing);
 
     let availableWidth = width * 0.9; 
-    const scaleFactor = Math.min(1, availableWidth / totalLength);
-    this.dia = this.dia * scaleFactor;
-    this.spacing = this.spacing * scaleFactor;
+    this.scaleFactor = Math.min(1, availableWidth / totalLength);
+    this.dia = this.dia * this.scaleFactor;
+    this.spacing = this.spacing * this.scaleFactor;
 
     totalLength = input.length * (this.dia + this.spacing);
 
+    
     if (x == null) x = (width / 2) - (totalLength / 2) + this.dia / 2;
     input.forEach(val => {
       const circle = new Circle({ xPos: x, yPos: y, dia: this.dia, label: val, col: this.BaseCol });

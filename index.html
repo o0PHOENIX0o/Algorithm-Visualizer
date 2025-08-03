@@ -108,7 +108,7 @@
                 <div class="algorithm-category">
                     <h3 class="category-title">Tree Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="binary-tree">Binary Tree
+                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="binary-tree-traversal">Binary Tree
                                 Traversal</button></li>
                         <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="avl-tree">AVL
                                 Tree</button></li>
@@ -150,6 +150,14 @@
                     <label for="searchValue">Search Key</label>
                     <input type="text" id="searchValue" class="array-input" placeholder="search key">
                 </div>
+                
+                <div id="subType" class="input-group">
+                    <label for="opType">Select the type</label>
+                    <!-- <input type="option" id="opType" class="array-input" placeholder="search key"> -->
+                    <select name="opType" id="opType" class="array-input">
+                    </select>
+                </div>
+
                 <button class="control-btn apply-btn" id="applyArrayBtn">Apply</button>
                 <button class="control-btn generate-btn" id="generate">Example</button>
             </div>

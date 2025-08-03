@@ -12,6 +12,7 @@ import { BFS } from './algorithms/Graphs/BFS.js';
 import { Dijkstra } from './algorithms/Graphs/Dijkstra.js';
 import { kruskal } from './algorithms/Graphs/Kruskal.js';
 import { prim } from './algorithms/Graphs/Prim.js';
+import { TreeTraversal } from './algorithms/Trees/Traversal.js';
 
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -85,7 +86,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
 
     document.querySelectorAll(".algorithm-btn").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
-    console.log("--> reset");
+    console.log("--> reset", currentAlgorithm.name);
     currentAlgorithm.reset();
 
     if (document.getElementById('startVertexDiv')) document.getElementById('inputField').removeChild(document.getElementById('startVertexDiv'));
@@ -111,13 +112,17 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       case 'dijkstra': currentAlgorithm = Dijkstra; break;
       case 'kruskal': currentAlgorithm = kruskal; break;
       case 'prim': currentAlgorithm = prim; break;
+      case 'binary-tree-traversal': currentAlgorithm = TreeTraversal; break;
       default: alert(`${alg} not implemented.`); return;
     }
 
     let inputLabel = document.querySelector(`label[for="${InputField.id}"]`);
     let [label, input] = [...keyInput.children];
+
     if (curAlgoType == "Search") {
       keyInput.classList.add('active');
+      document.getElementById('opType')?.classList.remove('active');
+
       inputLabel.innerText = "Custom Array (comma-separated)";
       InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
 
@@ -126,6 +131,9 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     }
     else if (curAlgoType == "Graph") {
       keyInput.classList.add('active');
+      document.getElementById('opType')?.classList.remove('active');
+
+      
       label.innerText = "Edges (src , dest , weight)";
       inputLabel.innerText = "Vertices (comma-separated)";
 
@@ -147,8 +155,27 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
           document.getElementById('startVertex').setAttribute("disabled", "true");
         }
       }
+    } else if(curAlgoType == "Tree") {
+      keyInput.classList.remove('active');
+      let type = document.getElementById('opType');
+
+      if (currentAlgorithm.name == 'Tree Traversal') {
+        let temp = `
+          <option value="inORder">In order</option>
+          <option value="preOrder">pre order</option>
+          <option value="postOrder">post order</option>
+        `;
+        type.innerHTML = temp;
+      }
+      type?.classList.add('active');
+
+      inputLabel.innerText = "Vertices (comma-separated)";
+      InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
+     
     } else {
       keyInput.classList.remove('active');
+      document.getElementById('opType')?.classList.remove('active');
+
       inputLabel.innerText = "Custom Array (comma-separated)";
       InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
     }
@@ -167,6 +194,9 @@ document.getElementById("generate").addEventListener("click", () => {
     InputField.value = (currentAlgorithm.name == 'prim' || currentAlgorithm.name == 'kruskal') ? "A, B, C, E, F, G, H, I, J" : "A, B, C, D, E, F, G, H, I, J";
     keyValue.value = "(A,B,2), (A,C,10), (B,E,11), (C,F,3), (E,F,7), (E,G,1), (G,H,14), (F,H,20), (H,I,13), (I,J,21), (J,G, 5)";
     document.getElementById('startVertex').value = "A";
+  } else if (curAlgoType == "Tree") {
+    document.getElementById('opType').value = "inORder";
+    InputField.value = "29, 10, 14, 37, 13, 25, 1, 17, 5, 8";
   }
   document.getElementById("applyArrayBtn").click();
 })
@@ -190,7 +220,9 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     alert("Use max 15 elements for visualization");
     return;
   }
+
   console.log("cur algo type ", curAlgoType);
+
   if (curAlgoType == "Search") currentAlgorithm.generate(values, keyValue.value);
   else if (curAlgoType == "Graph") {
 
@@ -228,6 +260,8 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
     currentAlgorithm.generate(values, edges, startIndex, adjMatrix);
 
+  }else if(curAlgoType == 'Tree'){
+    currentAlgorithm.generate(values, document.getElementById('opType').value);
   } else currentAlgorithm.generate(values);
 });
 
