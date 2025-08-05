@@ -13,6 +13,7 @@ import { Dijkstra } from './algorithms/Graphs/Dijkstra.js';
 import { kruskal } from './algorithms/Graphs/Kruskal.js';
 import { prim } from './algorithms/Graphs/Prim.js';
 import { TreeTraversal } from './algorithms/Trees/Traversal.js';
+// import { BST } from './algorithms/Trees/BST.js';
 
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -79,109 +80,132 @@ window.currentAlgorithm = currentAlgorithm;
 
 document.querySelectorAll(".algorithm-btn").forEach(btn => {
   btn.addEventListener("click", (e) => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     document.querySelectorAll(".algorithm-btn").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
-    console.log("--> reset", currentAlgorithm.name);
-    currentAlgorithm.reset();
 
-    if (document.getElementById('startVertexDiv')) document.getElementById('inputField').removeChild(document.getElementById('startVertexDiv'));
+    console.log("--> reset", currentAlgorithm);
+    if(currentAlgorithm) currentAlgorithm.reset();
+
+    document.getElementById('startVertexDiv')?.remove();
+
+    const inputButtons = document.querySelectorAll('#inputField .control-btn');
+    const controlButtons = document.querySelector('#controlButtons');
+    const treeControls = document.querySelector('#treeControls');
+    const inputLabel = document.querySelector(`label[for="${InputField.id}"]`);
+    const [label, input] = [...keyInput.children];
+    const subType = document.getElementById('subType');
 
     const alg = e.target.dataset.algorithm;
-    curAlgoType = e.target.dataset.algoType;
+    curAlgoType= e.target.dataset.algoType;
 
     algoTitle.textContent = e.target.textContent;
     algoInfo.textContent = info[alg] || 'No information available';
 
-    switch (alg) {
-      case 'bubble-sort': currentAlgorithm = BubbleSort; break;
-      case 'selection-sort': currentAlgorithm = SelectionSort; break;
-      case 'insertion-sort': currentAlgorithm = insertionSort; break;
-      case 'quick-sort': currentAlgorithm = quickSort; break;
-      case 'merge-sort': currentAlgorithm = mergeSort; break;
-      case 'heap-sort': currentAlgorithm = heapSort; break;
-      case 'linear-search': currentAlgorithm = linearSearch; break;
-      case 'binary-search': currentAlgorithm = binarySearch; break;
-      case 'hash-search': currentAlgorithm = hashSearch; break;
-      case 'dfs': currentAlgorithm = DFS; break;
-      case 'bfs': currentAlgorithm = BFS; break;
-      case 'dijkstra': currentAlgorithm = Dijkstra; break;
-      case 'kruskal': currentAlgorithm = kruskal; break;
-      case 'prim': currentAlgorithm = prim; break;
-      case 'binary-tree-traversal': currentAlgorithm = TreeTraversal; break;
-      default: alert(`${alg} not implemented.`); return;
+    const algorithmMap = {
+      'bubble-sort': BubbleSort,
+      'selection-sort': SelectionSort,
+      'insertion-sort': insertionSort,
+      'quick-sort': quickSort,
+      'merge-sort': mergeSort,
+      'heap-sort': heapSort,
+      'linear-search': linearSearch,
+      'binary-search': binarySearch,
+      'hash-search': hashSearch,
+      'dfs': DFS,
+      'bfs': BFS,
+      'dijkstra': Dijkstra,
+      'kruskal': kruskal,
+      'prim': prim,
+      'binary-tree-traversal': TreeTraversal,
+      // 'BST' : BST, 
+    };
+
+    currentAlgorithm = algorithmMap[alg];
+
+    if (!currentAlgorithm) {
+      alert(`${alg} not implemented.`);
+      return;
     }
 
-    let inputLabel = document.querySelector(`label[for="${InputField.id}"]`);
-    let [label, input] = [...keyInput.children];
+    // Reset display
+    keyInput.classList.remove('active');
+    subType?.classList.remove('active');
+    treeControls?.classList.replace('displayGrid', 'displayNone');
+    controlButtons?.classList.remove('displayNone');
+    inputButtons.forEach(btn => btn.classList.remove('displayNone'));
 
-    if (curAlgoType == "Search") {
-      keyInput.classList.add('active');
-      document.getElementById('opType')?.classList.remove('active');
+    // subType specific UI
+    switch (curAlgoType) {
+      case "Search":
+        keyInput.classList.add('active');
+        inputLabel.innerText = "Custom Array (comma-separated)";
+        InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
+        label.innerText = "Search Key";
+        input.setAttribute("placeholder", "Search Key");
+        break;
 
-      inputLabel.innerText = "Custom Array (comma-separated)";
-      InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
+      case "Graph":
+        keyInput.classList.add('active');
 
-      label.innerText = "Search Key";
-      input.setAttribute("placeholder", "Search Key");
-    }
-    else if (curAlgoType == "Graph") {
-      keyInput.classList.add('active');
-      document.getElementById('opType')?.classList.remove('active');
-
-      
-      label.innerText = "Edges (src , dest , weight)";
-      inputLabel.innerText = "Vertices (comma-separated)";
-
-      input.setAttribute("placeholder", "eg: (A,B), (C,D)");
-      InputField.setAttribute("placeholder", "eg: A,B,C,D");
-
-      if (!document.getElementById('startVertex')) {
-        const temp = document.createElement('div');
-        temp.classList = "input-group";
-        temp.id = "startVertexDiv"
-        let element = `
-                  <label for="startVertex">Start Vertex</label>
-                  <input type="text" id="startVertex" class="array-input" placeholder="eg: A">
-                `;
-        temp.innerHTML = element;
-        keyInput.after(temp);
-        if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") {
-          document.getElementById('startVertex').value = "A";
-          document.getElementById('startVertex').setAttribute("disabled", "true");
+        if (!document.getElementById('startVertex')) {
+          const startVertexDiv = document.createElement('div');
+          startVertexDiv.classList = "input-group";
+          startVertexDiv.id = "startVertexDiv";
+          startVertexDiv.innerHTML = `
+            <label for="startVertex">Start Vertex</label>
+            <input type="text" id="startVertex" class="array-input" placeholder="eg: A">
+          `;
+          keyInput.after(startVertexDiv);
         }
-      }
-    } else if(curAlgoType == "Tree") {
-      keyInput.classList.remove('active');
-      let type = document.getElementById('opType');
 
-      if (currentAlgorithm.name == 'Tree Traversal') {
-        let temp = `
-          <option value="inORder">In order</option>
-          <option value="preOrder">pre order</option>
-          <option value="postOrder">post order</option>
-        `;
-        type.innerHTML = temp;
-      }
-      type?.classList.add('active');
+        inputLabel.innerText = "Vertices (comma-separated)";
+        InputField.setAttribute("placeholder", "eg: A,B,C,D");
+        label.innerText = "Edges (src , dest , weight)";
+        input.setAttribute("placeholder", "eg: (A,B), (C,D)");
 
-      inputLabel.innerText = "Vertices (comma-separated)";
-      InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
-     
-    } else {
-      keyInput.classList.remove('active');
-      document.getElementById('opType')?.classList.remove('active');
+        if (["prim", "kruskal"].includes(currentAlgorithm.name)) {
+          const startVertex = document.getElementById('startVertex');
+          if (startVertex) {
+            startVertex.value = "A";
+            startVertex.setAttribute("disabled", "true");
+          }
+        }
+        break;
 
-      inputLabel.innerText = "Custom Array (comma-separated)";
-      InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
+      case "Tree":
+        inputLabel.innerText = "Vertices (comma-separated)";
+        InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
+
+        if (currentAlgorithm.name == "Tree Traversal") {
+          subType?.classList.add('active');
+          treeControls?.classList.replace('displayGrid', 'displayNone');
+          let type = document.getElementById('opType');
+          type.innerHTML = `
+            <option value="inORder">In order</option>
+            <option value="preOrder">Pre order</option>
+            <option value="postOrder">Post order</option>
+          `;
+        } else if (currentAlgorithm.name == "BST") {
+          treeControls?.classList.replace('displayNone', 'displayGrid');
+          controlButtons?.classList.add('displayNone');
+          keyInput.classList.add('active');
+          console.log("BST selected");
+          inputButtons.forEach(btn => btn.classList.add('displayNone'));
+        }
+        break;
+
+      default:
+        // For sorting
+        inputLabel.innerText = "Custom Array (comma-separated)";
+        InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
     }
+
     window.currentAlgorithm = currentAlgorithm;
   });
 });
+
 
 
 document.getElementById("generate").addEventListener("click", () => {
@@ -221,7 +245,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     return;
   }
 
-  console.log("cur algo type ", curAlgoType);
+  console.log("cur algo subType ", curAlgoType);
 
   if (curAlgoType == "Search") currentAlgorithm.generate(values, keyValue.value);
   else if (curAlgoType == "Graph") {
@@ -260,7 +284,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
     currentAlgorithm.generate(values, edges, startIndex, adjMatrix);
 
-  }else if(curAlgoType == 'Tree'){
+  } else if (curAlgoType == 'Tree') {
     currentAlgorithm.generate(values, document.getElementById('opType').value);
   } else currentAlgorithm.generate(values);
 });
