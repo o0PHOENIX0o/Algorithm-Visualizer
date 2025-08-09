@@ -245,7 +245,6 @@ document.getElementById("generateBST").addEventListener("click", () => {
   }
   InputField.value = (width < 780) ? "8,4,12,2,6,10,14,1,3,5" : "8,4,12,2,6,10,14,1,3,5,0"
 
-
   document.getElementById("bulkInsert").click();
 });
 

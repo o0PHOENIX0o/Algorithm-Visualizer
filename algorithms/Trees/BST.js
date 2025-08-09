@@ -172,8 +172,8 @@ class BSTclass extends TreeBase {
             y2: linePosition.y2,
             col: 0,
             strokeW: 1,
-            label: `${childIndex - 1}`,
-            textPos: 'center'
+            // label: `${childIndex - 1}`,
+            // textPos: 'center'
         });
 
         this.lineArray.push(edge);
