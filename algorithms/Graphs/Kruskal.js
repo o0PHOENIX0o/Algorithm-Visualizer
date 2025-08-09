@@ -39,7 +39,6 @@ class DisjointSet {
 class KruskalClass extends GraphBase {
     constructor() {
         super("kruskal", 10, 40);
-        this.textArray = [];
         this.edgeBoxes = [];
     }
 
@@ -50,7 +49,6 @@ class KruskalClass extends GraphBase {
         this.adjMatrix = [];
         this.directedEdges = [];
         this.indexMap = {};
-        this.textArray = [];
         this.edgeBoxes = [];
 
         this.isAnimating = false;
@@ -59,59 +57,9 @@ class KruskalClass extends GraphBase {
         DrawArray(null);
     }
 
-    async moveSquare({ element, xc, yc, otherElements, speedFactor = 4 } = {}) {
-        let offset = 5 + this.objNodeArray[0].obj.dia / 2;
-        let targetX1 = xc - offset;
-        let targetY1 = yc + offset;
-        let targetX2 = xc + offset;
-        let targetY2 = yc - offset;
+    
 
-        if (!this.isAnimating) return;
-        return new Promise(resolve => {
-            if (!this.isAnimating) return;
-
-            let startX1 = element.xPos1;
-            let startY1 = element.yPos1;
-            let startX2 = element.xPos2;
-            let startY2 = element.yPos2;
-            let t = 0;
-            const animate = async () => {
-                if (!this.isAnimating) return;
-
-                t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
-                element.xPos1 = lerp(startX1, targetX1, t);
-                element.yPos1 = lerp(startY1, targetY1, t);
-                element.xPos2 = lerp(startX2, targetX2, t);
-                element.yPos2 = lerp(startY2, targetY2, t);
-                this.drawAll([...otherElements, element]);
-
-                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
-                else resolve();
-            };
-            animate();
-        });
-    }
-
-    async move({ element, x, y, otherElements, speedFactor = 4 } = {}) {
-        if (!this.isAnimating) return;
-        return new Promise(resolve => {
-            if (!this.isAnimating) return;
-
-            const startX = element.xPos, startY = element.yPos;
-            let t = 0;
-            const animate = async () => {
-                if (!this.isAnimating) return;
-
-                t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
-                element.xPos = lerp(startX, x, t);
-                element.yPos = lerp(startY, y, t);
-                this.drawAll([element, ...otherElements, ...this.edgeBoxes.map(box => box.obj)]);
-                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
-                else resolve();
-            };
-            animate();
-        });
-    }
+   
 
 
     async setBoxes(edges, Nodes) {
@@ -190,7 +138,7 @@ class KruskalClass extends GraphBase {
         let MST = [];
         let totalWeight = 0;
         for (let [i, { u, v, weight, line }] of edges.entries()) {
-            this.move({ element: pointer, x: this.edgeBoxes[i].position.xPos, y: this.edgeBoxes[i].position.yPos + 25, otherElements: [...pointerBox] });
+            this.move({ element: pointer, x: this.edgeBoxes[i].position.xPos, y: this.edgeBoxes[i].position.yPos + 25, otherElements: [...pointerBox, ...this.edgeBoxes.map(box => box.obj)] });
 
             await Promise.all([
                 this.moveSquare({ element: pointerBox[0], xc: Nodes[u].obj.xPos, yc: Nodes[u].obj.yPos, otherElements: [pointer, pointerBox[1], ...this.edgeBoxes.map(box => box.obj)] }),

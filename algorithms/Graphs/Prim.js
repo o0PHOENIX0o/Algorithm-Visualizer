@@ -23,39 +23,6 @@ class PrimClass extends GraphBase {
         DrawArray(null);
     }
 
-    async moveSquare(element, xc, yc, speedFactor = 4) {
-        let offset = 5 + this.objNodeArray[0].obj.dia / 2;
-        let targetX1 = xc - offset;
-        let targetY1 = yc + offset;
-        let targetX2 = xc + offset;
-        let targetY2 = yc - offset;
-
-        if (!this.isAnimating) return;
-        return new Promise(resolve => {
-            if (!this.isAnimating) return;
-
-            let startX1 = element.xPos1;
-            let startY1 = element.yPos1;
-            let startX2 = element.xPos2;
-            let startY2 = element.yPos2;
-            let t = 0;
-            const animate = async () => {
-                if (!this.isAnimating) return;
-
-                t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
-                element.xPos1 = lerp(startX1, targetX1, t);
-                element.yPos1 = lerp(startY1, targetY1, t);
-                element.xPos2 = lerp(startX2, targetX2, t);
-                element.yPos2 = lerp(startY2, targetY2, t);
-                this.drawAll([...this.textArray, element]);
-
-                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
-                else resolve();
-            };
-            animate();
-        });
-    }
-
     drawDist(Nodes) {
         if (Nodes.length < 1) return;
 
@@ -125,7 +92,7 @@ class PrimClass extends GraphBase {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-            await this.moveSquare(box, Nodes[uIndex].obj.xPos, Nodes[uIndex].obj.yPos);
+            await this.moveSquare({element: box, xc: Nodes[uIndex].obj.xPos, yc: Nodes[uIndex].obj.yPos, otherObjects: this.textArray});
             this.drawAll([...this.textArray, box]);
             await this.delay(2 * this.TimeoutDelay);
             await this.waitWhilePaused();

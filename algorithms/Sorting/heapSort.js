@@ -283,8 +283,8 @@ class heapSortClass extends Base {
 
     async algoExecutor() {
         await this.waitWhilePaused();
-
         if (!this.isAnimating) return;
+        
         await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 30), 2))); //animateY -> move all nodes to the top of the canvas (in base class)
         await this.waitWhilePaused();
         await this.delay(this.TimeoutDelay);

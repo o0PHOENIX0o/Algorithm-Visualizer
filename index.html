@@ -96,7 +96,7 @@
                     <ul class="algorithm-list">
                         <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="binary-tree-traversal">Binary Tree Traversal</button> </li>
                         <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="BST">Binary Search Tree</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="avl-tree">AVL Tree</button></li>
+                        <!-- <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="avl-tree">AVL Tree</button></li> -->
                     </ul>
                 </div>
             </div>
@@ -139,8 +139,15 @@
                     <select name="opType" id="opType" class="array-input"></select>
                 </div>
 
-                <button class="control-btn apply-btn" id="applyArrayBtn">Apply</button>
-                <button class="control-btn generate-btn" id="generate">Example</button>
+                <div id="controlBtnGrp" class="controlBtnGrp">
+                    <button class="control-btn apply-btn" id="applyArrayBtn">Apply</button>
+                    <button class="control-btn generate-btn" id="generate">Example</button>
+                </div>
+                
+                <div id="treeControlsGrp" class="controlBtnGrp displayNone">
+                    <button class="control-btn apply-btn" id="bulkInsert">Bulk Insert</button>
+                    <button class="control-btn generate-btn" id="generateBST">Example</button>
+                </div>
             </div>
 
             <div class="control-group">
@@ -166,17 +173,21 @@
 
             <!-- for tree lagorithms -->
             <div class="control-buttons displayNone" id="treeControls">
-                <button class="control-btn play-btn" id="playBtn">
+                <button class="control-btn play-btn" id="insertBtn">
                     <ion-icon name="add-outline" style="font-size: large;"></ion-icon>
                     Insert
                 </button>
-                <button class="control-btn pause-btn" id="playPauseBtn">
+                <button class="control-btn pause-btn" id="SearchBtn">
                     <ion-icon name="search-outline"></ion-icon>
                     Search
                 </button>
-                <button class="control-btn reset-btn" id="resetBtn">
+                <button class="control-btn reset-btn" id="DeleteBtn">
                     <ion-icon name="trash-outline"></ion-icon>
                     Delete
+                </button>
+                <button class="control-btn deleteAll-btn" id="deleteAllBtn">
+                    <ion-icon name="trash-outline"></ion-icon>
+                    Delete All
                 </button>
             </div>
         </div>

@@ -71,7 +71,7 @@ export class GraphBase extends Base {
         else DrawArray(objects);
     }
 
-    createArrow(posA, posB, w, sf=1) {
+    createArrow(posA, posB, w, sf = 1) {
         let dx = posB.xPos - posA.xPos;
         let dy = posB.yPos - posA.yPos;
         let angle = atan2(dy, dx);
@@ -86,13 +86,34 @@ export class GraphBase extends Base {
         if (this.name == 'BFS' || this.name == 'DFS') weight = "";
         else weight = w ?? "";
 
-        
-        let line = new Line({x1: startX, y1: startY, x2: endX, y2: endY, col: 0, strokeW: 1, label: weight, textCol: this.unsortedCol});
-        
-        let pointerTriangle = new PointerTriangles({x1: 0, y1: 0, x2: -8, y2: -5, x3: -8, y3: 5, col: 0, angle: angle, tx: endX, ty: endY});
+
+        let line = new Line({ x1: startX, y1: startY, x2: endX, y2: endY, col: 0, strokeW: 1, label: weight, textCol: this.unsortedCol });
+
+        let pointerTriangle = new PointerTriangles({ x1: 0, y1: 0, x2: -8, y2: -5, x3: -8, y3: 5, col: 0, angle: angle, tx: endX, ty: endY });
 
         let arrow = { line: line, arrow: pointerTriangle };
         return arrow;
+    }
+
+    async move({ element, x, y, otherElements, speedFactor = 4 } = {}) {
+        if (!this.isAnimating) return;
+        return new Promise(resolve => {
+            if (!this.isAnimating) return;
+
+            const startX = element.xPos, startY = element.yPos;
+            let t = 0;
+            const animate = async () => {
+                if (!this.isAnimating) return;
+
+                t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
+                element.xPos = lerp(startX, x, t);
+                element.yPos = lerp(startY, y, t);
+                this.drawAll([element, ...otherElements]);
+                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
+                else resolve();
+            };
+            animate();
+        });
     }
 
     BoxAround(index, Nodes, Boxtext) {
@@ -106,9 +127,42 @@ export class GraphBase extends Base {
 
         let BoxH = Math.abs(BoxY2 - BoxY1);
 
-        let box = new Square({xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.HighlightCol2, strokeW: 2, text: Boxtext, textCol: 0, textYOffset: -(10 + BoxH / 2)});
+        let box = new Square({ xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.HighlightCol2, strokeW: 2, text: Boxtext, textCol: 0, textYOffset: -(10 + BoxH / 2) });
 
         return box;
+    }
+
+    async moveSquare({ element, xc, yc, otherElements, speedFactor = 4 } = {}) {
+        let offset = 5 + this.objNodeArray[0].obj.dia / 2;
+        let targetX1 = xc - offset;
+        let targetY1 = yc + offset;
+        let targetX2 = xc + offset;
+        let targetY2 = yc - offset;
+
+        if (!this.isAnimating) return;
+        return new Promise(resolve => {
+            if (!this.isAnimating) return;
+
+            let startX1 = element.xPos1;
+            let startY1 = element.yPos1;
+            let startX2 = element.xPos2;
+            let startY2 = element.yPos2;
+            let t = 0;
+            const animate = async () => {
+                if (!this.isAnimating) return;
+
+                t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
+                element.xPos1 = lerp(startX1, targetX1, t);
+                element.yPos1 = lerp(startY1, targetY1, t);
+                element.xPos2 = lerp(startX2, targetX2, t);
+                element.yPos2 = lerp(startY2, targetY2, t);
+                this.drawAll([...otherElements, element]);
+
+                if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
+                else resolve();
+            };
+            animate();
+        });
     }
 
     generate(input, edges, startVertex, adjMatrix) {
@@ -125,9 +179,9 @@ export class GraphBase extends Base {
         let centerX = width / 2;
         let centerY = height / 2;
 
-        let availableWidth = width * 0.9; 
+        let availableWidth = width * 0.9;
         let totalLength = 2 * (this.radius + this.dia * 2);
-        this.scaleFactor = Math.min(1, availableWidth/ totalLength);
+        this.scaleFactor = Math.min(1, availableWidth / totalLength);
 
         let sclaedRadius = this.radius * this.scaleFactor
         let scaledDia = this.dia * this.scaleFactor;
@@ -140,7 +194,7 @@ export class GraphBase extends Base {
         });
 
 
-        
+
 
         for (let i = 0; i < input.length; i++) {
             let angle = map(i, 0, input.length, 0, TWO_PI);
@@ -156,9 +210,9 @@ export class GraphBase extends Base {
             let posB = { xPos: this.objNodeArray[this.indexMap[to]].obj.xPos, yPos: this.objNodeArray[this.indexMap[to]].obj.yPos }
 
             if (this.name === "prim" || this.name === "kruskal") {
-                let line = { 
-                    line: new Line({x1: posA.xPos, y1: posA.yPos, x2: posB.xPos, y2: posB.yPos, col: 0, strokeW: 1, label: w ?? "", textCol:  this.unsortedCol}) , 
-                    arrow: null 
+                let line = {
+                    line: new Line({ x1: posA.xPos, y1: posA.yPos, x2: posB.xPos, y2: posB.yPos, col: 0, strokeW: 1, label: w ?? "", textCol: this.unsortedCol }),
+                    arrow: null
                 }
 
                 this.directedEdges[this.indexMap[from]][this.indexMap[to]] = line;

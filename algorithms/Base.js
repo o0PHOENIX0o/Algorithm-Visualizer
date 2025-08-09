@@ -115,7 +115,7 @@ export class Base {
     });
   }
 
-  async SwapNodes(obj1, obj2, arrows, speedFactor = 2) {
+  async SwapNodes(obj1, obj2, otherObjects=[], speedFactor = 2) {
     if (obj1 == obj2) return;
     return new Promise(resolve => {
       const startX1 = obj1.xPos, startX2 = obj2.xPos;
@@ -127,7 +127,7 @@ export class Base {
         obj1.yPos = lerp(startY1, startY2, t);
         obj2.xPos = lerp(startX2, startX1, t);
         obj2.yPos = lerp(startY2, startY1, t);
-        DrawArray(arrows);
+        DrawArray(otherObjects);
         if (t < 1 && this.isAnimating) requestAnimationFrame(animate);
         else resolve();
       };

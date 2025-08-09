@@ -13,7 +13,7 @@ import { Dijkstra } from './algorithms/Graphs/Dijkstra.js';
 import { kruskal } from './algorithms/Graphs/Kruskal.js';
 import { prim } from './algorithms/Graphs/Prim.js';
 import { TreeTraversal } from './algorithms/Trees/Traversal.js';
-// import { BST } from './algorithms/Trees/BST.js';
+import { BST } from './algorithms/Trees/BST.js';
 
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -25,6 +25,9 @@ const navToggle = document.getElementById('navToggle');
 const keyInput = document.getElementById("searchKey");
 const keyValue = document.getElementById("searchValue");
 const sidebar = document.getElementById('sidebar');
+
+const constrolButtonGrp = document.getElementById('controlBtnGrp');
+const treeControlsGrp = document.getElementById('treeControlsGrp');
 
 const algoTitle = document.getElementById("algorithmTitle");
 const algoInfo = document.getElementById("algorithmInfo");
@@ -86,11 +89,10 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     e.target.classList.add("active");
 
     console.log("--> reset", currentAlgorithm);
-    if(currentAlgorithm) currentAlgorithm.reset();
+    if (currentAlgorithm) currentAlgorithm.reset();
 
     document.getElementById('startVertexDiv')?.remove();
 
-    const inputButtons = document.querySelectorAll('#inputField .control-btn');
     const controlButtons = document.querySelector('#controlButtons');
     const treeControls = document.querySelector('#treeControls');
     const inputLabel = document.querySelector(`label[for="${InputField.id}"]`);
@@ -98,7 +100,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     const subType = document.getElementById('subType');
 
     const alg = e.target.dataset.algorithm;
-    curAlgoType= e.target.dataset.algoType;
+    curAlgoType = e.target.dataset.algoType;
 
     algoTitle.textContent = e.target.textContent;
     algoInfo.textContent = info[alg] || 'No information available';
@@ -119,7 +121,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
       'kruskal': kruskal,
       'prim': prim,
       'binary-tree-traversal': TreeTraversal,
-      // 'BST' : BST, 
+      'BST': BST,
     };
 
     currentAlgorithm = algorithmMap[alg];
@@ -134,7 +136,8 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     subType?.classList.remove('active');
     treeControls?.classList.replace('displayGrid', 'displayNone');
     controlButtons?.classList.remove('displayNone');
-    inputButtons.forEach(btn => btn.classList.remove('displayNone'));
+    constrolButtonGrp.classList.remove('displayNone');
+    treeControlsGrp?.classList.add('displayNone');
 
     // subType specific UI
     switch (curAlgoType) {
@@ -175,24 +178,34 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
         break;
 
       case "Tree":
-        inputLabel.innerText = "Vertices (comma-separated)";
-        InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
 
         if (currentAlgorithm.name == "Tree Traversal") {
+          inputLabel.innerText = "Vertices (comma-separated)";
+          InputField.setAttribute("placeholder", "eg: 64, 34, 25, 12, 22, 11, 90");
+
           subType?.classList.add('active');
           treeControls?.classList.replace('displayGrid', 'displayNone');
+          
           let type = document.getElementById('opType');
           type.innerHTML = `
             <option value="inORder">In order</option>
             <option value="preOrder">Pre order</option>
             <option value="postOrder">Post order</option>
           `;
+
         } else if (currentAlgorithm.name == "BST") {
+          treeControlsGrp?.classList.replace('displayNone', 'displayFlex');
+          constrolButtonGrp?.classList.add('displayNone');
           treeControls?.classList.replace('displayNone', 'displayGrid');
           controlButtons?.classList.add('displayNone');
+
+          inputLabel.innerText = "vertices (comma-separated)";
+          InputField.setAttribute("placeholder", "eg: 64,64,25,12,22,11,90");
+          keyInput.children[0].innerText = "vertex (one at a time)";
+          keyValue.setAttribute("placeholder", "eg: 64");
           keyInput.classList.add('active');
-          console.log("BST selected");
-          inputButtons.forEach(btn => btn.classList.add('displayNone'));
+
+          console.log("BST selected", currentAlgorithm);
         }
         break;
 
@@ -225,6 +238,14 @@ document.getElementById("generate").addEventListener("click", () => {
   document.getElementById("applyArrayBtn").click();
 })
 
+document.getElementById("generateBST").addEventListener("click", () => {
+  if (currentAlgorithm.name !== "BST") {
+    alert("Please select BST algorithm to generate BST.");
+    return;
+  }
+  InputField.value = "100,50,40,30,35,25,120";
+  document.getElementById("bulkInsert").click();
+});
 
 document.getElementById("applyArrayBtn").addEventListener("click", () => {
   window.scrollTo({
@@ -329,3 +350,80 @@ document.getElementById("playPauseBtn").addEventListener("click", () => {
 })
 
 
+document.getElementById("insertBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+  if (currentAlgorithm.isAnimating) return;
+  const value = keyValue.value.trim();
+  if (!value) {
+    alert("Please enter a value to insert.");
+    return;
+  }
+  currentAlgorithm.insert(value);
+  keyValue.value = "";
+});
+
+
+document.getElementById("SearchBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+  if (currentAlgorithm.isAnimating) return;
+  const value = keyValue.value.trim();
+  if (!value) {
+    alert("Please enter a value to insert.");
+    return;
+  }
+  currentAlgorithm.search(value);
+  keyValue.value = "";
+});
+
+
+document.getElementById("DeleteBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+  if (currentAlgorithm.isAnimating) return;
+  const value = keyValue.value.trim();
+  if (!value) {
+    alert("Please enter a value to insert.");
+    return;
+  }
+  currentAlgorithm.delete(value);
+  keyValue.value = "";
+});
+
+document.getElementById("deleteAllBtn").addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+  currentAlgorithm.reset({ preserveLayout: true });
+});
+
+
+document.getElementById('bulkInsert').addEventListener("click", () => { // bulk insert btn
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+  if (currentAlgorithm.isAnimating) return;
+  
+  const input = InputField.value;
+  const values = input.split(',').map(x => x.trim()).filter(x => x !== '');
+  if (values.length === 0) {
+    alert("Please enter values to bulk insert.");
+    return;
+  }
+  currentAlgorithm.bulkInsert(values);
+  InputField.value = "";
+});
+
+
+document.getElementById('generateBST').addEventListener("click", () => { // generate BST btn
+
+}); 
