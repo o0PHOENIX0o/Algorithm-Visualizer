@@ -243,7 +243,7 @@ document.getElementById("generateBST").addEventListener("click", () => {
     alert("Please select BST algorithm to generate BST.");
     return;
   }
-  InputField.value = (width < 780) ? "8,4,12,2,6,10,14,1,3,5" : "8,4,12,2,6,10,14,1,3,5,0"
+  InputField.value = (width < 780) ? "50,30,70,20,60,10,25,65" : "50,30,70,20,60,10,25,65,5,15,55,68,72,90,85,95"
 
   document.getElementById("bulkInsert").click();
 });

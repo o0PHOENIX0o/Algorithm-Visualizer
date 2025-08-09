@@ -186,6 +186,7 @@ class BSTclass extends TreeBase {
 
     async bulkInsert(values) {
         this.isAnimating = true;
+        this.SPEED_UP_FACTOR = 2;
 
         const numericValues = values.map(Number).filter(v => !isNaN(v));
         if (numericValues.length === 0) {
@@ -198,6 +199,7 @@ class BSTclass extends TreeBase {
             await this.insert(value);
         }
 
+        this.SPEED_UP_FACTOR = 1;
         this.isAnimating = false;
     }
 
@@ -429,7 +431,7 @@ class BSTclass extends TreeBase {
 
 
     async buildBinaryTree(keepValues) {
-        this.SPEED_UP_FACTOR = 10;
+        this.SPEED_UP_FACTOR = 50;
         this.reset({ preserveLayout: true });
         this.isAnimating = true;
 
@@ -499,34 +501,41 @@ class BSTclass extends TreeBase {
 
         nodeArray[keyIndex].obj.col = this.unsortedCol;
 
-        let leftChildOfKey = this.getLeftChildIndex(keyIndex);
-        let rightChildOfKey = this.getRightChildIndex(keyIndex);
+        let leftChildIndex = this.getLeftChildIndex(keyIndex);
+        let rightChildIndex = this.getRightChildIndex(keyIndex);
 
-        // Case 1: Two children
-        if (nodeArray[leftChildOfKey] != undefined && nodeArray[rightChildOfKey] != undefined) {
-            let cur = leftChildOfKey;
+        const rebuildTree = async () => {
+            let newTreeValues = nodeArray
+                .filter(node => node !== undefined)
+                .map(node => node.value);
+            console.log("Rebuilding tree with values:", newTreeValues);
+            await this.buildBinaryTree(newTreeValues);
+        };
+
+        // Case 1: Node has TWO children
+        if (nodeArray[leftChildIndex] && nodeArray[rightChildIndex]) {
+            let cur = leftChildIndex;
             let prev = cur;
 
-            let Successor = this.BoxAround({
+            let predecessorBox = this.BoxAround({
                 index: cur,
                 Nodes: nodeArray,
                 col: this.HighlightCol,
-                Boxtext: "Successor"
+                Boxtext: "Predecessor"
             });
 
-            this.drawAll([...this.lineArray, Successor]);
+            this.drawAll([...this.lineArray, predecessorBox]);
             await this.delay(this.TimeoutDelay);
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-
             // Find rightmost in left subtree
-            while (nodeArray[this.getRightChildIndex(cur)] != undefined) {
+            while (nodeArray[cur] != undefined) {
                 prev = cur;
                 cur = this.getRightChildIndex(cur);
 
                 await this.moveSquare({
-                    element: Successor,
+                    element: predecessorBox,
                     xc: this.objPositions[prev]?.x,
                     yc: this.objPositions[prev]?.y,
                     otherObjects: [...this.lineArray, this.pointerSquare]
@@ -537,43 +546,49 @@ class BSTclass extends TreeBase {
                 if (!this.isAnimating) return;
             }
 
-            nodeArray[prev].obj.col = this.HighlightCol; // prev is successor
+            nodeArray[prev].obj.col = this.HighlightCol;
 
-            await this.SwapNodes(nodeArray[keyIndex].obj, nodeArray[prev].obj, [...this.lineArray, this.pointerSquare, Successor]);
+            // Swap predecessor with target node
+            await this.SwapNodes(
+                nodeArray[keyIndex].obj,
+                nodeArray[prev].obj,
+                [...this.lineArray, this.pointerSquare, predecessorBox]
+            );
             [nodeArray[keyIndex], nodeArray[prev]] = [nodeArray[prev], nodeArray[keyIndex]];
+
             delete nodeArray[prev];
 
-            let leftChild = this.getLeftChildIndex(prev);
-            if (nodeArray[leftChild] != undefined) {
-                let edge = this.lineArray[this.edgeMap.get(`${leftChild - 1}`)];
-                edge.x1 = this.objPositions[this.getParentIndex(prev)].x;
-                edge.y1 = this.objPositions[this.getParentIndex(prev)].y;
+            // Edge adjustments if predecessor had a left child
+            let leftChildOfPrev = this.getLeftChildIndex(prev);
+            if (nodeArray[leftChildOfPrev]) {
+                let edge = this.lineArray[this.edgeMap.get(`${leftChildOfPrev - 1}`)];
+                if (edge) {
+                    edge.x1 = this.objPositions[this.getParentIndex(prev)].x;
+                    edge.y1 = this.objPositions[this.getParentIndex(prev)].y;
+                }
             }
 
             await this.removeEdge(`${prev - 1}`);
             this.drawAll(this.lineArray);
             await this.delay(5 * this.TimeoutDelay);
 
-
-            // Rebuild after showing edge adjustments
-            let newTreeValues = nodeArray.filter(node => node !== undefined).map(node => node.value);
-            console.log("Rebuilding tree with values:", newTreeValues);
-            await this.buildBinaryTree(newTreeValues);
-            return;
+            return await rebuildTree();
         }
 
-        // Case 2: One child
-        else if (nodeArray[leftChildOfKey] != undefined || nodeArray[rightChildOfKey] != undefined) {
+        // -----------------------------
+        // Case 2: Node has ONE child
+        // -----------------------------
+        if (nodeArray[leftChildIndex] || nodeArray[rightChildIndex]) {
             console.log("Deleting single child node:", nodeArray[keyIndex].value);
 
-            let child = (nodeArray[leftChildOfKey] != undefined) ? leftChildOfKey : rightChildOfKey;
-            nodeArray[child].obj.col = this.HighlightCol;
+            let childIndex = nodeArray[leftChildIndex] ? leftChildIndex : rightChildIndex;
+            nodeArray[childIndex].obj.col = this.HighlightCol;
 
-            let Successor = this.BoxAround({
-                index: child,
+            let childBox = this.BoxAround({
+                index: childIndex,
                 Nodes: nodeArray,
                 col: this.HighlightCol,
-                Boxtext: "new root"
+                Boxtext: "New Root"
             });
 
             await this.delay(this.TimeoutDelay);
@@ -583,53 +598,48 @@ class BSTclass extends TreeBase {
 
             let pos = this.objPositions[keyIndex];
             await this.move({
-                element: nodeArray[child].obj,
+                element: nodeArray[childIndex].obj,
                 x: pos.x,
                 y: pos.y,
-                otherObjects: [...this.lineArray, Successor]
+                otherObjects: [...this.lineArray, childBox]
             });
 
-            await this.removeEdge(`${child - 1}`);
+            await this.removeEdge(`${childIndex - 1}`);
 
-            let leftChild = this.getLeftChildIndex(child);
-            let rightChild = this.getRightChildIndex(child);
-            if (nodeArray[leftChild] != undefined) {
-                let edge = this.lineArray[this.edgeMap.get(`${leftChild - 1}`)];
-                edge.x1 = pos.x;
-                edge.y1 = pos.y;
-            }
-            if (nodeArray[rightChild] != undefined) {
-                let edge = this.lineArray[this.edgeMap.get(`${rightChild - 1}`)];
-                edge.x1 = pos.x;
-                edge.y1 = pos.y;
-            }
+            // Adjust edges for child's children
+            [this.getLeftChildIndex(childIndex), this.getRightChildIndex(childIndex)]
+                .forEach(child => {
+                    if (nodeArray[child]) {
+                        let edge = this.lineArray[this.edgeMap.get(`${child - 1}`)];
+                        if (edge) {
+                            edge.x1 = pos.x;
+                            edge.y1 = pos.y;
+                        }
+                    }
+                });
 
             this.drawAll(this.lineArray);
             await this.delay(5 * this.TimeoutDelay);
 
-            let newTreeValues = nodeArray.filter(node => node !== undefined).map(node => node.value);
-            console.log("Rebuilding tree with values:", newTreeValues);
-            await this.buildBinaryTree(newTreeValues);
-            return;
+            return await rebuildTree();
         }
 
-        // Case 3: Leaf node
-        else {
-            console.log("Deleting leaf node:", nodeArray[keyIndex].value);
+        // -----------------------------
+        // Case 3: Leaf Node
+        // -----------------------------
+        console.log("Deleting leaf node:", nodeArray[keyIndex].value);
 
-            this.drawAll(this.lineArray);
-            await this.delay(this.TimeoutDelay);
+        this.drawAll(this.lineArray);
+        await this.delay(this.TimeoutDelay);
 
-            delete nodeArray[keyIndex];
-            await this.removeEdge(`${keyIndex - 1}`);
-            this.drawAll(this.lineArray);
-            await this.delay(5 * this.TimeoutDelay);
+        delete nodeArray[keyIndex];
+        await this.removeEdge(`${keyIndex - 1}`);
+        this.drawAll(this.lineArray);
+        await this.delay(5 * this.TimeoutDelay);
 
-            let newTreeValues = nodeArray.filter(node => node !== undefined).map(node => node.value);
-            console.log("Rebuilding tree with values:", newTreeValues);
-            await this.buildBinaryTree(newTreeValues);
-        }
+        return await rebuildTree();
     }
+
 
 
 
