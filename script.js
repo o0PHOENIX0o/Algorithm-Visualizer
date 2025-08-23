@@ -1,3 +1,8 @@
+import './sketch.js';
+import { Notes, Logger } from './logger.js';
+
+import { windowResized } from './canvas.js';
+
 import { BubbleSort } from './algorithms/Sorting/bubbleSort.js';
 import { SelectionSort } from './algorithms/Sorting/selectionSort.js';
 import { insertionSort } from './algorithms/Sorting/insertionSort.js';
@@ -26,13 +31,18 @@ const keyInput = document.getElementById("searchKey");
 const keyValue = document.getElementById("searchValue");
 const sidebar = document.getElementById('sidebar');
 
+
+
 const constrolButtonGrp = document.getElementById('controlBtnGrp');
 const treeControlsGrp = document.getElementById('treeControlsGrp');
 
 const algoTitle = document.getElementById("algorithmTitle");
 const algoInfo = document.getElementById("algorithmInfo");
 
-let isPlayed = false;
+let notes = new Notes("bubble-sort");
+let logger = new Logger();
+
+let isPlaying = false;
 
 const info = {
   'bubble-sort': 'Time Complexity: O(n²) | Space Complexity: O(1) | Stable: Yes',
@@ -59,23 +69,83 @@ const info = {
 
 
 
+// --- Utility Functions ---
+function scrollToTop() {
+  const header = document.querySelector('header');
+  window.scrollTo({
+    top: header.offsetHeight,
+    behavior: 'smooth'
+  });
+}
 
-navToggle.addEventListener('click', () => {
+function showError(title, text, isEvent = true) {
+  logger.show({ message: { title, text }, type: 'error', timer: 3000, isEvent: isEvent });
+}
+function showWarning(title, text, isEvent = true) {
+  logger.show({ message: { title, text }, type: 'warning', timer: 3000, isEvent: isEvent });
+}
+
+function handleNavToggle() {
   sidebar.classList.toggle('active');
-});
+  windowResized();
+}
 
-controlsToggle.addEventListener('click', () => {
+function handleControlsToggle() {
   controlsPanel.classList.toggle('active');
-  controlsToggle.innerHTML = controlsPanel.classList.contains('active') ? `<ion-icon name="chevron-back-outline"></ion-icon>` : `<ion-icon name="chevron-forward-outline"></ion-icon>`;
-});
+  controlsToggle.innerHTML = controlsPanel.classList.contains('active')
+    ? `<ion-icon name="chevron-back-outline"></ion-icon>`
+    : `<ion-icon name="chevron-forward-outline"></ion-icon>`;
+}
 
-speedSlider.addEventListener("input", (e) => {
+function handleSpeedSlider(e) {
   const val = parseInt(e.target.value);
   currentAlgorithm.AnimationSpeed = currentAlgorithm.BaseSpeed * val;
   currentAlgorithm.TimeoutDelay = currentAlgorithm.BaseDelay / val;
   speedValue.textContent = `${val}x`;
-});
+}
 
+function handleAlgoTitleClick(e) {
+  notes?.showNotes();
+  scrollToTop();
+  if (!isPlaying) return;
+  let btn = document.getElementById("playPauseBtn");
+  currentAlgorithm.Pause();
+  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+}
+
+// Attach modularized event listeners
+navToggle.addEventListener('click', handleNavToggle);
+controlsToggle.addEventListener('click', handleControlsToggle);
+speedSlider.addEventListener('input', handleSpeedSlider);
+algoTitle.addEventListener('click', handleAlgoTitleClick);
+
+function resetUiSettings() {
+  const controlButtons = document.querySelector('#controlButtons');
+  const treeControls = document.querySelector('#treeControls');
+
+  keyInput.classList.remove('active');
+  keyValue.value = '';
+  InputField.value = '';
+  speedSlider.value = 1;
+  speedValue.textContent = '1x';
+  isPlaying = false;
+
+  let btn = document.getElementById("togglePlayBtn");
+  btn.classList.remove('pause-btn');
+  btn.classList.add('play-btn');
+  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+
+  document.getElementById('startVertexDiv')?.remove();
+
+  document.querySelector('.control-group').insertBefore( keyInput, constrolButtonGrp);
+
+
+  subType?.classList.remove('active');
+  treeControls?.classList.replace('displayGrid', 'displayNone');
+  controlButtons?.classList.remove('displayNone');
+  constrolButtonGrp?.classList.remove('displayNone');
+  treeControlsGrp?.classList.replace('displayFlex', 'displayNone');
+}
 
 let currentAlgorithm = BubbleSort;
 let curAlgoType = "Sorting";
@@ -84,6 +154,8 @@ window.currentAlgorithm = currentAlgorithm;
 document.querySelectorAll(".algorithm-btn").forEach(btn => {
   btn.addEventListener("click", (e) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    logger.clearLogs();
+
 
     document.querySelectorAll(".algorithm-btn").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
@@ -102,8 +174,12 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     const alg = e.target.dataset.algorithm;
     curAlgoType = e.target.dataset.algoType;
 
-    algoTitle.textContent = e.target.textContent;
+    algoTitle.innerHTML = `${e.target.textContent} <span class="infoIcon"><ion-icon name="help-circle-outline"></ion-icon></span>`;
+
     algoInfo.textContent = info[alg] || 'No information available';
+
+    notes = new Notes(alg);
+
 
     const algorithmMap = {
       'bubble-sort': BubbleSort,
@@ -127,19 +203,14 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     currentAlgorithm = algorithmMap[alg];
 
     if (!currentAlgorithm) {
-      alert(`${alg} not implemented.`);
+      showError("Algorithm Not Found", `The algorithm "${alg}" is not available.`);
       return;
     }
 
     // Reset display
-    keyInput.classList.remove('active');
-    subType?.classList.remove('active');
-    treeControls?.classList.replace('displayGrid', 'displayNone');
-    controlButtons?.classList.remove('displayNone');
-    constrolButtonGrp.classList.remove('displayNone');
-    treeControlsGrp?.classList.add('displayNone');
+    resetUiSettings();
 
-    // subType specific UI
+    // type specific UI
     switch (curAlgoType) {
       case "Search":
         keyInput.classList.add('active');
@@ -185,7 +256,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
 
           subType?.classList.add('active');
           treeControls?.classList.replace('displayGrid', 'displayNone');
-          
+
           let type = document.getElementById('opType');
           type.innerHTML = `
             <option value="inORder">In order</option>
@@ -204,6 +275,8 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
           keyInput.children[0].innerText = "vertex (one at a time)";
           keyValue.setAttribute("placeholder", "eg: 64");
           keyInput.classList.add('active');
+        
+          document.getElementById('controlsContent').insertBefore( keyInput, treeControls);
 
           console.log("BST selected", currentAlgorithm);
         }
@@ -222,6 +295,18 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
 
 
 document.getElementById("generate").addEventListener("click", () => {
+  if (currentAlgorithm.isAnimating) {
+    showError("Animation in Progress", "Please wait for the current animation to finish or reset the algorithm.");
+    return;
+  }
+
+  let btn = document.getElementById("togglePlayBtn");
+  btn.classList.remove('pause-btn');
+  btn.classList.add('play-btn');
+  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+  isPlaying = false;
+
+
   if (curAlgoType == "Sorting") InputField.value = "29, 10, 14, 37, 13, 25, 1, 17, 5, 8";
   else if (curAlgoType == "Search") {
     console.log("search algo ", currentAlgorithm.name);
@@ -235,17 +320,31 @@ document.getElementById("generate").addEventListener("click", () => {
     document.getElementById('opType').value = "inORder";
     InputField.value = "29, 10, 14, 37, 13, 25, 1, 17, 5, 8";
   }
-  document.getElementById("applyArrayBtn").click();
+  // document.getElementById("applyArrayBtn").click();
 })
 
 document.getElementById("generateBST").addEventListener("click", () => {
+  if (currentAlgorithm.isAnimating) return;
+
+  let btn = document.getElementById("togglePlayBtn");
+  btn.classList.remove('pause-btn');
+  btn.classList.add('play-btn');
+  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+  isPlaying = false;
+
   if (currentAlgorithm.name !== "BST") {
-    alert("Please select BST algorithm to generate BST.");
+    showError("Invalid Selection", "Please select BST algorithm to generate BST.");
     return;
   }
+
+  if (currentAlgorithm.objNodeArray.length > 0) {
+    showError("BST Exists", "Please delete all nodes before generating a new BST.");
+    return;
+  }
+
   InputField.value = (width < 780) ? "50,30,70,20,60,10,25,65" : "50,30,70,20,60,10,25,65,5,15,55,68,72,90,85,95"
 
-  document.getElementById("bulkInsert").click();
+  // document.getElementById("bulkInsert").click();
 });
 
 document.getElementById("applyArrayBtn").addEventListener("click", () => {
@@ -253,17 +352,30 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     top: 0,
     behavior: 'smooth'
   });
+
   console.log("apply ", currentAlgorithm);
-  if (currentAlgorithm.isAnimating) return;
+  if (currentAlgorithm.isAnimating) {
+    showError("Animation in Progress", "Please wait for the current animation to finish or reset the algorithm.");
+    return;
+  }
+
+  logger.clearLogs();
   currentAlgorithm.reset();
+
+  let btn = document.getElementById("togglePlayBtn");
+  btn.classList.remove('pause-btn');
+  btn.classList.add('play-btn');
+  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+  isPlaying = false;
+
   const input = InputField.value;
 
   const values = input.split(',').map(x => x.trim()).filter(x => x !== '');
   if (["Bubble Sort", "Selection Sort", "Insertion Sort", "Merge Sort", "Quick Sort"].includes(currentAlgorithm.name) && values.length > 10) {
-    alert("Use max 10 elements for visualization");
+    showError("Input Error", "Use max 10 elements for visualization.");
     return;
   } else if (["Heap Sort"].includes(currentAlgorithm.name) && values.length > 15) {
-    alert("Use max 15 elements for visualization");
+    showError("Input Error", "Use max 15 elements for visualization.");
     return;
   }
 
@@ -271,6 +383,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
   if (curAlgoType == "Search") currentAlgorithm.generate(values, keyValue.value);
   else if (curAlgoType == "Graph") {
+
 
     const regex = /\((\w),(\w),?(-?\d+)?\)/g;
     const edges = [];
@@ -313,42 +426,57 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
 
 
-document.getElementById("playBtn").addEventListener("click", () => {
+document.getElementById("togglePlayBtn").addEventListener("click", () => {
   window.scrollTo({
     top: 0,
     behavior: 'smooth'
   });
-  isPlayed = true;
-  currentAlgorithm.Play();
+  isPlaying = !isPlaying;
+
+  let btn = document.getElementById("togglePlayBtn");
+
+  btn.classList.add('pause-btn');
+  btn.classList.remove('play-btn');
+
+  if (currentAlgorithm.isPause) {
+    currentAlgorithm.Resume();
+
+    btn.innerHTML = `<span class="btn-icon"><ion-icon name="pause-outline"></ion-icon></span> Pause`;
+  } else if (currentAlgorithm.isAnimating) {
+    currentAlgorithm.Pause();
+    btn.innerHTML = `<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Resume`;
+  } else {
+    if (currentAlgorithm.objNodeArray.length < 1) {
+      btn.classList.remove('pause-btn');
+      btn.classList.add('play-btn');
+
+      (InputField.value.trim() == "")
+        ? showError("Input Error", "Please enter an array first.")
+        : showError("Input Error", "Please click Apply first.");
+
+      return;
+    }
+    currentAlgorithm.Play();
+    btn.innerHTML = `<span class="btn-icon"><ion-icon name="pause-outline"></ion-icon></span> Pause`;
+  }
 });
+
+
 
 document.getElementById("resetBtn").addEventListener("click", () => {
   window.scrollTo({
     top: 0,
     behavior: 'smooth'
   });
-  let btn = document.getElementById("playPauseBtn");
-  btn.innerHTML = `<span class="btn-icon">⏸</span> Pause`;
-  isPlayed = false;
+  let btn = document.getElementById("togglePlayBtn");
+  btn.classList.remove('pause-btn');
+  btn.classList.add('play-btn');
+
+  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+  isPlaying = false;
   currentAlgorithm.reset();
 });
 
-document.getElementById("playPauseBtn").addEventListener("click", () => {
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  });
-  if (!isPlayed) return;
-  let btn = document.getElementById("playPauseBtn");
-
-  if (currentAlgorithm.isPause) {
-    currentAlgorithm.Resume();
-    btn.innerHTML = `<span class="btn-icon">⏸</span> Pause`;
-  } else {
-    currentAlgorithm.Pause();
-    btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
-  }
-})
 
 
 document.getElementById("insertBtn").addEventListener("click", () => {
@@ -356,10 +484,13 @@ document.getElementById("insertBtn").addEventListener("click", () => {
     top: 0,
     behavior: 'smooth'
   });
-  if (currentAlgorithm.isAnimating) return;
+  if (currentAlgorithm.isAnimating) {
+    showError("Animation in Progress", "Please wait for the current animation to finish.");
+    return;
+  }
   const value = keyValue.value.trim();
   if (!value) {
-    alert("Please enter a value to insert.");
+    showError("Input Error", "Please enter a value to insert.");
     return;
   }
   currentAlgorithm.insert(value);
@@ -372,10 +503,13 @@ document.getElementById("SearchBtn").addEventListener("click", () => {
     top: 0,
     behavior: 'smooth'
   });
-  if (currentAlgorithm.isAnimating) return;
+  if (currentAlgorithm.isAnimating) {
+    showError("Animation in Progress", "Please wait for the current animation to finish.");
+    return;
+  }
   const value = keyValue.value.trim();
   if (!value) {
-    alert("Please enter a value to insert.");
+    showError("Input Error", "Please enter a value to search.");
     return;
   }
   currentAlgorithm.search(value);
@@ -388,10 +522,13 @@ document.getElementById("DeleteBtn").addEventListener("click", () => {
     top: 0,
     behavior: 'smooth'
   });
-  if (currentAlgorithm.isAnimating) return;
+  if (currentAlgorithm.isAnimating) {
+    showError("Animation in Progress", "Please wait for the current animation to finish.");
+    return;
+  }
   const value = keyValue.value.trim();
   if (!value) {
-    alert("Please enter a value to insert.");
+    showError("Input Error", "Please enter a value to delete.");
     return;
   }
   currentAlgorithm.delete(value);
@@ -403,7 +540,16 @@ document.getElementById("deleteAllBtn").addEventListener("click", () => {
     top: 0,
     behavior: 'smooth'
   });
-  currentAlgorithm.reset({ preserveLayout: true });
+  isPlaying = false;
+
+  let btn = document.getElementById('bulkInsert');
+  InputField.disabled = false
+  InputField.classList.remove('disabled');
+  btn.disabled = false;
+  btn.classList.remove('disabled-btn');
+
+  currentAlgorithm.reset();
+  console.log("delete all ", currentAlgorithm.isAnimating);
 });
 
 
@@ -412,19 +558,26 @@ document.getElementById('bulkInsert').addEventListener("click", () => { // bulk 
     top: 0,
     behavior: 'smooth'
   });
-  if (currentAlgorithm.isAnimating) return;
-  
+
+  if (currentAlgorithm.isAnimating) {
+    showError("Animation in Progress", "Please wait for the current animation to finish.");
+    return;
+  }
+
   const input = InputField.value;
   const values = input.split(',').map(x => x.trim()).filter(x => x !== '');
   if (values.length === 0) {
-    alert("Please enter values to bulk insert.");
+    showError("Input Error", "Please enter values to bulk insert.");
     return;
   }
+  let btn = document.getElementById('bulkInsert');
+
   currentAlgorithm.bulkInsert(values);
-  InputField.value = "";
+
+  InputField.disabled = true;
+  InputField.classList.add('disabled');
+  btn.disabled = true;
+  btn.classList.add('disabled-btn');
+  
 });
 
-
-document.getElementById('generateBST').addEventListener("click", () => { // generate BST btn
-
-}); 

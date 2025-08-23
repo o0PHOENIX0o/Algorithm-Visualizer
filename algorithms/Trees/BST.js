@@ -1,6 +1,6 @@
 import { DrawArray, Square, clearCanvas, Circle, height, width, Line } from "../../canvas.js";
 import { TreeBase } from "./TreeBase.js";
-
+import {Logger} from "../../logger.js";
 
 class BSTclass extends TreeBase {
     constructor() {
@@ -23,10 +23,24 @@ class BSTclass extends TreeBase {
         this.NODE_SPACING = 10;
         this.SCALING_FACTOR = 0.9; // 0.9 for keeping some margin
         this.SPEED_UP_FACTOR = 1;
+
+        this.silentMode = false;
+        this.logger = new Logger();
     }
 
 
-    reset({ preserveLayout = false } = {}) {
+    showLog({message, type = "info", isEvent = false, timer} = {}) {
+        if (this.silentMode) return; 
+        this.logger.show({ message, type, isEvent, timer: timer ?? 0 });
+    }
+
+
+    reset({ preserveLayout = false, preserveLogs = false } = {}) {
+        this.showLog({
+            message: { title: "Reset", text: "BST state and visuals have been reset." },
+            type: "warning",
+            isEvent: true
+        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.lineArray = [];
@@ -38,9 +52,12 @@ class BSTclass extends TreeBase {
 
         this.isAnimating = false;
         this.isPause = false;
+        if(!preserveLogs) this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
     }
+
+    
 
 
     getParentIndex(index) { return Math.floor((index - 1) / 2); }
@@ -159,6 +176,7 @@ class BSTclass extends TreeBase {
 
 
     createEdge(childIndex) {
+        if (!this.isAnimating) return;
         const linePosition = this.linePositions[childIndex - 1];
         if (!linePosition) {
             console.error(`Line position not found for child index ${childIndex}`);
@@ -186,30 +204,77 @@ class BSTclass extends TreeBase {
 
     async bulkInsert(values) {
         this.isAnimating = true;
-        this.SPEED_UP_FACTOR = 2;
+        console.log("Bulk inserting values:", values);
 
         const numericValues = values.map(Number).filter(v => !isNaN(v));
         if (numericValues.length === 0) {
-            this.showError("Please enter valid numbers");
+            this.showLog({
+                message: { title: "Error", text: "No valid numbers provided for insertion." },
+                type: "error",
+                isEvent: true
+            });
             return;
         }
 
+        if (this.objPositions.length < 1 || this.linePositions.length < 1)
+                await this.generatePositionMap(this.objPositions, this.linePositions);
+
         for (const value of numericValues) {
             await this.waitWhilePaused();
-            await this.insert(value);
+            if (!this.isAnimating) return;
+
+            if (this.objNodeArray.length < 1) {
+                const circle = new Circle({
+                    xPos: width / 2,
+                    yPos: this.dia + 80,
+                    dia: this.dia,
+                    label: value,
+                    col: this.HighlightCol
+                });
+
+                this.objNodeArray.push({ value: value, obj: circle });
+                const targetPosition = this.objPositions[0];
+
+                this.showLog({
+                    message: { title: "Insert Root", text: `Inserting value ${value} as the root of the BST.` },
+                    type: "success"
+                })
+
+                await this.move({
+                    element: circle,
+                    x: targetPosition.x,
+                    y: targetPosition.y,
+                    speedFactor: 4 * this.SPEED_UP_FACTOR,
+                });
+
+                this.drawAll(this.lineArray);
+                await this.delay(this.TimeoutDelay / this.SPEED_UP_FACTOR);
+
+                await this.waitWhilePaused();
+                if (!this.isAnimating) return;
+            } else {
+                await this.insertBST(value, 0, this.objNodeArray);
+            }
+
         }
 
-        this.SPEED_UP_FACTOR = 1;
         this.isAnimating = false;
     }
 
 
     async insertBST(value, rootIndex, nodeArray) {
-        console.log("current node array:", nodeArray);
         if (!this.isAnimating) return;
+        this.showLog({
+            message: { title: `Insert Node: ${value}`, text: `Starting insertion of value ${value} into the BST.` },
+            type: "info"
+        })
 
         if (this.valueExists(value, nodeArray)) {
-            this.showError("BST cannot have duplicate values");
+            this.showLog({
+                message: { title: "Error", text: "Duplicate values are not allowed in BST." },
+                type: "error",
+                isEvent: true
+            })
             this.drawAll(this.lineArray);
             return;
         }
@@ -240,6 +305,11 @@ class BSTclass extends TreeBase {
         let currentIndex = rootIndex;
 
         while (nodeArray[currentIndex] !== undefined) {
+            if (!this.isAnimating) return;
+            this.showLog({
+                message: { title: "Traverse To Find Insertion Position", text: `Value ${value} is ${value < nodeArray[currentIndex].value ? "less" : "greater"} than ${nodeArray[currentIndex].value}. Moving ${value < nodeArray[currentIndex].value ? "left" : "right"}.` },
+                type: "info"
+            });
             currentIndex = (nodeArray[currentIndex].value > value) ? this.getLeftChildIndex(currentIndex) : this.getRightChildIndex(currentIndex);
 
             await this.moveSquare({
@@ -251,12 +321,15 @@ class BSTclass extends TreeBase {
             });
             await this.delay(2 * this.TimeoutDelay / this.SPEED_UP_FACTOR);
             await this.waitWhilePaused();
-            if (!this.isAnimating) return;
         }
 
         const config = this.getCurrentConfig();
         if (currentIndex >= config.maxNodes) {
-            this.showError("Maximum tree depth reached. Cannot insert more nodes.");
+            this.showLog({
+                message: { title: "Error", text: "Maximum tree depth reached. Cannot insert node at this position." },
+                type: "error",
+                isEvent: true
+            });
             this.drawAll(this.lineArray);
             return;
         }
@@ -279,6 +352,11 @@ class BSTclass extends TreeBase {
         });
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
+
+        this.showLog({
+            message: { title: `Inserted Node: ${value}`, text: `Inserted value ${value} at the correct position.` },
+            type: "success"
+        });
 
         await this.move({
             element: newNode.obj,
@@ -307,6 +385,11 @@ class BSTclass extends TreeBase {
             const numericValue = Number(value);
             if (isNaN(numericValue)) {
                 this.showError("Please enter a valid number");
+                this.showLog({
+                    message: { title: "Error", text: "Invalid input for insertion." },
+                    type: "error",
+                    isEvent: true
+                });
                 return;
             }
 
@@ -321,6 +404,11 @@ class BSTclass extends TreeBase {
 
                 this.objNodeArray.push({ value: value, obj: circle });
                 const targetPosition = this.objPositions[0];
+
+                this.showLog({
+                    message: { title: "Insert Root", text: `Inserting value ${value} as the root of the BST.` },
+                    type: "success"
+                });
 
                 await this.move({
                     element: circle,
@@ -339,14 +427,26 @@ class BSTclass extends TreeBase {
             }
         } catch (error) {
             console.error("Error during insertion:", error);
-            this.showError("An error occurred during insertion");
+            this.showLog({
+                message: { title: "Error", text: "An error occurred during insertion." },
+                type: "error",
+                isEvent: true
+            });
         } finally {
             this.isAnimating = false;
+            this.showLog({
+                message: { title: "Insertion Complete", text: `Insertion process for value ${value} completed.` },
+                type: "info"
+            });
         }
     }
 
 
     async searchBST(value, rootIndex, nodeArray) {
+        this.showLog({
+            message: { title: `Search for ${value}`, text: `Searching for value ${value} in the BST.` },
+            type: "info"
+        });
         let currentIndex = rootIndex;
 
         this.pointerSquare = this.BoxAround({
@@ -362,6 +462,12 @@ class BSTclass extends TreeBase {
         if (!this.isAnimating) return;
 
         while (nodeArray[currentIndex] != undefined && nodeArray[currentIndex].value != value) {
+            if (!this.isAnimating) return;
+
+            this.showLog({
+                message: { title: "Traverse for Searching", text: `Value ${value} is ${value < nodeArray[currentIndex].value ? "less" : "greater"} than ${nodeArray[currentIndex].value}. Moving ${value < nodeArray[currentIndex].value ? "left" : "right"}.` },
+                type: "info"
+            });
             currentIndex = (nodeArray[currentIndex].value > value) ? this.getLeftChildIndex(currentIndex) : this.getRightChildIndex(currentIndex);
 
             await this.moveSquare({
@@ -377,18 +483,25 @@ class BSTclass extends TreeBase {
         }
 
         if (nodeArray[currentIndex] === undefined) {
+            this.showLog({
+                message: { title: "Not Found", text: `Value ${value} not found in the BST.` },
+                type: "warning",
+                isEvent: true
+            });
             this.showError("Value not found in BST");
             this.drawAll(this.lineArray);
             return null;
         }
-        console.log("Current index after search:", currentIndex, "Value found:", nodeArray[currentIndex]);
 
         // Value found - highlight it
+        this.showLog({
+            message: { title: "Found", text: `Value ${value} found in the BST.` },
+            type: "success",
+        });
         this.pointerSquare.col = this.sortedCol;
         this.pointerSquare.text = 'found';
         this.drawAll([...this.lineArray, this.pointerSquare]);
 
-        console.log("pointerSquare:", this.pointerSquare);
 
         await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
@@ -399,31 +512,50 @@ class BSTclass extends TreeBase {
 
 
     async search(value) {
-        console.log("Searching for value:", value);
         this.isAnimating = true;
 
         try {
             if (this.objPositions.length < 1 || this.linePositions.length < 1) {
-                this.showError("No nodes to search. Please insert nodes first.");
+                this.showLog({
+                    message: { title: "Error", text: "No nodes to search. Please insert nodes first." },
+                    type: "error",
+                    isEvent: true
+                });
+                return;
+            }
+
+            if (this.objNodeArray.length === 0) {
+                this.showLog({
+                    message: { title: "Error", text: "Tree is empty. Please insert nodes first." },
+                    type: "error",
+                    isEvent: true
+                });
                 return;
             }
 
             const numericValue = Number(value);
             if (isNaN(numericValue)) {
-                this.showError("Please enter a valid number");
-                return;
-            }
-
-            if (this.objNodeArray.length === 0) {
-                this.showError("Tree is empty. Please insert nodes first.");
+                this.showLog({
+                    message: { title: "Error", text: "Invalid input for search." },
+                    type: "error",
+                    isEvent: true
+                });
                 return;
             }
 
             await this.searchBST(numericValue, 0, this.objNodeArray);
         } catch (error) {
             console.error("Error during search:", error);
-            this.showError("An error occurred during search");
+            this.showLog({
+                message: { title: "Error", text: "An error occurred during search." },
+                type: "error",
+                isEvent: true
+            });
         } finally {
+            this.showLog({
+                message: { title: "Search Complete", text: `Search process for value ${value} completed.` },
+                type: "success"
+            });
             this.isAnimating = false;
         }
     }
@@ -432,13 +564,14 @@ class BSTclass extends TreeBase {
 
     async buildBinaryTree(keepValues) {
         this.SPEED_UP_FACTOR = 50;
-        this.reset({ preserveLayout: true });
+        this.reset({ preserveLayout: true, preserveLogs: true });
+        this.silentMode = true;
         this.isAnimating = true;
 
-        for (const val of keepValues) {
-            await this.insert(val);
-        }
+        await this.bulkInsert(keepValues);
+
         this.SPEED_UP_FACTOR = 1;
+        this.silentMode = false;
         this.isAnimating = false;
     }
 
@@ -496,6 +629,11 @@ class BSTclass extends TreeBase {
 
 
     async deleteBST(value, root, nodeArray) {
+        this.showLog({
+            message: { title: `Delete Node: ${value}`, text: `Starting deletion of value ${value} from the BST.` },
+            type: "info"
+        });
+        await this.delay(this.TimeoutDelay);
         let keyIndex = await this.searchBST(value, root, nodeArray);
         if (keyIndex === null) return;
 
@@ -505,15 +643,16 @@ class BSTclass extends TreeBase {
         let rightChildIndex = this.getRightChildIndex(keyIndex);
 
         const rebuildTree = async () => {
-            let newTreeValues = nodeArray
-                .filter(node => node !== undefined)
-                .map(node => node.value);
-            console.log("Rebuilding tree with values:", newTreeValues);
+            let newTreeValues = nodeArray.filter(node => node !== undefined).map(node => node.value);
             await this.buildBinaryTree(newTreeValues);
         };
 
         // Case 1: Node has TWO children
         if (nodeArray[leftChildIndex] && nodeArray[rightChildIndex]) {
+            this.showLog({
+                message: { title: "Node has Two Children", text: `Node with value ${value} has two children. Finding inorder predecessor.` },
+                type: "info"
+            });
             let cur = leftChildIndex;
             let prev = cur;
 
@@ -529,6 +668,10 @@ class BSTclass extends TreeBase {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
+            this.showLog({
+                message: { title: "Finding Inorder Predecessor", text: `Finding inorder predecessor of node with value ${value}. i.e the rightmost node in its left subtree.` },
+                type: "info"
+            });
             // Find rightmost in left subtree
             while (nodeArray[cur] != undefined) {
                 prev = cur;
@@ -548,6 +691,10 @@ class BSTclass extends TreeBase {
 
             nodeArray[prev].obj.col = this.HighlightCol;
 
+            this.showLog({
+                message: { title: "Predecessor Found", text: `Inorder predecessor found with value ${nodeArray[prev].value}. Swapping values.` },
+                type: "info"
+            });
             // Swap predecessor with target node
             await this.SwapNodes(
                 nodeArray[keyIndex].obj,
@@ -579,7 +726,10 @@ class BSTclass extends TreeBase {
         // Case 2: Node has ONE child
         // -----------------------------
         if (nodeArray[leftChildIndex] || nodeArray[rightChildIndex]) {
-            console.log("Deleting single child node:", nodeArray[keyIndex].value);
+            this.showLog({
+                message: { title: "Delete Node With Single Child", text: `Node with value ${value} found. Deleting...` },
+                type: "info"
+            });
 
             let childIndex = nodeArray[leftChildIndex] ? leftChildIndex : rightChildIndex;
             nodeArray[childIndex].obj.col = this.HighlightCol;
@@ -627,7 +777,10 @@ class BSTclass extends TreeBase {
         // -----------------------------
         // Case 3: Leaf Node
         // -----------------------------
-        console.log("Deleting leaf node:", nodeArray[keyIndex].value);
+        this.showLog({
+            message: { title: "Delete Leaf Node", text: `Node with value ${value} found. Deleting...` },
+            type: "info"
+        });
 
         this.drawAll(this.lineArray);
         await this.delay(this.TimeoutDelay);
@@ -637,6 +790,11 @@ class BSTclass extends TreeBase {
         this.drawAll(this.lineArray);
         await this.delay(5 * this.TimeoutDelay);
 
+        this.showLog({
+            message: { title: `Node ${value} is Deleted`, text: `Node with value ${value} deleted from the BST.` },
+            type: "success",
+            isEvent: true
+        });
         return await rebuildTree();
     }
 
@@ -644,18 +802,25 @@ class BSTclass extends TreeBase {
 
 
     async delete(value) {
-        console.log("Deleting value:", value, this.objNodeArray);
         this.isAnimating = true;
 
         if (this.objPositions.length < 1 || this.linePositions.length < 1) {
-            alert("No nodes to delete. Please insert nodes first.");
+            this.showLog({
+                message: { title: "Error", text: "No nodes to delete. Please insert nodes first." },
+                type: "error",
+                isEvent: true
+            })
             this.isAnimating = false;
             return;
         }
 
         const v = Number(value);
         if (isNaN(v)) {
-            this._notify("Please provide a numeric value.");
+            this.logger.show({
+                message: { title: "Error", text: "Invalid input for deletion." },
+                type: "error",
+                isEvent: true
+            });
             this.isAnimating = false;
             return;
         }

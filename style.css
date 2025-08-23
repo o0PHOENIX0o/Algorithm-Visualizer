@@ -140,6 +140,7 @@ body {
     flex: 1;
     padding: 1.5rem;
     background: #fafafa;
+    position: relative;
 }
 
 .canvas-container {
@@ -159,11 +160,31 @@ body {
     text-align: center;
 }
 
-.canvas-header h2 {
+.canvas-header #algorithmTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.7rem;
+    
     color: #333;
     margin-bottom: 0.5rem;
     font-size: 1.8rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
+
+#algorithmTitle:hover{
+    color: #667eea;
+}
+
+.canvas-header #algorithmTitle span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+}
+
+
 
 .canvas-info {
     color: #666;
@@ -182,6 +203,7 @@ body {
     display: block;
     width: 100% !important;
     height: auto !important;
+    border-radius: 15px;
 }
 
 
@@ -199,7 +221,7 @@ body {
     right: 0;
     top: 30%;
     background: white;
-    border-radius: 12px;
+    border-bottom-left-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     width: 230px;
     z-index: 100;
@@ -209,17 +231,18 @@ body {
 }
 
 .controls-header {
-    height: 2.3rem;
-    width: 2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     background: #667eea96;
     color: white;
+    position: absolute;
+    height: 2.3rem;
+    width: 1.5rem;
     border-bottom: 1px solid #e0e0e0;
     border-radius: 50% 0 0 50%;
-    position: absolute;
-    left: -32px;
+    left: -24px;
+    background: linear-gradient(240deg, #728cffc4, #764ba2ab);
 }
 
 .controls-header h4 {
@@ -259,10 +282,9 @@ body {
     margin-bottom: 1.5rem;
 }
 
-#treeControls {
-    grid-template-columns: 1fr;
+.control-group.search{
+    margin-bottom: 0.5rem;
 }
-
 
 
 #inputField {
@@ -343,6 +365,16 @@ body {
     margin-top: 0.5rem;
 }
 
+.disabled{
+    background: #f8f8f8;
+    border: 2px solid #f0f0f0;
+    cursor: not-allowed !important;
+}
+
+.disabled-btn{
+    background: #1c1c1c7d;
+    cursor: not-allowed !important;
+}
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -372,10 +404,21 @@ body {
 }
 
 .control-buttons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
+}
+
+.control-buttons.tree{
+    display: grid;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
 }
 
 .controlBtnGrp {
@@ -384,6 +427,7 @@ body {
 }
 
 .control-btn {
+    flex-grow: 1;
     padding: 0.75rem 1rem;
     border: none;
     border-radius: 6px;
@@ -395,6 +439,10 @@ body {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+}
+
+.control-buttons.tree .control-btn{
+    padding: 0.5rem;
 }
 
 .play-btn {
@@ -428,6 +476,9 @@ body {
 }
 
 .btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 0.9rem;
 }
 
@@ -467,20 +518,57 @@ body {
 
 
 .displayBlock {
-    display: block;
+    display: block !important;
 }
 
 .displayNone {
-    display: none;
+    display: none !important;
 }
 
 .displayGrid {
-    display: grid;
+    display: grid !important;
 }
 
 .displayFlex {
-    display: flex;
+    display: flex !important;
 }
+
+.stack-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.stack-icon .layer {
+  fill: white;             
+  stroke: black;           
+  stroke-width: 2;
+  transform: translateY(0); 
+  transition: transform 0.3s ease;
+}
+
+.stack-button .layer.top {
+    transform: translateY(-6px);
+}
+.stack-button .layer.middle{
+    transform: translateY(0);
+}
+.stack-button .layer.bottom {
+    transform: translateY(6px);
+}
+
+/* .toggle-steps-btn.hide .layer.top    { transform: translateY(-6px); }
+.toggle-steps-btn.hide .layer.middle { transform: translateY(0); }
+.toggle-steps-btn.hide .layer.bottom { transform: translateY(6px); } */
+
+.toggle-steps-btn.active .layer.top    { transform: translateY(0); }
+.toggle-steps-btn.active .layer.middle { transform: translateY(0); }
+.toggle-steps-btn.active .layer.bottom { transform: translateY(0); }
+
+/* .toggle-steps-btn:hover .layer {
+    transform: translateY(0);
+} */
+
 
 
 
@@ -516,9 +604,8 @@ body {
     }
 
 
-
     .control-buttons {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 
     .footer-content {

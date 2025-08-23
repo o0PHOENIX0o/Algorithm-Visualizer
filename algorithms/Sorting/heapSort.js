@@ -1,9 +1,11 @@
 import { Base, compare } from "../Base.js"
 import { DrawArray, Line, Triangle, clearCanvas, width, PointerArrow, height } from '../../canvas.js';
+import { Logger } from "../../logger.js";
 
 class heapSortClass extends Base {
     constructor() {
         super("Heap Sort", 10, 30);
+        this.logger = new Logger();
         this.triangleArray = [];
         this.lineArray = [];
         this.arrows = [];
@@ -18,7 +20,15 @@ class heapSortClass extends Base {
         }
     }
 
+
+
     async reset() {
+        this.logger.show({
+            message: { title: "Reset", text: "Heap Sort state and visuals have been reset." },
+            type: "warning",
+            isEvent: true
+        });
+        this.logger.clearLogs();
         this.objNodeArray = [];
         this.inputArray = [];
         this.triangleArray = [];
@@ -100,14 +110,21 @@ class heapSortClass extends Base {
             y4 = y3;
         }
 
-        this.triangleArray = [new Triangle({x1: x1, y1: y1, x2: x2, y2: y2, x3: x3, y3: y3, x4: x4, y4: y4, col: this.unsortedCol})];
+        this.triangleArray = [new Triangle({ x1: x1, y1: y1, x2: x2, y2: y2, x3: x3, y3: y3, x4: x4, y4: y4, col: this.unsortedCol })];
         DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
         await this.delay(this.TimeoutDelay);
     }
 
 
 
-    async buildBTree(Array) { 
+    async buildBTree(Array) {
+
+        let buildTreeToast = this.logger.show({
+            message: { title: "Building Heap Tree", text: `<strong>Building Heap Tree:</strong> Placing nodes <code>[${Array.map(el => el.value).join(', ')}]</code> in binary tree structure.<br>Each node is positioned to visualize the heap property.` },
+            type: "info",
+            
+        });
+
         const buildBranch = async (Array, i, offsetX, dir, depth) => { // dir -ve: for odd index -> left node, +ve for even -> right node 
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
@@ -129,7 +146,7 @@ class heapSortClass extends Base {
             await this.move(element.obj, targetX, targetY, 4);
             await this.waitWhilePaused();
 
-            this.lineArray.push(new Line({x1: curX, y1: curY, x2: targetX, y2: targetY, col: 0}));
+            this.lineArray.push(new Line({ x1: curX, y1: curY, x2: targetX, y2: targetY, col: 0 }));
             DrawArray([...this.triangleArray, ...this.lineArray]);
             await this.waitWhilePaused();
 
@@ -139,10 +156,10 @@ class heapSortClass extends Base {
 
         let dia = Array[0].obj.dia;
         let d = 1;
-        let maxD= 4;
+        let maxD = 4;
         let totalwidth = 0;
-        for(let i = 0; i<maxD; i++){
-            totalwidth += 36* Math.pow(2, i);
+        for (let i = 0; i < maxD; i++) {
+            totalwidth += 36 * Math.pow(2, i);
         }
         console.log('total width', totalwidth)
         console.log('available width', width * 0.9);
@@ -156,15 +173,22 @@ class heapSortClass extends Base {
 
             let dir = (i % 2) ? -1 : 1;
             if ((i + 1) > Math.pow(2, d) - 1) d++;
-            await buildBranch(Array, i,  (Gap * (Math.pow(2, maxD - d))), dir, d);
+            await buildBranch(Array, i, (Gap * (Math.pow(2, maxD - d))), dir, d);
             await this.delay(this.TimeoutDelay);
         }
+
+        this.logger.removeNotification(buildTreeToast);
+        this.logger.show({
+            message: { title: "Heap Tree Built", text: `<strong>Heap Tree Built:</strong> All nodes <code>[${Array.map(node => node.value).join(', ')}</code>] are now arranged as a binary tree.` },
+            type: "success",
+        });
     }
 
-    
+
 
 
     async Heapify(Array, n, i) {
+
         let left = 2 * i + 1;
         let right = 2 * i + 2;
 
@@ -181,14 +205,13 @@ class heapSortClass extends Base {
 
         parent.col = this.HighlightCol2;
         this.arrows = [
-            new PointerArrow({xPos: parent.xPos, yPos: parent.yPos + 25, col: this.HighlightCol, length: 10, label: "i", textCol: 12, textS: 12}),
-            new PointerArrow({xPos: parent.xPos, yPos: parent.yPos + 45, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12})
+            new PointerArrow({ xPos: parent.xPos, yPos: parent.yPos + 25, col: this.HighlightCol, length: 10, label: "i", textCol: 12, textS: 12 }),
+            new PointerArrow({ xPos: parent.xPos, yPos: parent.yPos + 45, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12 })
         ]
 
         await this.drawTriangle(parent, left, leftChild, rightChild);
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
-
 
 
         let max = i;
@@ -197,7 +220,7 @@ class heapSortClass extends Base {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-            this.arrows[1] = new PointerArrow({xPos: leftChild.xPos, yPos: leftChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12});
+            this.arrows[1] = new PointerArrow({ xPos: leftChild.xPos, yPos: leftChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12 });
             leftChild.col = this.HighlightCol;
 
             DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
@@ -214,13 +237,14 @@ class heapSortClass extends Base {
             leftChild.col = this.BaseCol;
             rightChild.col = this.HighlightCol;
 
-            this.arrows[1] = new PointerArrow({xPos: rightChild.xPos, yPos: rightChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12});
+            this.arrows[1] = new PointerArrow({ xPos: rightChild.xPos, yPos: rightChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12 });
 
             DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
             await this.delay(this.TimeoutDelay)
             await this.waitWhilePaused();
 
         }
+
 
         if (max != i) {
             await this.waitWhilePaused();
@@ -245,17 +269,37 @@ class heapSortClass extends Base {
             DrawArray(this.lineArray);
             return;
         }
-
     }
 
 
     async buildHeap(Array) {
+        this.logger.show({
+            message: { title: "Building Heap", text: `<strong>Building Heap:</strong> Starting from last non-leaf node.<br>Each subtree is heapified to ensure max-heap property.` },
+            type: "info",
+            
+        });
+
+        await this.delay(this.TimeoutDelay);
+        if (!this.isAnimating) return;
+
         for (let i = Math.floor(Array.length / 2 - 1); i >= 0; i--) {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
+          
+            this.logger.show({
+                message: { title: "Heapify", text: `<strong>Heapify</strong> at <code>index ${i}</code> (value: <strong>${Array[i].value}</strong>)<br>Compare with children: <code>${Array[2 * i + 1] ? Array[2 * i + 1].value : 'N/A'}</code> (left), <code>${Array[2 * i + 2] ? Array[2 * i + 2].value : 'N/A'}</code> (right).<br>If a child is larger, swap and continue heapifying.` },
+                type: "info",
+                
+            });
+
+            await this.delay(this.TimeoutDelay);
             await this.Heapify(Array, Array.length, i);
             await this.waitWhilePaused();
         }
+        this.logger.show({
+            message: { title: "Heap Built", text: `<strong>Heap Built:</strong> All nodes now satisfy the max-heap property.` },
+            type: "success",
+        });
     }
 
     async heapSort(Array) {
@@ -263,7 +307,18 @@ class heapSortClass extends Base {
         for (let i = Array.length - 1; i >= 0; i--) {
             if (!this.isAnimating) return;
 
+            let maxElement = Array[0].value;
             Array[0].obj.col = this.sortedCol;
+            await this.delay(this.TimeoutDelay);
+            await this.waitWhilePaused();
+
+            
+            this.logger.show({
+                message: { title: "Extract Max", text: `<strong>Extract Max:</strong> Move <code>${maxElement}</code> to sorted position.<br>Swap root with last element, then re-heapify the remaining heap.` },
+                type: "info",
+                
+            });
+
             await this.SwapNodes(Array[0].obj, Array[i].obj, [...this.triangleArray, ...this.lineArray]);
             [Array[0], Array[i]] = [Array[i], Array[0]];
             await this.delay(this.TimeoutDelay);
@@ -272,9 +327,20 @@ class heapSortClass extends Base {
             await this.move(Array[i].obj, this.objPositions[i].x, this.objPositions[i].y);
             await this.waitWhilePaused();
 
+            this.logger.show({
+                message: { title: "Sorted", text: `Node <code>${maxElement}</code> is now in its correct position.` },
+                type: "success",
+            });
+
             this.lineArray.pop();
             await this.delay(this.TimeoutDelay);
             if (!this.isAnimating) return;
+
+            this.logger.show({
+                message: { title: "Re-Heapify", text: `<strong>Re-heapify:</strong> Restore heap property for the remaining unsorted nodes.` },
+                type: "info",
+                
+            });
 
             await this.Heapify(Array, i, 0);
             DrawArray(this.lineArray);
@@ -284,8 +350,8 @@ class heapSortClass extends Base {
     async algoExecutor() {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
-        
-        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 30), 2))); //animateY -> move all nodes to the top of the canvas (in base class)
+
+        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 60), 2))); //animateY -> move all nodes to the top of the canvas (in base class)
         await this.waitWhilePaused();
         await this.delay(this.TimeoutDelay);
         if (!this.isAnimating) return;
@@ -295,11 +361,11 @@ class heapSortClass extends Base {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
-        await this.buildBTree(this.objNodeArray);
+        await this.buildBTree(this.objNodeArray); // make binary tree from the array
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
-        await this.heapSort(this.objNodeArray);
+        await this.heapSort(this.objNodeArray); // apply heap sort
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
@@ -313,11 +379,23 @@ class heapSortClass extends Base {
     async run() {
         this.isAnimating = true;
 
+        this.logger.show({
+            message: { title: "Heap Sort", text: "Starting Heap Sort. The array will be transformed into a max-heap and then sorted." },
+            type: "info",
+            isEvent: true
+        });
+
         await this.algoExecutor();
 
         await this.delay(this.TimeoutDelay);
         if (!this.isAnimating) return;
-        DrawArray([...this.triangleArray, ...this.lineArray]);
+        DrawArray();
+
+        this.logger.show({
+            message: { title: "Heap Sort Completed", text: "Heap Sort has finished executing. The array is now sorted." },
+            type: "success",
+            isEvent: true
+        });
 
         this.isAnimating = false;
     }

@@ -1,6 +1,7 @@
 import { Base, compare } from "../Base.js"
 import { DrawArray, PointerArrow, Circle, Square, clearCanvas } from '../../canvas.js';
 
+import { Logger } from "../../logger.js";
 
 class linearSearchClass extends Base {
   constructor() {
@@ -8,6 +9,7 @@ class linearSearchClass extends Base {
     this.arrows = [];
     this.keyCircle = [];
     this.squareArray = [];
+    this.logger = new Logger();
   }
 
   Play() {
@@ -18,6 +20,11 @@ class linearSearchClass extends Base {
   }
 
   async reset() {
+    this.logger.show({
+      message: { title: "Reset", text: "Linear Search state and visuals have been reset." },
+      type: "warning",
+      isEvent: true
+    });
     this.objNodeArray = [];
     this.inputArray = [];
     this.arrows = [];
@@ -26,6 +33,7 @@ class linearSearchClass extends Base {
     this.isAnimating = false;
     this.isPause = false;
     await this.delay(50);
+    this.logger.clearLogs();
     clearCanvas();
     DrawArray(null);
   }
@@ -34,6 +42,10 @@ class linearSearchClass extends Base {
   async linearSearchAlgo(array, key) {
     for (let i = 0; i < array.length; i++) {
       if (!this.isAnimating) return;
+      this.logger.show({
+        message: { title: `Check Element ${array[i].value}`, text: `Checking element at index ${i} (value: ${array[i].value}).` },
+        type: "info"
+      });
       array[i].obj.col = this.HighlightCol;
       this.arrows = [
         new PointerArrow({xPos: array[i].obj.xPos, yPos: (this.objNodeArray[i].obj.yPos + 40), col: this.HighlightCol, length: 20, label: "i"})
@@ -56,8 +68,10 @@ class linearSearchClass extends Base {
       await this.delay(this.TimeoutDelay);
       if (!this.isAnimating) return;
       if (array[i].value === key) {
-
-        console.log("found at ", i);
+        this.logger.show({
+          message: { title: `Found at index ${i}`, text: `Key ${key} found at index ${i}.` },
+          type: "success",
+        });
         array[i].obj.col = this.sortedCol;
         this.squareArray[0].col = this.sortedCol;
         DrawArray([...this.arrows, ...this.squareArray, ...this.keyCircle]);
@@ -67,7 +81,6 @@ class linearSearchClass extends Base {
 
         return;
       } else {
-
         array[i].obj.col = this.unsortedCol;
         await this.delay(this.TimeoutDelay);
       }
@@ -77,7 +90,10 @@ class linearSearchClass extends Base {
     array[array.length - 1].obj.col = this.unsortedCol;
     DrawArray(this.keyCircle);
     await this.delay(this.TimeoutDelay);
-    console.log("not found");
+    this.logger.show({
+      message: { title: "Not Found", text: `Key ${key} was not found in the array.` },
+      type: "warning",
+    });
   }
 
 
@@ -86,8 +102,21 @@ class linearSearchClass extends Base {
 
     await this.waitWhilePaused();
     if (!this.isAnimating) return;
+
+    this.logger.show({
+      message: { title: "Linear Search", text: `Starting Linear Search for key ${this.key}.` },
+      type: "info",
+      isEvent: true,
+      timer: 5000
+    });
+
     await this.linearSearchAlgo(this.objNodeArray, this.key);
 
+    this.logger.show({
+      message: { title: "Linear Search Completed", text: "Search completed." },
+      type: "success",
+      isEvent: true
+    });
 
     this.isAnimating = false;
   }

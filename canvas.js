@@ -35,11 +35,11 @@ export class Circle {
 }
 
 export class Text {
-  constructor({ xPos, yPos, label, textSize = 16, textCol = 0 } = {}) {
+  constructor({ xPos, yPos, label, text_size = 16, textCol = 0 } = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.label = label;
-    this.textS = textSize;
+    this.text_size = text_size;
     this.textCol = textCol;
   }
 
@@ -47,7 +47,7 @@ export class Text {
     push();
     noStroke();
     textFont('sans-serif');
-    textSize(this.textS);
+    textSize(this.text_size);
     fill(this.textCol);
     textStyle(NORMAL);
     textAlign(CENTER, CENTER);
@@ -344,10 +344,10 @@ export function windowResized() {
   const parent = document.getElementById("CanvasContainer");
   resizeCanvas(parent.offsetWidth, parent.offsetHeight);
 
-  scaleFactorW = (parent.offsetWidth) / baseWidth;
+  // scaleFactorW = (parent.offsetWidth) / baseWidth;
   width = parent.offsetWidth;
 
-  scaleFactorH = parent.offsetHeight / baseHeight;
+  // scaleFactorH = parent.offsetHeight / baseHeight;
   height = parent.offsetHeight;
 
   console.log("width, height", width, height);
@@ -357,4 +357,4 @@ export function windowResized() {
 }
 
 
-export { height, width, scaleFactorH, scaleFactorW };
+export { height, width };

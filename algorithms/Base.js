@@ -62,14 +62,12 @@ export class Base {
       x += this.dia + this.spacing;
     });
 
-    console.log("key = ", this.key)
     DrawArray();
   }
 
   Pause() { this.isPause = true; }
   Resume() {
     if (this.isPause && this.isAnimating) {
-      console.log("Resuming...");
       this.isPause = false;
     }
   }

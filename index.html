@@ -28,14 +28,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <title>Algorithm Visualizer</title>
+    <link rel="stylesheet" href="logger.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-    <script type="module" src="./sketch.js"></script>
-
-
+    <!-- <script type="module" src="./sketch.js"></script> -->
+    <script type="module" src="./script.js"></script>
 
 </head>
 
@@ -62,21 +62,30 @@
                 <div class="algorithm-category">
                     <h3 class="category-title">Sorting Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn active" data-algo-type="Sorting" data-algorithm="bubble-sort">Bubble Sort</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="selection-sort">Selection Sort</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="insertion-sort">Insertion Sort</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="quick-sort">Quick Sort</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="merge-sort">Merge Sort</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="heap-sort">Heap Sort</button></li>
+                        <li><button class="algorithm-btn active" data-algo-type="Sorting"
+                                data-algorithm="bubble-sort">Bubble Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting"
+                                data-algorithm="selection-sort">Selection Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting"
+                                data-algorithm="insertion-sort">Insertion Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="quick-sort">Quick
+                                Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="merge-sort">Merge
+                                Sort</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Sorting" data-algorithm="heap-sort">Heap
+                                Sort</button></li>
                     </ul>
                 </div>
 
                 <div class="algorithm-category">
                     <h3 class="category-title">Search Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="linear-search">Linear Search</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="binary-search">Binary Search</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="hash-search">Hash Table</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="linear-search">Linear
+                                Search</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="binary-search">Binary
+                                Search</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Search" data-algorithm="hash-search">Hash
+                                Table</button></li>
                     </ul>
                 </div>
                 <div class="algorithm-category">
@@ -84,18 +93,23 @@
                     <ul class="algorithm-list">
                         <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="dfs">DFS</button></li>
                         <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="bfs">BFS</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="dijkstra">Dijkstra's Algorithm</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="dijkstra">Dijkstra's
+                                Algorithm</button></li>
                         <!-- <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="astar">A* Algorithm</button></li> -->
-                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="kruskal">Kruskal's Algorithm</button></li>
-                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="prim">Prim's Algorithm</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="kruskal">Kruskal's
+                                Algorithm</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Graph" data-algorithm="prim">Prim's
+                                Algorithm</button></li>
                     </ul>
                 </div>
 
                 <div class="algorithm-category">
                     <h3 class="category-title">Tree Algorithms</h3>
                     <ul class="algorithm-list">
-                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="binary-tree-traversal">Binary Tree Traversal</button> </li>
-                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="BST">Binary Search Tree</button></li>
+                        <li><button class="algorithm-btn" data-algo-type="Tree"
+                                data-algorithm="binary-tree-traversal">Binary Tree Traversal</button> </li>
+                        <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="BST">Binary Search
+                                Tree</button></li>
                         <!-- <li><button class="algorithm-btn" data-algo-type="Tree" data-algorithm="avl-tree">AVL Tree</button></li> -->
                     </ul>
                 </div>
@@ -104,15 +118,33 @@
 
         <!-- Main Content Area -->
         <main class="main-content">
-             <div class="canvas-container">
+            <div class="canvas-container">
                 <div class="canvas-header">
-                    <h2 id="algorithmTitle">Bubble Sort</h2>
+                    <h2 id="algorithmTitle">Bubble Sort <span class="infoIcon"><ion-icon
+                                name="help-circle-outline"></ion-icon></span></h2>
                     <div class="canvas-info">
                         <span id="algorithmInfo">Time Complexity: O(n²) | Space Complexity: O(1) | Stable: Yes</span>
                     </div>
                 </div>
-                <div id="CanvasContainer"></div>
+                <div id="CanvasContainer">
+                </div>
             </div>
+
+            <!-- for alerts/errors/warnings -->
+            <div class="toast-container event" id="eventToastContainer">
+                <div class="toast-inner" id="eventInnerContainer"></div>
+            </div>
+
+            <!-- for Algo steps-->
+            <div class="toast-container steps" id="stepsToastContainer">
+                <h3>
+                    Steps <ion-icon name="chevron-expand-outline"></ion-icon>
+                </h3>
+                <div class="scrollable-content">
+                    <div class="toast-list" id="toastList"></div>
+                </div>
+            </div>
+
         </main>
     </div>
 
@@ -126,14 +158,15 @@
             <div id="inputField" class="control-group">
                 <div class="input-group">
                     <label for="customArrayInput">Custom Array (comma-separated)</label>
-                    <input type="text" id="customArrayInput" class="array-input" placeholder="eg: 64, 34, 25, 12, 22, 11, 90">
+                    <input type="text" id="customArrayInput" class="array-input"
+                        placeholder="eg: 64, 34, 25, 12, 22, 11, 90">
                 </div>
 
                 <div id="searchKey" class="input-group">
                     <label for="searchValue">Search Key</label>
                     <input type="text" id="searchValue" class="array-input" placeholder="search key">
                 </div>
-                
+
                 <div id="subType" class="input-group">
                     <label for="opType">Select the type</label>
                     <select name="opType" id="opType" class="array-input"></select>
@@ -143,27 +176,23 @@
                     <button class="control-btn apply-btn" id="applyArrayBtn">Apply</button>
                     <button class="control-btn generate-btn" id="generate">Example</button>
                 </div>
-                
+
                 <div id="treeControlsGrp" class="controlBtnGrp displayNone">
                     <button class="control-btn apply-btn" id="bulkInsert">Bulk Insert</button>
                     <button class="control-btn generate-btn" id="generateBST">Example</button>
                 </div>
             </div>
 
-            <div class="control-group">
+            <div class="control-group search">
                 <label for="speedSlider">Speed</label>
                 <input type="range" id="speedSlider" min="1" max="5" step="1" value="1" class="slider">
                 <span id="speedValue">1x</span>
             </div>
 
             <div class="control-buttons" id="controlButtons">
-                <button class="control-btn play-btn" id="playBtn">
+                <button class="control-btn play-btn" id="togglePlayBtn">
                     <span class="btn-icon">▶</span>
                     Play
-                </button>
-                <button class="control-btn pause-btn" id="playPauseBtn">
-                    <span class="btn-icon">⏸</span>
-                    Pause
                 </button>
                 <button class="control-btn reset-btn" id="resetBtn">
                     <span class="btn-icon">⏹</span>
@@ -172,7 +201,7 @@
             </div>
 
             <!-- for tree lagorithms -->
-            <div class="control-buttons displayNone" id="treeControls">
+            <div class="control-buttons tree displayNone" id="treeControls">
                 <button class="control-btn play-btn" id="insertBtn">
                     <ion-icon name="add-outline" style="font-size: large;"></ion-icon>
                     Insert
@@ -193,6 +222,19 @@
         </div>
     </div>
 
+    <div id="modalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Algorithm Notes</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <!-- content -->
+            <div class="modal-body" id="modalBody">
+
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
@@ -205,8 +247,7 @@
         </div>
     </footer>
 
-    <script type="module" src="./script.js"></script>
-
+    <!-- <script type="module" src="./logger.js"></script> -->
 </body>
 
 </html>

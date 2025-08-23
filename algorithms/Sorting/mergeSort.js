@@ -1,9 +1,16 @@
 import { Base, compare } from "../Base.js"
 import { DrawArray, Square, clearCanvas } from '../../canvas.js';
 
+import { Logger } from "../../logger.js";
+
 class mergeSortClass extends Base {
     constructor() {
-        super("Merge Sort", 8, 30);
+        super("Merge Sort", 10, 35);
+        this.logger = new Logger();
+        this.MOVE_SPEED = 4;
+        this.BOX_RADIUS_PADDING = 5;
+        this.BOX_Y_PADDING = 10;
+        this.SORTED_BOX_STROKE = 4;
         this.squareArray = [];
     }
 
@@ -15,21 +22,28 @@ class mergeSortClass extends Base {
         }
     }
 
+
+
     async reset() {
+        this.logger.show({
+            message: { title: "Reset", text: "Merge Sort state and visuals have been reset." },
+            type: "warning",
+            isEvent: true
+        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.squareArray = [];
         this.isAnimating = false;
         this.isPause = false;
-        this.i = null;
+      
         await this.delay(50);
+        this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
     }
 
 
-
-    async move(element, x, y, speedFactor = 4) {
+    async move(element, x, y, speedFactor = this.MOVE_SPEED) {
         if (!this.isAnimating) return;
         return new Promise(resolve => {
             if (!this.isAnimating) return;
@@ -48,162 +62,223 @@ class mergeSortClass extends Base {
             };
             animate();
         });
-
     }
 
-    moveDiagonal(elements, angle, dir, depth, offsetY = 50) {
-        if (!this.isAnimating) return;
-        let i;
-        i = (dir > 0) ? 1 : elements.length;
+
+    moveDiagonal(elements, direction, offsetY = 70) {
+        if (!this.isAnimating) return Promise.resolve();
+
+        let totalLength = (elements.length * (this.dia + this.spacing)) - this.spacing;
+
+        const startX = (direction > 0)
+            ?  (elements[elements.length-1].obj.xPos) - totalLength + this.dia
+            : elements[0].obj.xPos;
+
         return Promise.all(
-            elements.map((element) => {
-                if (!this.isAnimating) return;
+            elements.map((element, idx) => {
+                if (!this.isAnimating) return Promise.resolve();
                 const y = element.obj.yPos + offsetY;
-                const offsetX = Math.floor(y / Math.tan(angle));
-                const x = element.obj.xPos + ((i * dir * offsetX) / depth);
-                (dir > 0) ? i += 0.1 : i -= 0.1;
-                return this.move(element.obj, x, y, 4);
+                const x = startX + idx * (this.dia + this.spacing);
+                return this.move(element.obj, x, y, this.MOVE_SPEED);
             })
         );
-    };
-
-    async drawSquare(array) {
-        if (!this.isAnimating) return;
-        let r = array[0].obj.dia / 2;
-        let x1 = array[0].obj.xPos - (r + 5);
-        let y1 = array[0].obj.yPos + (r + 10);
-
-        let x2 = array[array.length - 1].obj.xPos + (r + 5);
-        let y2 = array[array.length - 1].obj.yPos - (r + 10);
-
-        this.squareArray.push(new Square({xPos1: x1, yPos1: y1, xPos2: x2, yPos2: y2, col: this.unsortedCol}));
-
-        DrawArray(this.squareArray);
-
-        await this.delay(this.TimeoutDelay);
     }
 
-    async merge(left, right) {
+
+    async drawSquare(subArray, mid) {
+        if (!this.isAnimating) return;
+        let radius = subArray[0].obj.dia / 2;
+
+        if (mid > 0 && mid < subArray.length) {
+            let leftStart = subArray[0].obj;
+            let leftEnd = subArray[mid - 1].obj;
+            
+            let rightStart = subArray[mid].obj;
+            let rightEnd = subArray[subArray.length - 1].obj;
+
+            let x1 = leftStart.xPos - (radius + this.BOX_RADIUS_PADDING);
+            let y1 = leftStart.yPos + (radius + this.BOX_Y_PADDING);
+
+            let x2 = (leftEnd.xPos + rightStart.xPos) /2;
+            let y2 = leftEnd.yPos - (radius + this.BOX_Y_PADDING);
+                
+            this.squareArray.push( new Square({ xPos1: x1, yPos1: y1, xPos2: x2, yPos2: y2, col: this.unsortedCol }));
+
+            x2 = rightEnd.xPos + (radius + this.BOX_RADIUS_PADDING);
+            y2 = rightEnd.yPos - (radius + this.BOX_Y_PADDING);
+
+            this.squareArray.push( new Square({ xPos1: x1, yPos1: y1, xPos2: x2, yPos2: y2, col: this.unsortedCol }) );
+        }
+
+        
+
+        DrawArray(this.squareArray);
+        await this.delay(this.TimeoutDelay);
+
+        return this.squareArray.slice(-2); 
+    }
+
+
+    async merge(leftArray, rightArray, mergedPositions) {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
-        let r = left[0].obj.dia / 2;
-        let i = 0, j = 0, k = 0;
-        let combined = [];
+        let leftIndex = 0, rightIndex = 0, mergeIndex = 0;
+        let mergedArray = [];
 
-        let boxL = this.squareArray[this.squareArray.length - 2];
-        let boxR = this.squareArray[this.squareArray.length - 1];
+        let leftBox = this.squareArray[this.squareArray.length - 2];
+        let rightBox = this.squareArray[this.squareArray.length - 1];
 
-        let startX = boxL.xPos1 + r + 5;
-        let targetY = left[0].obj.yPos - 70;
-
-        let space = this.spacing + 2 * r + 4.5;
-        if (this.squareArray.length == 2) space = this.spacing + left[0].obj.dia;
-
-
-        while (i < left.length && j < right.length) {
+        while (leftIndex < leftArray?.length && rightIndex < rightArray?.length) {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
             let element;
-            if (compare(right[j], left[i])) element = left[i++];
-            else element = right[j++];
+            if (compare(rightArray[rightIndex], leftArray[leftIndex])) {
+                element = leftArray[leftIndex++];
+            } else {
+                element = rightArray[rightIndex++];
+            }
 
-            let targetX = startX + k * space;
-            await this.move(element.obj, targetX, targetY, 4, this.squareArray);
-            combined.push(element);
-            k++;
+            let { x, y } = mergedPositions[mergeIndex];
+            await this.move(element.obj, x, y, this.MOVE_SPEED, this.squareArray);
+            mergedArray.push(element);
+            mergeIndex++;
         }
 
-        while (i < left.length) {
+        while (leftIndex < leftArray.length) {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-
-            let targetX = startX + k * space;
-            await this.move(left[i].obj, targetX, targetY, 4);
-            combined.push(left[i++]);
-            k++;
+            let { x, y } = mergedPositions[mergeIndex];
+            await this.move(leftArray[leftIndex].obj, x, y, this.MOVE_SPEED);
+            mergedArray.push(leftArray[leftIndex++]);
+            mergeIndex++;
         }
 
-        while (j < right.length) {
+        while (rightIndex < rightArray.length) {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-
-            let targetX = startX + k * space;
-            await this.move(right[j].obj, targetX, targetY, 4);
-            combined.push(right[j++]);
-            k++;
+            let { x, y } = mergedPositions[mergeIndex];
+            await this.move(rightArray[rightIndex].obj, x, y, this.MOVE_SPEED);
+            mergedArray.push(rightArray[rightIndex++]);
+            mergeIndex++;
         }
 
-        boxL.col = this.sortedCol;
-        boxR.col = this.sortedCol;
-        boxL.strokeW = boxR.strokeW = 4;
+        leftBox.col = this.sortedCol;
+        rightBox.col = this.sortedCol;
+        leftBox.strokeW = rightBox.strokeW = this.SORTED_BOX_STROKE;
 
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
-
         DrawArray(this.squareArray);
 
         if (!this.isAnimating) return;
-        this.squareArray.pop()
-        this.squareArray.pop()
+        this.squareArray.pop();
+        this.squareArray.pop();
         await this.delay(this.TimeoutDelay * 2);
 
-        return combined;
+        return mergedArray;
     }
 
 
-    async mergeSortAlgo(Array, depth) {
+
+    async mergeSortAlgo(arrayToSort) {
         await this.waitWhilePaused();
 
-        if (Array.length <= 1) {
-            Array[0].obj.col = this.sortedCol;
+        if (arrayToSort.length <= 1) {
+            this.logger.show({
+                message: { title: "Base Case", text: `Subarray of length 1: [${arrayToSort[0]?.value}] is already sorted.` },
+                type: "success",
+            });
+            arrayToSort[0].obj.col = this.sortedCol;
             DrawArray(this.squareArray);
-            return Array;
+            return arrayToSort;
         }
-        let mid = Math.floor(Array.length / 2);
-        let leftArray = Array.slice(0, mid);
-        let rightArray = Array.slice(mid);
+
+
+        let mid = Math.floor(arrayToSort.length / 2);
+        let leftArray = arrayToSort.slice(0, mid);
+        let rightArray = arrayToSort.slice(mid);
 
         await this.waitWhilePaused();
-        await this.drawSquare(leftArray);
-        await this.drawSquare(rightArray);
+        await this.drawSquare(arrayToSort, mid);
+        // await this.drawSquare(rightArray);
         await this.waitWhilePaused();
 
+        this.logger.show({
+            message: { title: "Divide", text: `Dividing array [${arrayToSort.map(node => node.value)}] into two halves. <br>Left array:  [${leftArray.map(node => node.value)}]  <br>Right array:  [${rightArray.map(node => node.value)}]` },
+            type: "info",
+
+        });
+
+        let mergedPositions = arrayToSort.map(element => ({ x: element.obj.xPos, y: element.obj.yPos }));
+
         await this.waitWhilePaused();
-        await this.moveDiagonal(leftArray, Math.PI / (2 + Array.length * 0.1), -1, depth, 70);
-        await this.moveDiagonal(rightArray, Math.PI / (2 + Array.length * 0.1), 1, depth, 70);
+        await this.moveDiagonal(leftArray, -1);
+        await this.moveDiagonal(rightArray, 1);
         await this.waitWhilePaused();
+
+
 
         await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
 
-        let left = await this.mergeSortAlgo(leftArray, depth + 1);
-        let right = await this.mergeSortAlgo(rightArray, depth + 1);
+        let leftSorted = await this.mergeSortAlgo(leftArray);
+        let rightSorted = await this.mergeSortAlgo(rightArray);
 
         await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
-        return await this.merge(left, right, depth);
+
+        this.logger.show({
+            message: { title: "Merge", text: `Merging two sorted halves. <br>Left array:  [${leftSorted.map(node => node.value)}]  <br>Right array:  [${rightSorted.map(node => node.value)}]` },
+            type: "info",
+
+        });
+        return await this.merge(leftSorted, rightSorted, mergedPositions);
     }
+
 
     async algoExecutor() {
         await this.waitWhilePaused();
-        if (!this.isAnimating) return; 
-        
-        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 30), 2)));
+        if (!this.isAnimating) return;
+
+        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 60), 2)));
 
         await this.waitWhilePaused();
-        if (!this.isAnimating) return; 
-        
-        await this.mergeSortAlgo(this.objNodeArray, 1);
+        if (!this.isAnimating) return;
+
+        this.logger.show({
+            message: { title: "Merge Sort", text: "Starting Merge Sort. The array will be recursively divided and merged." },
+            type: "info",
+            isEvent: true,
+            timer:2000
+        });
+
+        let totalLength = this.objNodeArray.length * (this.dia + this.spacing);
+        let availableWidth = width * 0.95;
+        let sf = Math.min(1, availableWidth / totalLength);
+        this.dia *= sf;
+        this.spacing *= sf;
+        this.SQUARE_GAP *= sf;
+        this.BOX_RADIUS_PADDING *= sf;
+
+        await this.mergeSortAlgo(this.objNodeArray);
         await this.waitWhilePaused();
+
+        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, (height / 2 - 30), 2)));
+
+        this.logger.show({
+            message: { title: "Completed", text: "Merge Sort completed. The array is now sorted." },
+            type: "success",
+            isEvent: true
+        });
     }
+
 
     async run() {
         this.isAnimating = true;
-
         await this.algoExecutor();
 
         await this.delay(this.TimeoutDelay);
@@ -212,8 +287,6 @@ class mergeSortClass extends Base {
 
         this.isAnimating = false;
     }
-
-
-};
+}
 
 export const mergeSort = new mergeSortClass();

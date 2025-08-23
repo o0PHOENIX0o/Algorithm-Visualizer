@@ -10,8 +10,9 @@ export class GraphBase extends Base {
         this.directedEdges = [];
         this.indexMap = {};
         this.radius = radius;
-        this.highlightColors = ['#FFD54F', '#4FC3F7', '#6858f8ff', '#FF8A65', '#BA68C8', '#F06292', '#e6ad98ff', '#9575CD', '#64B5F6', '#E57373'];
-        this.scaleFactor = 1;
+        this.highlightColors = ['#43A047','#FFD54F', '#2effc0ff', '#FF8A65', '#BA68C8', '#F06292', '#e6ad98ff', '#9575CD', '#00897B', '#E57373'];
+
+        this.scaleFactor = 1; 
     }
 
     Play() {
@@ -56,12 +57,11 @@ export class GraphBase extends Base {
         for (let i = 0; i < visited.length; i++) {
             if (!visited[i]) {
                 console.warn(`Vertex ${this.inputArray[i]} is not connected to the graph.`);
-                alert(`Vertex ${this.inputArray[i]} is not connected to the graph.\n"Prim's algorithm requires a connected graph."`);
-                return false;
+                return { connected: false, vertex: this.inputArray[i] };
             }
         }
 
-        return true;
+        return { connected: true, vertex: null };
     }
 
 
@@ -132,7 +132,8 @@ export class GraphBase extends Base {
         return box;
     }
 
-    async moveSquare({ element, xc, yc, otherElements, speedFactor = 4 } = {}) {
+    async moveSquare({ element, xc, yc, otherElements = [], speedFactor = 4 } = {}) {
+        console.log("Moving square: ", element, " to -> ", xc, yc);
         let offset = 5 + this.objNodeArray[0].obj.dia / 2;
         let targetX1 = xc - offset;
         let targetY1 = yc + offset;
@@ -179,7 +180,7 @@ export class GraphBase extends Base {
         let centerX = width / 2;
         let centerY = height / 2;
 
-        let availableWidth = width * 0.9;
+        let availableWidth = width * 0.8;
         let totalLength = 2 * (this.radius + this.dia * 2);
         this.scaleFactor = Math.min(1, availableWidth / totalLength);
 

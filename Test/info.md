@@ -10,8 +10,10 @@
   ```
 
 
-  - improve heapsort graph
-  - fix pause/play bug
+  - fix pause/play bug 
+  - remove the play btn just keep the play/pause btn
+  - if error notifiction already being displayed skip it or increase the timer
+  - use uniform naming for object node array (nodesArray), replace Nodes, nodeArray, Array, array with nodesArray
 
 
   # ALGORITHM_VISUALIZER

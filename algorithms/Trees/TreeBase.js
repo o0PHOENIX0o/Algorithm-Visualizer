@@ -1,6 +1,6 @@
 import { Base } from "../Base.js";
-import { DrawArray, Line, Circle, PointerTriangles, clearCanvas, height, width, Square } from '../../canvas.js';
-
+import { DrawArray, Line, width, Square } from '../../canvas.js';
+import {Logger} from "../../logger.js";
 
 export class TreeBase extends Base {
     constructor(name, spacing = 10, diameter = 30, gap = 36) {
@@ -17,19 +17,6 @@ export class TreeBase extends Base {
             this.run();
         }
     }
-
-    // reset() {
-    //     this.objNodeArray = [];
-    //     this.inputArray = [];
-    //     this.lineArray = [];
-    //     this.objPositions = [];
-
-
-    //     this.isAnimating = false;
-    //     this.isPause = false;
-    //     clearCanvas();
-    //     DrawArray(null);
-    // }
 
     drawAll(otherObjects = []) {
         if (otherObjects.length > 0) DrawArray([... this.lineArray, ...otherObjects]);
@@ -188,8 +175,4 @@ export class TreeBase extends Base {
             await this.delay(this.TimeoutDelay);
         }
     }
-
-
-
-
 }
