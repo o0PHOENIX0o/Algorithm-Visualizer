@@ -99,12 +99,20 @@ let algoData = {
           "url": "https://www.geeksforgeeks.org/bubble-sort/"
         },
         {
-          "name": "Khan Academy",
-          "url": "https://www.khanacademy.org/computing/computer-science/algorithms/sorting-algorithms/a/bubble-sort"
+          "name": "W3Schools",
+          "url": "https://www.w3schools.com/dsa/dsa_algo_bubblesort.php"
+        },
+        {
+          "name": "tutorialspoint",
+          "url": "https://www.tutorialspoint.com/data_structures_algorithms/bubble_sort_algorithm.html"
+        },
+        {
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=Dv4qLJcxus8"
         },
         {
           "name": "github code",
-          "url": ""
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/2_SortingAlgo_O(n%5E2)/SortingAlgo.c"
         }
       ]
     }
@@ -211,8 +219,16 @@ let algoData = {
           "url": "https://github.com/TheAlgorithms/JavaScript/blob/master/Sorts/InsertionSort.js"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/sorting"
+          "name": "W3Schools",
+          "url": "https://www.w3schools.com/dsa/dsa_algo_insertionsort.php"
+        },
+        {
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=8mJ-OhcfpYg&pp=ygUOaW5zZXJ0aW9uIHNvcnQ%3D"
+        },
+        {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/2_SortingAlgo_O(n%5E2)/SortingAlgo.c"
         }
       ]
     }
@@ -302,8 +318,16 @@ let algoData = {
           "url": "https://www.geeksforgeeks.org/selection-sort/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/sorting"
+          "name": "W3Schools",
+          "url": "https://www.w3schools.com/dsa/dsa_algo_selectionsort.php"
+        },
+        {
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=EwjnF7rFLns"
+        },
+        {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/2_SortingAlgo_O(n%5E2)/SortingAlgo.c"
         }
       ]
     }
@@ -405,9 +429,17 @@ Merge(L, R)
           "url": "https://www.geeksforgeeks.org/merge-sort/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/sorting"
-        }
+          "name": "Khan Academy",
+          "url": "https://www.khanacademy.org/computing/computer-science/algorithms/merge-sort/a/overview-of-merge-sort"
+        },
+        {
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=4VqmGXwpLqc"
+        },
+         {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/tree/main/DAA_assignment/3_SortingAlgo/O(nlogn)"
+        },
       ]
     }
   },
@@ -512,12 +544,20 @@ Partition(A, low, high)
           "url": "https://en.wikipedia.org/wiki/Quicksort"
         },
         {
-          "name": "github code",
-          "url": "https://github.com/TheAlgorithms/JavaScript/blob/master/Sorts/QuickSort.js"
+          "name": "GeeksforGeeks",
+          "url": "https://www.geeksforgeeks.org/dsa/quick-sort-algorithm/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/sorting"
+          "name": "Khan Academy",
+          "url": "https://www.khanacademy.org/computing/computer-science/algorithms/quick-sort/a/overview-of-quicksort"
+        },
+        {
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=Hoixgm4-P4M"
+        },
+        {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/tree/main/DAA_assignment/3_SortingAlgo/O(nlogn)"
         }
       ]
     }
@@ -620,9 +660,13 @@ Heapify(A, n, i)
           "url": "https://www.geeksforgeeks.org/heap-sort/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/sorting"
-        }
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=ZxH3jcA3EK0&t=69s"
+        },
+         {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/3_SortingAlgo/O(nlogn)/heap.c"
+        },
       ]
     }
   },
@@ -712,12 +756,20 @@ Heapify(A, n, i)
           "url": "https://en.wikipedia.org/wiki/Linear_search"
         },
         {
+          "name": "GeeksforGeeks",
+          "url": "https://www.geeksforgeeks.org/linear-search/"
+        },
+        {
           "name": "github code",
           "url": "https://github.com/TheAlgorithms/JavaScript/blob/master/Searches/LinearSearch.js"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/searching"
+          "name" : "YouTube Video",
+          "url" : "https://www.youtube.com/watch?v=246V51AWwZM"
+        },
+        {
+          "name": "Github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/1_SearchAlgo/Search.c"
         }
       ]
     }
@@ -816,12 +868,20 @@ Heapify(A, n, i)
           "url": "https://en.wikipedia.org/wiki/Binary_search_algorithm"
         },
         {
-          "name": "github code",
-          "url": "https://github.com/TheAlgorithms/JavaScript/blob/master/Searches/BinarySearch.js"
+          "name": "GeeksforGeeks",
+          "url": "https://www.geeksforgeeks.org/dsa/binary-search"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/searching"
+          "name": "Khan Academy",
+          "url": "https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/binary-search"
+        },
+        {
+          "name" : "YouTube Video",
+          "url" : "https://www.youtube.com/watch?v=xrMppTpoqdw"
+        },
+        {
+          "name": "Github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/1_SearchAlgo/Search.c"
         }
       ]
     }
@@ -929,8 +989,12 @@ Heapify(A, n, i)
           "url": "https://www.geeksforgeeks.org/hashing-data-structure/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/hashtable"
+          "name" : "YouTube Video",
+          "url" : "https://www.youtube.com/watch?v=FsfRsGFHuv4"
+        },
+        {
+          "name": "Github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/1_SearchAlgo/Search.c"
         }
       ]
     }
@@ -1023,8 +1087,16 @@ Heapify(A, n, i)
           "url": "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/dfsbfs"
+          "name": "HackerEarth",
+          "url": "https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial"
+        },
+        {
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=oDqjPvD54Ss"
+        },
+        {
+          "name": "github code",
+          "url": "https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/tutorial"
         }
       ]
     }
@@ -1124,13 +1196,17 @@ Heapify(A, n, i)
           "url": "https://en.wikipedia.org/wiki/Depth-first_search"
         },
         {
+          "name": "GeeksforGeeks",
+          "url": "https://www.geeksforgeeks.org/depth-first-search-or-dfs-for-a-graph/"
+        },
+        {
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=7fujbpJ0LB4"
+        },
+        {
           "name": "github code",
           "url": "https://github.com/TheAlgorithms/JavaScript/blob/master/Graphs/DFS.js"
         },
-        {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/dfsbfs"
-        }
       ]
     }
   },
@@ -1228,9 +1304,13 @@ Heapify(A, n, i)
           "url": "https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-graph-data-structure/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/sssp"
-        }
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=EFg3u_E6eHU&t=10s"
+        },
+        {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/6_Graphs/DijkstraAlgo.c"
+        },
       ]
     }
   },
@@ -1331,8 +1411,12 @@ Heapify(A, n, i)
           "url": "https://www.geeksforgeeks.org/prims-minimum-spanning-tree-mst-greedy-algo-5/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/mst"
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=EHRqQBlZAtU"
+        },
+        {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/Prims.c"
         }
       ]
     }
@@ -1422,8 +1506,12 @@ Heapify(A, n, i)
           "url": "https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/mst"
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=8HeLu8wuLqo&t=40s"
+        },
+        {
+          "name": "github code",
+          "url": "https://github.com/o0PHOENIX0o/CSE/blob/main/DAA_assignment/5_Graphs/KruskalAlgo.c"
         }
       ]
     }
@@ -1518,8 +1606,8 @@ Postorder(node)
           "url": "https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/bst"
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=b_NjndniOqY"
         }
       ]
     }
@@ -1671,12 +1759,12 @@ Postorder(node)
           "url": "https://www.geeksforgeeks.org/binary-search-tree-data-structure/"
         },
         {
-          "name": "Interactive Visualization",
-          "url": "https://visualgo.net/en/bst"
+          "name": "YouTube Video",
+          "url": "https://www.youtube.com/watch?v=pYT9F8_LFTM"
         },
         {
           "name": "github code",
-          "url": "https://github.com/TheAlgorithms/JavaScript/blob/master/Data-Structures/Tree/BinarySearchTree.js"
+          "url": "https://github.com/o0PHOENIX0o/CSE/tree/f847a4e05f508d4c880ca185a7ccef17d35325c5/BinarySearchTree"
         }
       ]
     }
