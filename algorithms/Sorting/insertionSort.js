@@ -15,7 +15,7 @@ class insertionSortClass extends Base {
     }
 
     Play() {
-        console.log("play ", this.isAnimating, this.isPause);
+        //console.log("play ", this.isAnimating, this.isPause);
         if (!this.isAnimating && !this.isPause && this.objNodeArray.length > 0) {
             this.isPause = false;
             this.run();

@@ -170,7 +170,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     document.querySelectorAll(".algorithm-btn").forEach(b => b.classList.remove("active"));
     e.target.classList.add("active");
 
-    console.log("--> reset", currentAlgorithm);
+    //console.log("--> reset", currentAlgorithm);
     if (currentAlgorithm) currentAlgorithm.reset();
 
     document.getElementById('startVertexDiv')?.remove();
@@ -293,7 +293,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
         
           document.getElementById('controlsContent').insertBefore( keyInput, treeControls);
 
-          console.log("BST selected", currentAlgorithm);
+          //console.log("BST selected", currentAlgorithm);
         }
         break;
 
@@ -328,7 +328,7 @@ document.getElementById("generate").addEventListener("click", () => {
 
   if (curAlgoType == "Sorting") InputField.value = "29, 10, 14, 37, 13, 25, 1, 17, 5, 8";
   else if (curAlgoType == "Search") {
-    console.log("search algo ", currentAlgorithm.name);
+    //console.log("search algo ", currentAlgorithm.name);
     InputField.value = (currentAlgorithm.name == 'Binary Search') ? "1, 5, 8, 10, 13, 14, 17, 25, 29, 37" : "29, 10, 14, 37, 13, 25, 1, 17, 5, 8";
     keyValue.value = 8;
   } else if (curAlgoType == "Graph") {
@@ -372,7 +372,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     behavior: 'smooth'
   });
 
-  console.log("apply ", currentAlgorithm);
+  //console.log("apply ", currentAlgorithm);
   if (currentAlgorithm.isAnimating) {
     showError("Animation in Progress", "Please wait for the current animation to finish or reset the algorithm.");
     return;
@@ -399,7 +399,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     return;
   }
 
-  console.log("cur algo subType ", curAlgoType);
+  //console.log("cur algo subType ", curAlgoType);
 
   if (curAlgoType == "Search") currentAlgorithm.generate(values, keyValue.value);
   else if (curAlgoType == "Graph") {
@@ -417,7 +417,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     let indexMap = {};
     values.forEach((v, i) => indexMap[v.trim()] = i);
     
-    console.log(values, indexMap);
+    //console.log(values, indexMap);
     let n = values.length;
     let adjMatrix = Array.from({ length: n }, () => Array(n).fill(0));
 
@@ -425,13 +425,13 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
       let [src, dest, w] = [...edge];
 
         if (!(src in indexMap) || !(dest in indexMap)) {
-          console.warn(`Skipping invalid edge (${src}, ${dest}, ${w}) because one or both vertices are missing`);
+          //console.warn(`Skipping invalid edge (${src}, ${dest}, ${w}) because one or both vertices are missing`);
           return;
         }
         
       let weight = (w && !isNaN(Number(w))) ? Number(w) : 1;
       if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") {
-        console.log(adjMatrix[indexMap[src]][indexMap[dest]], adjMatrix[indexMap[dest]][indexMap[src]], weight);
+        //console.log(adjMatrix[indexMap[src]][indexMap[dest]], adjMatrix[indexMap[dest]][indexMap[src]], weight);
         adjMatrix[indexMap[src]][indexMap[dest]] = adjMatrix[indexMap[dest]][indexMap[src]] = weight;
       } else {
         adjMatrix[indexMap[src]][indexMap[dest]] = weight;
@@ -444,7 +444,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
     if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") startIndex = 0;
     else startIndex = (startVertex && startVertex.length === 1 && !isNaN(indexMap[startVertex])) ? indexMap[startVertex] : -1;
 
-    console.log("initial-> ", adjMatrix, startVertex, indexMap[startVertex]);
+    //console.log("initial-> ", adjMatrix, startVertex, indexMap[startVertex]);
 
     currentAlgorithm.generate(values, edges, startIndex, adjMatrix);
 
@@ -584,7 +584,7 @@ document.getElementById("deleteAllBtn").addEventListener("click", () => {
   btn.forEach(btn => btn.classList.remove('disabled-btn'));
 
   currentAlgorithm.reset();
-  console.log("delete all ", currentAlgorithm.isAnimating);
+  //console.log("delete all ", currentAlgorithm.isAnimating);
 });
 
 

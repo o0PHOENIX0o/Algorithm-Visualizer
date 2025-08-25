@@ -56,7 +56,7 @@ export class GraphBase extends Base {
 
         for (let i = 0; i < visited.length; i++) {
             if (!visited[i]) {
-                console.warn(`Vertex ${this.inputArray[i]} is not connected to the graph.`);
+                //console.warn(`Vertex ${this.inputArray[i]} is not connected to the graph.`);
                 return { connected: false, vertex: this.inputArray[i] };
             }
         }
@@ -171,7 +171,7 @@ export class GraphBase extends Base {
         this.key = startVertex;
         this.edgeList = structuredClone(edges);
         this.adjMatrix = structuredClone(adjMatrix);
-        console.log(this.adjMatrix);
+        //console.log(this.adjMatrix);
         clearCanvas();
 
         input.forEach((v, i) => this.indexMap[v] = i);
@@ -208,7 +208,7 @@ export class GraphBase extends Base {
         this.directedEdges = Array.from({ length: input.length }, () => Array(input.length).fill(null));
         for (let [from, to, w] of edges) {
             if(!(from in this.indexMap) || !(to in this.indexMap)) {
-                console.warn(`Skipping invalid edge (${from}, ${to}, ${w}) because one or both vertices are missing`);
+                //console.warn(`Skipping invalid edge (${from}, ${to}, ${w}) because one or both vertices are missing`);
                 continue;
             }
             let posA = { xPos: this.objNodeArray[this.indexMap[from]].obj.xPos, yPos: this.objNodeArray[this.indexMap[from]].obj.yPos };

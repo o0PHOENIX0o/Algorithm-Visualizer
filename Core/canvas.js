@@ -338,13 +338,13 @@ export function drawWelcomeScreen( heading = "Welcome to Algorithm Canvas", subH
 }
 
 export function setupCanvas() {
-  console.log("Setting up canvas...");
+  //console.log("Setting up canvas...");
 
   const parent = document.getElementById("CanvasContainer");
   const canvas = createCanvas(parent.offsetWidth, parent.offsetHeight - 3);
 
-  console.log("parent offsetWidth, offsetHeight", parent.offsetWidth, parent.offsetHeight);
-  console.log("canvas width, height", canvas.width, canvas.height);
+  //console.log("parent offsetWidth, offsetHeight", parent.offsetWidth, parent.offsetHeight);
+  //console.log("canvas width, height", canvas.width, canvas.height);
 
   height = canvas.height;
   width = canvas.width;
@@ -359,14 +359,14 @@ export function setupCanvas() {
 }
 
 export function windowResized() {
-  console.log("resized");
+  //console.log("resized");
   const parent = document.getElementById("CanvasContainer");
   resizeCanvas(parent.offsetWidth, parent.offsetHeight);
 
   width = parent.offsetWidth;
   height = parent.offsetHeight;
 
-  console.log("width, height", width, height);
+  //console.log("width, height", width, height);
 
   DrawArray();
 }

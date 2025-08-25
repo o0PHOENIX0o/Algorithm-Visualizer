@@ -81,7 +81,7 @@ class KruskalClass extends GraphBase {
         let startX = (width / 2) - (totalBoxWidth / 2) + BoxSpace / 2
 
         edges.forEach(({ u, v, weight, line }, i) => {
-            console.log(u, v, Nodes[u], Nodes[v]);
+            //console.log(u, v, Nodes[u], Nodes[v]);
             let label = `${Nodes[u].obj.label} - ${Nodes[v].obj.label} : ${weight}`;
 
             let boxX1 = startX + (i * (boxWidth + BoxSpace));

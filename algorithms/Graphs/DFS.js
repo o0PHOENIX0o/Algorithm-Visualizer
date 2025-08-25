@@ -31,7 +31,7 @@ class DFSClass extends GraphBase {
 
 
         const DFSvisit = async (array, u, highlightColor) => {
-            console.log("Visiting node: ", u, highlightColor);
+            //console.log("Visiting node: ", u, highlightColor);
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
@@ -86,7 +86,7 @@ class DFSClass extends GraphBase {
                         line.strokeW = 3;
                         this.drawAll([box]);
 
-                        console.log("befor 98", u, array, array[u]);
+                        //console.log("befor 98", u, array, array[u]);
                         this.logger.show({
                             message: {
                                 title: `Discovered New Node ${array[v].obj.label}`,
@@ -105,7 +105,7 @@ class DFSClass extends GraphBase {
                         box.text = "backtracking";
                         await this.moveSquare({ element: box, xc: array[u].obj.xPos, yc: array[u].obj.yPos });
 
-                        console.log(v," -> v is now visited");
+                        //console.log(v," -> v is now visited");
                         adjNode.map(adj =>{
                             if(isSeen[adj.node]){
                                 adj.box.col = this.sortedCol;
@@ -153,7 +153,7 @@ class DFSClass extends GraphBase {
         let stack = [];
         let forest = [];
         if (u === -1) {
-            console.log("Starting DFS for disconnected graph", u);
+            //console.log("Starting DFS for disconnected graph", u);
             for (let u = 0; u < Nodes.length; u++) {
                 DFSOrder = [];
                 let highlightColor = this.highlightColors[u % this.highlightColors.length];
@@ -168,11 +168,11 @@ class DFSClass extends GraphBase {
                     });
                     await this.delay(this.TimeoutDelay);
                     let DFStree = await DFSvisit(Nodes, u, highlightColor);
-                    console.log("DFS tree from node ", u, DFStree);
+                    //console.log("DFS tree from node ", u, DFStree);
                     forest.push([...DFStree]);
                 }
             }
-            console.log("Full DFS forest: ", forest);
+            //console.log("Full DFS forest: ", forest);
 
             this.logger.show({
                 message: {
@@ -210,7 +210,7 @@ class DFSClass extends GraphBase {
 
         await this.delay(this.TimeoutDelay);
 
-        console.log(DFSOrder);
+        //console.log(DFSOrder);
     }
 
 

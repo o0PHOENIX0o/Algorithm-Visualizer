@@ -132,7 +132,7 @@ class heapSortClass extends Base {
             if (i == 0) {
                 let targetX = width / 2;
                 let targetY = depth * (element.obj.dia + this.spacing + 70);
-                console.log(element, depth);
+                //console.log(element, depth);
                 this.move(element.obj, targetX, targetY, 4);
                 await this.waitWhilePaused();
                 return
@@ -160,8 +160,8 @@ class heapSortClass extends Base {
         for (let i = 0; i < maxD; i++) {
             totalwidth += 36 * Math.pow(2, i);
         }
-        console.log('total width', totalwidth)
-        console.log('available width', width * 0.9);
+        //console.log('total width', totalwidth)
+        //console.log('available width', width * 0.9);
 
         let scalingFactor = Math.min(1, (width * 0.9) / totalwidth);
         let Gap = 36 * scalingFactor;

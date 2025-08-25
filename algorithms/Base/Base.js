@@ -55,9 +55,9 @@ export class Base {
     this.spacing = this.spacing * this.scaleFactor;
     this.TEXT_SIZE = this.TEXT_SIZE * this.scaleFactor;
 
-    console.log("Width: ", width, "  availableWidth: ", availableWidth);
-    console.log("scaleFactor", this.scaleFactor);
-    console.log("dia, spacing", this.dia, this.spacing);
+    //console.log("Width: ", width, "  availableWidth: ", availableWidth);
+    //console.log("scaleFactor", this.scaleFactor);
+    //console.log("dia, spacing", this.dia, this.spacing);
 
     totalLength = input.length * (this.dia + this.spacing);
 

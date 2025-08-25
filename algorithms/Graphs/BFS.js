@@ -33,7 +33,7 @@ class BFSClass extends GraphBase {
         let isSeen = Array(Nodes.length).fill(false);
 
         const BFSvisit = async (array, u) => {
-            console.log(array, array[0].obj.label);
+            //console.log(array, array[0].obj.label);
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
@@ -65,13 +65,13 @@ class BFSClass extends GraphBase {
             
 
             while (Queue.length > 0) {
-                console.log(" Queue: ", Queue);
+                //console.log(" Queue: ", Queue);
                 let v = Queue.shift();
 
                 box.text = "Visiting";
                 box.col = this.HighlightCol;
                 box.textCol = this.HighlightCol;
-                console.log("Box: ", box);
+                //console.log("Box: ", box);
 
                 await this.moveSquare({element: box, xc: array[v].obj.xPos, yc: array[v].obj.yPos});
 
@@ -164,7 +164,7 @@ class BFSClass extends GraphBase {
         if (u === -1) await BFSvisit(Nodes, 0);
         else await BFSvisit(Nodes, u);
 
-        console.log(BFSOrder);
+        //console.log(BFSOrder);
     }
 
 

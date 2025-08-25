@@ -111,11 +111,11 @@ export class TreeBase extends Base {
             if (!this.isAnimating) return;
 
             let element = Array[i];
-            // console.log('element -> ', element);
+            // //console.log('element -> ', element);
             if (i == 0) {
                 let targetX = width / 2;
                 let targetY = depth * (element.obj.dia + this.spacing + 70);
-                // console.log(element, depth);
+                // //console.log(element, depth);
                 this.move({ element: element.obj, x: targetX, y: targetY, speedFactor: 4 });
                 await this.waitWhilePaused();
                 return
@@ -140,7 +140,7 @@ export class TreeBase extends Base {
             this.delay(this.TimeoutDelay);
         }
 
-        console.log('Building Binary Tree', Array.length);
+        //console.log('Building Binary Tree', Array.length);
         let dia = Array[0].obj.dia;
         let d = 1;
         let maxD = 4;
@@ -150,8 +150,8 @@ export class TreeBase extends Base {
             totalwidth += this.leafGap * Math.pow(2, i);
         }
 
-        console.log('total width', totalwidth)
-        console.log('available width', width * 0.9);
+        //console.log('total width', totalwidth)
+        //console.log('available width', width * 0.9);
 
         let scalingFactor = Math.min(1, (width * 0.9) / totalwidth);
         
@@ -165,7 +165,7 @@ export class TreeBase extends Base {
 
             let dir = (i % 2) ? -1 : 1;
             if ((i + 1) > Math.pow(2, d) - 1) d++;
-            // console.log('build branch', i, dir, d);
+            // //console.log('build branch', i, dir, d);
             await buildBranch({
                 Array: Array,
                 i: i,

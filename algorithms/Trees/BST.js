@@ -63,7 +63,7 @@ class BSTclass extends TreeBase {
     isMobileDevice() { return width < 780; }
 
     showError(message) {
-        console.error(message);
+        //console.error(message);
         alert(message);
     }
 
@@ -101,7 +101,7 @@ class BSTclass extends TreeBase {
 
     async generatePositionMap(objPositions, linePositions) {
         const config = this.getCurrentConfig();
-        console.log(this.Y_OFFSET)
+        //console.log(this.Y_OFFSET)
 
         const buildBranch = async ({ nodeIndex, offsetX, direction, depth }) => {
             if (nodeIndex === 0) {
@@ -115,7 +115,7 @@ class BSTclass extends TreeBase {
             const parent = objPositions[parentIndex];
 
             if (!parent) {
-                console.error(`Parent not found for node ${nodeIndex}`);
+                //console.error(`Parent not found for node ${nodeIndex}`);
                 return;
             }
 
@@ -157,7 +157,7 @@ class BSTclass extends TreeBase {
 
     async removeEdge(edgeKey) {
         if (!this.edgeMap.has(edgeKey)) {
-            console.warn(`Edge ${edgeKey} not found in edge map`);
+            //console.warn(`Edge ${edgeKey} not found in edge map`);
             return;
         }
 
@@ -177,7 +177,7 @@ class BSTclass extends TreeBase {
         if (!this.isAnimating) return;
         const linePosition = this.linePositions[childIndex - 1];
         if (!linePosition) {
-            console.error(`Line position not found for child index ${childIndex}`);
+            //console.error(`Line position not found for child index ${childIndex}`);
             return null;
         }
 
@@ -203,7 +203,7 @@ class BSTclass extends TreeBase {
     async bulkInsert(values) {
         this.isAnimating = true;
 
-        console.log("Bulk inserting values:", values, this.Y_OFFSET);
+        //console.log("Bulk inserting values:", values, this.Y_OFFSET);
 
         const numericValues = values.map(Number).filter(v => !isNaN(v));
         if (numericValues.length === 0) {
@@ -335,7 +335,7 @@ class BSTclass extends TreeBase {
 
         const targetPosition = this.objPositions[currentIndex];
         if (!targetPosition) {
-            console.error(`Position not found for index ${currentIndex}`);
+            //console.error(`Position not found for index ${currentIndex}`);
             return;
         }
         nodeArray[currentIndex] = newNode;
@@ -425,7 +425,7 @@ class BSTclass extends TreeBase {
                 await this.insertBST(numericValue, 0, this.objNodeArray);
             }
         } catch (error) {
-            console.error("Error during insertion:", error);
+            //console.error("Error during insertion:", error);
             this.showLog({
                 message: { title: "Error", text: "An error occurred during insertion." },
                 type: "error",
@@ -544,7 +544,7 @@ class BSTclass extends TreeBase {
 
             await this.searchBST(numericValue, 0, this.objNodeArray);
         } catch (error) {
-            console.error("Error during search:", error);
+            //console.error("Error during search:", error);
             this.showLog({
                 message: { title: "Error", text: "An error occurred during search." },
                 type: "error",
@@ -581,7 +581,7 @@ class BSTclass extends TreeBase {
     //         let { cur, newPos, oldPos } = queue.shift();
 
     //         // Move node to target position
-    //         console.log("Moving node:", cur, nodeArray[cur], "to position:", newPos);
+    //         //console.log("Moving node:", cur, nodeArray[cur], "to position:", newPos);
     //         await this.move({
     //             element: nodeArray[cur].obj,
     //             x: newPos.x,

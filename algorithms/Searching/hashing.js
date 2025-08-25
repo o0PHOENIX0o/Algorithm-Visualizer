@@ -241,7 +241,7 @@ class hashSearchClass extends Base {
     DrawArray([...this.bucketArray, this.hashBox]);
     await this.delay(this.TimeoutDelay);
 
-    console.log("hashTable: ", this.hashTable);
+    //console.log("hashTable: ", this.hashTable);
     this.logger.show({
       message: {
         title: "Created Hash table", text: `
@@ -335,7 +335,7 @@ class hashSearchClass extends Base {
         isEvent: true
       });
 
-      console.log(this.bucketArray[keyIndex])
+      //console.log(this.bucketArray[keyIndex])
       let BoxX1 = this.keyCircle[0].xPos - this.keyCircle[0].dia / 2 - 5;
       let BoxY1 = this.keyCircle[0].yPos + this.keyCircle[0].dia / 2 + 5;
       let BoxX2 = this.bucketArray[keyIndex].xPos2;

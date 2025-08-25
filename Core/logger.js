@@ -221,7 +221,7 @@ export class Logger {
         document.querySelectorAll('.progress-bar').forEach(toast => {
             toast.style.animationPlayState = 'paused';
         });
-        console.log("Notifications paused.");
+        //console.log("Notifications paused.");
     }
 
     resumeNotifications() {
@@ -229,7 +229,7 @@ export class Logger {
         document.querySelectorAll('.progress-bar').forEach(toast => {
             toast.style.animationPlayState = 'running';
         });
-        console.log("Notifications resumed.");
+        //console.log("Notifications resumed.");
     }
 
     getLogs() {
@@ -251,7 +251,7 @@ export class Notes {
         this.body = document.getElementById('modalBody');
         this.closeButton = document.getElementById('closeModal');
 
-        console.log("algo names: ", this.name)
+        //console.log("algo names: ", this.name)
         this.notes = algoData[this.name].notes || {};
 
         this.closeButton.addEventListener('click', (e) => {
@@ -287,9 +287,6 @@ export class Notes {
 
         let imgCount = Object.keys(images).length;
 
-                                            // <img src="${img}" alt="algo-step" class="algorithm-step-image" loading="lazy"> 
-
-                                            // <img src="${images.algorithm}" alt="${this.name} Visualization" class="algorithm-image" loading="lazy">
 
         let content = `
             <div class="notes-content">
@@ -378,7 +375,7 @@ export class Notes {
     }
 
     closeNotes() {
-        console.log('Closing notes modal');
+        //console.log('Closing notes modal');
         const modal = document.getElementById('modalOverlay');
         modal.classList.remove('show-modal-overlay');
         document.body.style.overflow = 'auto';

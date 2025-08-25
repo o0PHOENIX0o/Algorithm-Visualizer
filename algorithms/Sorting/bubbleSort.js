@@ -22,7 +22,7 @@ class BubbleSortClass extends Base {
   }
   Resume() {
     if (this.isPause && this.isAnimating) {
-      console.log("Resuming...");
+      //console.log("Resuming...");
       this.isPause = false;
       this.logger.resumeNotifications();
     }
@@ -93,7 +93,7 @@ class BubbleSortClass extends Base {
       }
       return true;
     } catch (e) {
-      console.error("Error in bubbleSort: ", e);
+      //console.error("Error in bubbleSort: ", e);
       this.logger.show({
         message: { title: "Error", text: "An error occurred during the bubble sort process" },
         type: "error",
@@ -110,7 +110,7 @@ class BubbleSortClass extends Base {
     this.isAnimating = true;
     this.logger.clearLogs();
 
-    console.log("TEXT_SIZE", this.TEXT_SIZE);
+    //console.log("TEXT_SIZE", this.TEXT_SIZE);
 
     this.logger.show({
       message: { title: "Bubble Sort Started", text: "Sorting the array using Bubble Sort algorithm." },
