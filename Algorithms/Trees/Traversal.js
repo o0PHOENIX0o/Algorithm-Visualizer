@@ -9,7 +9,7 @@ class TreeTraversalClass extends TreeBase {
         this.logger = new Logger();
     }
 
-    showLog({ message, type = "info", isEvent = false, timer } = {}) {
+    showLog({message, type = "info", isEvent = false, timer} = {}) {
         if (this.silentMode) return;
         this.logger.show({ message, type, isEvent, timer: timer ?? 0 });
     }
@@ -73,7 +73,7 @@ class TreeTraversalClass extends TreeBase {
 
         await this.preOrder(leftChildIndex, Array);
         await this.waitWhilePaused();
-
+        
         this.showLog({
             message: { title: "Traverse Right", text: `Moving to RIGHT child of ${root.value} at index ${rightChildIndex}.` },
             type: "info"
@@ -336,6 +336,10 @@ class TreeTraversalClass extends TreeBase {
         if (!this.isAnimating) return;
 
         this.isAnimating = false;
+        let btn = document.getElementById("togglePlayBtn");
+        btn.classList.add('play-btn');
+        btn.classList.remove('pause-btn');
+        btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 
 }
