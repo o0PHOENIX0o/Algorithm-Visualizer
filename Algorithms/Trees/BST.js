@@ -19,7 +19,7 @@ class BSTclass extends TreeBase {
         this.MOBILE_MAX_DEPTH = 4;
 
         // Visual constants
-        this.Y_OFFSET = 100 ;
+        this.Y_OFFSET = 100;
         this.NODE_SPACING = 10;
         this.SCALING_FACTOR = 0.9; // 0.9 for keeping some margin
         this.SPEED_UP_FACTOR = 1;
@@ -29,14 +29,14 @@ class BSTclass extends TreeBase {
     }
 
 
-    showLog({message, type = "info", isEvent = false, timer} = {}) {
-        if (this.silentMode) return; 
+    showLog({ message, type = "info", isEvent = false, timer } = {}) {
+        if (this.silentMode) return;
         this.logger.show({ message, type, isEvent, timer: timer ?? 0 });
     }
 
 
     reset({ preserveLayout = false, preserveLogs = false } = {}) {
-        
+
         this.objNodeArray = [];
         this.inputArray = [];
         this.lineArray = [];
@@ -48,13 +48,13 @@ class BSTclass extends TreeBase {
 
         this.isAnimating = false;
         this.isPause = false;
-        if(!preserveLogs) this.logger.clearLogs();
+        if (!preserveLogs) this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
         // drawWelcomeScreen();
     }
 
-    
+
 
 
     getParentIndex(index) { return Math.floor((index - 1) / 2); }
@@ -216,7 +216,7 @@ class BSTclass extends TreeBase {
         }
 
         if (this.objPositions.length < 1 || this.linePositions.length < 1)
-                await this.generatePositionMap(this.objPositions, this.linePositions);
+            await this.generatePositionMap(this.objPositions, this.linePositions);
 
         for (const value of numericValues) {
             await this.waitWhilePaused();

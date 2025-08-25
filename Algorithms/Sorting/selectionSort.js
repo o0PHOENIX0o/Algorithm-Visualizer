@@ -154,7 +154,11 @@ class SelectionSortClass extends Base {
         });
 
         DrawArray();
-        this.isAnimating = false;
+    this.isAnimating = false;
+    let btn = document.getElementById("togglePlayBtn");
+    btn.classList.add('play-btn');
+    btn.classList.remove('pause-btn');
+    btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 };
 

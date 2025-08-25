@@ -80,7 +80,7 @@ class DFSClass extends GraphBase {
                         box.col = this.HighlightCol;
                         box.textCol = this.HighlightCol;
                         await this.moveSquare({ element: box, xc: array[v].obj.xPos, yc: array[v].obj.yPos });
-                        
+
                         let { line, arrow } = { ...this.directedEdges[u][v] };
                         line.col = arrow.col = highlightColor;
                         line.strokeW = 3;
@@ -106,8 +106,8 @@ class DFSClass extends GraphBase {
                         await this.moveSquare({ element: box, xc: array[u].obj.xPos, yc: array[u].obj.yPos });
 
                         //console.log(v," -> v is now visited");
-                        adjNode.map(adj =>{
-                            if(isSeen[adj.node]){
+                        adjNode.map(adj => {
+                            if (isSeen[adj.node]) {
                                 adj.box.col = this.sortedCol;
                                 adj.box.textCol = this.sortedCol;
                             }
@@ -191,7 +191,7 @@ class DFSClass extends GraphBase {
                 type: "info"
             });
             let dfsTree = await DFSvisit(Nodes, u, this.highlightColors[Math.floor(Math.random() * this.highlightColors.length)]);
-            
+
             this.logger.show({
                 message: {
                     title: `DFS Complete`,
@@ -222,6 +222,10 @@ class DFSClass extends GraphBase {
         await this.DFS(this.objNodeArray, this.adjMatrix, this.key);
 
         this.isAnimating = false;
+        let btn = document.getElementById("togglePlayBtn");
+        btn.classList.add('play-btn');
+        btn.classList.remove('pause-btn');
+        btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 };
 

@@ -460,36 +460,32 @@ document.getElementById("togglePlayBtn").addEventListener("click", () => {
     top: 0,
     behavior: 'smooth'
   });
-  isPlaying = !isPlaying;
 
   let btn = document.getElementById("togglePlayBtn");
 
-  btn.classList.add('pause-btn');
-  btn.classList.remove('play-btn');
+
 
   if (currentAlgorithm.isPause) {
     currentAlgorithm.Resume();
-
-    btn.innerHTML = `<span class="btn-icon"><ion-icon name="pause-outline"></ion-icon></span> Pause`;
+    setPauseState(btn);
   } else if (currentAlgorithm.isAnimating) {
     currentAlgorithm.Pause();
-    btn.innerHTML = `<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Resume`;
+    setPlayState(btn);
   } else {
     if (currentAlgorithm.objNodeArray.length < 1) {
       if(InputField.value.trim() == ""){
         showError("Input Error", "Please enter an array first.")
-        btn.classList.remove('pause-btn');
-        btn.classList.add('play-btn');
+        setPlayState(btn);
+        isPlaying = false;
         return;
       }else{
         // showError("Input Error", "Please click Apply first.");
-        document.getElementById("applyArrayBtn").click();
       }
     }
+    document.getElementById("applyArrayBtn").click();
+    setPauseState(btn);
+    isPlaying = true;
     currentAlgorithm.Play();
-    btn.classList.add('pause-btn');
-    btn.classList.remove('play-btn');
-    btn.innerHTML = `<span class="btn-icon"><ion-icon name="pause-outline"></ion-icon></span> Pause`;
   }
 });
 
@@ -500,11 +496,10 @@ document.getElementById("resetBtn").addEventListener("click", () => {
     top: 0,
     behavior: 'smooth'
   });
-  let btn = document.getElementById("togglePlayBtn");
-  btn.classList.remove('pause-btn');
-  btn.classList.add('play-btn');
 
-  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+  let btn = document.getElementById("togglePlayBtn");
+  setPlayState(btn);
+
   isPlaying = false;
   currentAlgorithm.reset();
 
@@ -617,3 +612,16 @@ document.getElementById('bulkInsert').addEventListener("click", () => { // bulk 
   
 });
 
+
+
+function setPauseState(btn) {
+  btn.classList.add('pause-btn');
+  btn.classList.remove('play-btn');
+  btn.innerHTML = `<span class="btn-icon"><ion-icon name="pause-outline"></ion-icon></span> Pause`;
+}
+
+function setPlayState(btn) {
+  btn.classList.add('play-btn');
+  btn.classList.remove('pause-btn');
+  btn.innerHTML = `<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play`;
+} 

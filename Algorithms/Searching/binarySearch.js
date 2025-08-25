@@ -189,9 +189,9 @@ class BinarySearchClass extends Base {
         }
 
         this.logger.show({
-            message: { 
-                title: "Binary Search", 
-                text: `Starting Binary Search for key ${this.key} on a ${this.isDesc ? "descending" : "ascending"} array.` 
+            message: {
+                title: "Binary Search",
+                text: `Starting Binary Search for key ${this.key} on a ${this.isDesc ? "descending" : "ascending"} array.`
             },
             type: "info",
             isEvent: true
@@ -206,6 +206,10 @@ class BinarySearchClass extends Base {
         });
 
         this.isAnimating = false;
+        let btn = document.getElementById("togglePlayBtn");
+        btn.classList.add('play-btn');
+        btn.classList.remove('pause-btn');
+        btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 };
 

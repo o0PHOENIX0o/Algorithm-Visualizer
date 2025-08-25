@@ -369,7 +369,7 @@ class heapSortClass extends Base {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
-        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, (height / 2 - 30), 2)));
+        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, (height / 3 - 30), 2)));
 
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
@@ -398,7 +398,11 @@ class heapSortClass extends Base {
             isEvent: true
         });
 
-        this.isAnimating = false;
+    this.isAnimating = false;
+    let btn = document.getElementById("togglePlayBtn");
+    btn.classList.add('play-btn');
+    btn.classList.remove('pause-btn');
+    btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 
 

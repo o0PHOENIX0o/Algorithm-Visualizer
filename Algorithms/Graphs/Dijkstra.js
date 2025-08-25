@@ -1,6 +1,6 @@
 import { GraphBase, PriorityQueue } from './GraphBase.js';
 import { DrawArray, Text, clearCanvas, height, width, drawWelcomeScreen } from '../../Core/canvas.js';
-import {Logger} from "../../Core/logger.js";
+import { Logger } from "../../Core/logger.js";
 
 class DijkstraClass extends GraphBase {
     constructor() {
@@ -33,7 +33,7 @@ class DijkstraClass extends GraphBase {
         let label = '∞';
         let size = 30 * this.scaleFactor;
         for (let i = 0; i < Nodes.length; i++) {
-            let t = new Text({xPos: 0, yPos: 0, label: label, text_size: size, textCol: this.unsortedCol});
+            let t = new Text({ xPos: 0, yPos: 0, label: label, text_size: size, textCol: this.unsortedCol });
             this.textArray.push(t);
         }
 
@@ -60,10 +60,10 @@ class DijkstraClass extends GraphBase {
         this.Pqueue = new PriorityQueue();
         this.Pqueue.initialize(Nodes);
         this.Pqueue.decreaseKey(vi, 0)
-    
+
         this.logger.show({
-            message: { 
-                title: "Initialization", 
+            message: {
+                title: "Initialization",
                 text: `Set distance of <b>source node</b> (${Nodes[vi].obj.label}) to 0 and insert it into the priority queue.<br>
                        All other nodes are initialized with distance <b>∞</b>.`
             },
@@ -103,15 +103,15 @@ class DijkstraClass extends GraphBase {
 
 
             this.logger.show({
-                message: { 
-                    title: `Extract-Min: ${Nodes[uIndex].obj.label}`, 
+                message: {
+                    title: `Extract-Min: ${Nodes[uIndex].obj.label}`,
                     text: `Node <b>${Nodes[uIndex].obj.label}</b> is removed from the priority queue.<br>
                            Its current shortest distance is <b>${dist[uIndex]}</b>.`
                 },
                 type: "info"
             });
 
-            await this.moveSquare({element: box, xc: Nodes[uIndex].obj.xPos, yc: Nodes[uIndex].obj.yPos, otherElements: this.textArray});
+            await this.moveSquare({ element: box, xc: Nodes[uIndex].obj.xPos, yc: Nodes[uIndex].obj.yPos, otherElements: this.textArray });
             this.drawAll([...this.textArray, box, adjBox]);
             await this.delay(2 * this.TimeoutDelay);
             await this.waitWhilePaused();
@@ -124,11 +124,11 @@ class DijkstraClass extends GraphBase {
                     let weight = adjM[uIndex][v];
 
                     adjBox.text = "relax"
-                    await this.moveSquare({element: adjBox, xc: Nodes[v].obj.xPos, yc: Nodes[v].obj.yPos, otherElements: [...this.textArray, box]});
+                    await this.moveSquare({ element: adjBox, xc: Nodes[v].obj.xPos, yc: Nodes[v].obj.yPos, otherElements: [...this.textArray, box] });
 
                     this.logger.show({
-                        message: { 
-                            title: "Relax Edge", 
+                        message: {
+                            title: "Relax Edge",
                             text: `Checking edge <b>${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}</b> with weight <b>${weight}</b>.`
                         },
                         type: "info"
@@ -152,8 +152,8 @@ class DijkstraClass extends GraphBase {
                         await this.waitWhilePaused();
 
                         this.logger.show({
-                            message: { 
-                                title: "Distance Updated", 
+                            message: {
+                                title: "Distance Updated",
                                 text: `A shorter path was found from node <b> ${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}</b>.<br>
                                        New distance = <b>${u.priority + weight}</b>.`
                             },
@@ -167,8 +167,8 @@ class DijkstraClass extends GraphBase {
                         await this.delay(1.5 * this.TimeoutDelay);
                     } else {
                         this.logger.show({
-                            message: { 
-                                title: "No Update", 
+                            message: {
+                                title: "No Update",
                                 text: `Existing distance to <b>${Nodes[v].obj.label}</b> is shorter. No update performed.`
                             },
                             type: "warning"
@@ -179,8 +179,8 @@ class DijkstraClass extends GraphBase {
             }
 
             this.logger.show({
-                message: { 
-                    title: "Node Finalized", 
+                message: {
+                    title: "Node Finalized",
                     text: `Node <b>${Nodes[uIndex].obj.label}</b> is now marked as visited.<br>
                            Its shortest distance is finalized and will not change further.`
                 },
@@ -201,9 +201,9 @@ class DijkstraClass extends GraphBase {
         }
 
         this.logger.show({
-            message: { 
-                title: "Algorithm Completed", 
-                text: "All nodes have been processed. Final shortest path distances are now displayed beside each node." 
+            message: {
+                title: "Algorithm Completed",
+                text: "All nodes have been processed. Final shortest path distances are now displayed beside each node."
             },
             type: "success"
         });
@@ -234,6 +234,10 @@ class DijkstraClass extends GraphBase {
         });
 
         this.isAnimating = false;
+        let btn = document.getElementById("togglePlayBtn");
+        btn.classList.add('play-btn');
+        btn.classList.remove('pause-btn');
+        btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 };
 

@@ -44,7 +44,7 @@ class KruskalClass extends GraphBase {
     }
 
     reset() {
-       
+
         this.objNodeArray = [];
         this.inputArray = [];
         this.edgeList = [];
@@ -163,7 +163,7 @@ class KruskalClass extends GraphBase {
 
 
             if (this.disjointSet.find(u) != this.disjointSet.find(v)) {
-                
+
                 this.disjointSet.union(u, v);
                 totalWeight += weight
 
@@ -257,6 +257,10 @@ class KruskalClass extends GraphBase {
         });
 
         this.isAnimating = false;
+        let btn = document.getElementById("togglePlayBtn");
+        btn.classList.add('play-btn');
+        btn.classList.remove('pause-btn');
+        btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 };
 

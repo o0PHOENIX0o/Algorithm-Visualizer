@@ -42,12 +42,12 @@ class mergeSortClass extends Base {
     async move(element, x, y, speedFactor = this.MOVE_SPEED) {
         if (!this.isAnimating) return;
         return new Promise(resolve => {
-            if (!this.isAnimating) return;
+            if (!this.isAnimating) return resolve();
 
             const startX = element.xPos, startY = element.yPos;
             let t = 0;
             const animate = async () => {
-                if (!this.isAnimating) return;
+                if (!this.isAnimating) return resolve();
 
                 t = Math.min(t + (speedFactor * this.AnimationSpeed), 1);
                 element.xPos = lerp(startX, x, t);
@@ -85,7 +85,7 @@ class mergeSortClass extends Base {
         if (!this.isAnimating) return;
         let radius = subArray[0].obj.dia / 2;
 
-        if (mid > 0 && mid < subArray.length) {
+        if (mid > 0 && mid < subArray.length) {            
             let leftStart = subArray[0].obj;
             let leftEnd = subArray[mid - 1].obj;
             
@@ -110,6 +110,8 @@ class mergeSortClass extends Base {
 
         DrawArray(this.squareArray);
         await this.delay(this.TimeoutDelay);
+        if (!this.isAnimating) return;
+
 
         return this.squareArray.slice(-2); 
     }
@@ -197,11 +199,14 @@ class mergeSortClass extends Base {
         let mid = Math.floor(arrayToSort.length / 2);
         let leftArray = arrayToSort.slice(0, mid);
         let rightArray = arrayToSort.slice(mid);
+        
 
         await this.waitWhilePaused();
         await this.drawSquare(arrayToSort, mid);
         // await this.drawSquare(rightArray);
         await this.waitWhilePaused();
+        if (!this.isAnimating) return;
+
 
         this.logger.show({
             message: { title: "Divide", text: `Dividing array [${arrayToSort.map(node => node.value)}] into two halves. <br>Left array:  [${leftArray.map(node => node.value)}]  <br>Right array:  [${rightArray.map(node => node.value)}]` },
@@ -221,14 +226,18 @@ class mergeSortClass extends Base {
         await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
 
+        if (!this.isAnimating) return;
         let leftSorted = await this.mergeSortAlgo(leftArray);
+        if (!this.isAnimating) return;
         let rightSorted = await this.mergeSortAlgo(rightArray);
+        if (!this.isAnimating) return;
+
 
         await this.delay(this.TimeoutDelay);
         await this.waitWhilePaused();
 
         this.logger.show({
-            message: { title: "Merge", text: `Merging two sorted halves. <br>Left array:  [${leftSorted.map(node => node.value)}]  <br>Right array:  [${rightSorted.map(node => node.value)}]` },
+            message: { title: "Merge", text: `Merging two sorted halves. <br>Left array:  [${leftSorted?.map(node => node.value)}]  <br>Right array:  [${rightSorted.map(node => node.value)}]` },
             type: "info",
 
         });
@@ -263,7 +272,7 @@ class mergeSortClass extends Base {
         await this.mergeSortAlgo(this.objNodeArray);
         await this.waitWhilePaused();
 
-        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, (height / 2 - 30), 2)));
+        await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, (height / 3 - 30), 2)));
 
         this.logger.show({
             message: { title: "Completed", text: "Merge Sort completed. The array is now sorted." },
@@ -282,6 +291,10 @@ class mergeSortClass extends Base {
         DrawArray(this.squareArray);
 
         this.isAnimating = false;
+        let btn = document.getElementById("togglePlayBtn");
+        btn.classList.add('play-btn');
+        btn.classList.remove('pause-btn');
+        btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 }
 

@@ -1,6 +1,6 @@
 import { GraphBase, PriorityQueue } from './GraphBase.js';
 import { DrawArray, Text, clearCanvas, height, width, drawWelcomeScreen } from '../../Core/canvas.js';
-import {Logger} from "../../Core/logger.js";
+import { Logger } from "../../Core/logger.js";
 
 class PrimClass extends GraphBase {
     constructor() {
@@ -32,7 +32,7 @@ class PrimClass extends GraphBase {
         for (let i = 0; i < Nodes.length; i++) {
             let label = '∞';
             let size = 30 * this.scaleFactor;
-            let t = new Text({xPos: 0, yPos: 0, label: label, text_size: size, textCol: this.unsortedCol});
+            let t = new Text({ xPos: 0, yPos: 0, label: label, text_size: size, textCol: this.unsortedCol });
             this.textArray.push(t);
         }
 
@@ -53,7 +53,7 @@ class PrimClass extends GraphBase {
         this.drawAll(this.textArray);
     }
 
-    
+
 
     async PrimAlgo(Nodes, adjM, vi) {
         const TEXT_SIZE = 25 * this.scaleFactor;
@@ -63,7 +63,7 @@ class PrimClass extends GraphBase {
         this.Pqueue.decreaseKey(vi, 0);
 
         this.logger.show({
-            message: { title: "Initialization", text: `Starting from <b>source node</b> (${Nodes[vi].obj.label}).<br> Distance set to <b>0</b>. All others set to <b>∞</b>.`},
+            message: { title: "Initialization", text: `Starting from <b>source node</b> (${Nodes[vi].obj.label}).<br> Distance set to <b>0</b>. All others set to <b>∞</b>.` },
             type: "info"
         });
 
@@ -93,7 +93,7 @@ class PrimClass extends GraphBase {
             let uIndex = u.item.index;
 
             this.logger.show({
-                message: {  title: `Extract-Min: ${Nodes[uIndex].obj.label}`,  text: `Node <b>${Nodes[uIndex].obj.label}</b> chosen with edge weight <b>${dist[uIndex]}</b>.` },
+                message: { title: `Extract-Min: ${Nodes[uIndex].obj.label}`, text: `Node <b>${Nodes[uIndex].obj.label}</b> chosen with edge weight <b>${dist[uIndex]}</b>.` },
                 type: "info"
             });
 
@@ -113,7 +113,7 @@ class PrimClass extends GraphBase {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-            await this.moveSquare({element: box, xc: Nodes[uIndex].obj.xPos, yc: Nodes[uIndex].obj.yPos, otherElements: this.textArray});
+            await this.moveSquare({ element: box, xc: Nodes[uIndex].obj.xPos, yc: Nodes[uIndex].obj.yPos, otherElements: this.textArray });
             this.drawAll([...this.textArray, box, adjBox]);
             await this.delay(2 * this.TimeoutDelay);
             await this.waitWhilePaused();
@@ -129,7 +129,7 @@ class PrimClass extends GraphBase {
                     totalWeight += weight;
 
                     this.logger.show({
-                        message: {  title: `Check Edge: ${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}`,  text: `Considering edge <b>${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}</b> with weight <b>${weight}</b>.` },
+                        message: { title: `Check Edge: ${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}`, text: `Considering edge <b>${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}</b> with weight <b>${weight}</b>.` },
                         type: "info"
                     });
 
@@ -140,10 +140,10 @@ class PrimClass extends GraphBase {
                         if (!this.isAnimating) return;
 
                         adjBox.text = "relax";
-                        await this.moveSquare({element: adjBox, xc: Nodes[v].obj.xPos, yc: Nodes[v].obj.yPos, otherElements: [...this.textArray, box]});
+                        await this.moveSquare({ element: adjBox, xc: Nodes[v].obj.xPos, yc: Nodes[v].obj.yPos, otherElements: [...this.textArray, box] });
 
                         this.logger.show({
-                            message: {  title: `Edge Chosen: ${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}`,  text: `Edge <b>${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}</b> improves MST.<br>  <br> <b>current total weight = ${totalWeight}</b>.`},
+                            message: { title: `Edge Chosen: ${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}`, text: `Edge <b>${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}</b> improves MST.<br>  <br> <b>current total weight = ${totalWeight}</b>.` },
                             type: "success"
                         });
 
@@ -172,7 +172,7 @@ class PrimClass extends GraphBase {
             }
 
             this.logger.show({
-                message: {  title: "Node Added to MST",  text: `Node <b>${Nodes[uIndex].obj.label}</b> is finalized in the MST.`  },
+                message: { title: "Node Added to MST", text: `Node <b>${Nodes[uIndex].obj.label}</b> is finalized in the MST.` },
                 type: "success"
             });
 
@@ -220,7 +220,7 @@ class PrimClass extends GraphBase {
         }
 
         this.logger.show({
-            message: {  title: "Prim's Algorithm",  text: "Starting Prim's Algorithm to construct the Minimum Spanning Tree (MST)."  },
+            message: { title: "Prim's Algorithm", text: "Starting Prim's Algorithm to construct the Minimum Spanning Tree (MST)." },
             type: "info",
             isEvent: true
         });
@@ -228,12 +228,16 @@ class PrimClass extends GraphBase {
         await this.PrimAlgo(this.objNodeArray, this.adjMatrix, 0);
 
         this.logger.show({
-            message: {  title: "Completed",  text: "Prim's Algorithm has finished execution." },
+            message: { title: "Completed", text: "Prim's Algorithm has finished execution." },
             type: "success",
             isEvent: true
         });
 
         this.isAnimating = false;
+        let btn = document.getElementById("togglePlayBtn");
+        btn.classList.add('play-btn');
+        btn.classList.remove('pause-btn');
+        btn.innerHTML = '<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Play';
     }
 };
 

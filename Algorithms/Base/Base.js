@@ -28,7 +28,7 @@ export class Base {
   generate(input, key = null, x = null, y = null) {
     if (input.length < 1) return;
     this.inputArray = [...input];
-    y = (y == null) ? Number(height / 2) : Number(y);
+    y = (y == null) ? Number(height / 3) : Number(y);
     clearCanvas();
     if (input.length > 0 && this.name.includes("Search")) {
       if (key) this.key = key;
