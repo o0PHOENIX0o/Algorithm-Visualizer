@@ -383,7 +383,7 @@ class BSTclass extends TreeBase {
 
             const numericValue = Number(value);
             if (isNaN(numericValue)) {
-                this.showError("Please enter a valid number");
+                // this.showError("Please enter a valid number");
                 this.showLog({
                     message: { title: "Error", text: "Invalid input for insertion." },
                     type: "error",
@@ -487,7 +487,7 @@ class BSTclass extends TreeBase {
                 type: "warning",
                 isEvent: true
             });
-            this.showError("Value not found in BST");
+            // this.showError("Value not found in BST");
             this.drawAll(this.lineArray);
             return null;
         }
