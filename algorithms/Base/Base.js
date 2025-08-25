@@ -1,4 +1,4 @@
-import { clearCanvas, DrawArray, Circle, height, width } from "../canvas.js";
+import { clearCanvas, DrawArray, Circle, height, width } from "../../Core/canvas.js";
 
 export class Base {
   constructor(name, spacing = 20, diameter = 50) {
@@ -10,14 +10,16 @@ export class Base {
     this.AnimationSpeed = 0.01;
     this.BaseDelay = 500;
     this.TimeoutDelay = 500;
-    this.BaseCol = "#9e9e9e";
+    this.BaseCol = "#ffffffff";
     this.HighlightCol = "#667eea";
     this.HighlightCol2 = "#09d3ff";
     this.sortedCol = "#4CAF50";
     this.unsortedCol = "#f44336";
+    this.defaultTextCol = "#ffffff";
     this.isAnimating = false;
     this.isPause = false;
     this.scaleFactor = 1;
+    this.TEXT_SIZE = 16;
 
     this.spacing = spacing;
     this.dia = diameter;
@@ -51,13 +53,18 @@ export class Base {
     this.scaleFactor = Math.min(1, availableWidth / totalLength);
     this.dia = this.dia * this.scaleFactor;
     this.spacing = this.spacing * this.scaleFactor;
+    this.TEXT_SIZE = this.TEXT_SIZE * this.scaleFactor;
+
+    console.log("Width: ", width, "  availableWidth: ", availableWidth);
+    console.log("scaleFactor", this.scaleFactor);
+    console.log("dia, spacing", this.dia, this.spacing);
 
     totalLength = input.length * (this.dia + this.spacing);
 
     
     if (x == null) x = (width / 2) - (totalLength / 2) + this.dia / 2;
     input.forEach(val => {
-      const circle = new Circle({ xPos: x, yPos: y, dia: this.dia, label: val, col: this.BaseCol });
+      const circle = new Circle({ xPos: x, yPos: y, dia: this.dia, label: val, col: this.BaseCol, textS: this.TEXT_SIZE });
       this.objNodeArray.push({ value: val, obj: circle });
       x += this.dia + this.spacing;
     });

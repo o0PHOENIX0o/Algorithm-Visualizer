@@ -1,10 +1,7 @@
 let width, height;
 
-let baseWidth, baseHeight;
-let scaleFactorW = 1, scaleFactorH = 1;
-
 export class Circle {
-  constructor({ xPos, yPos, dia, label, col, textCol = 0, strokeCol = null, strokeW = 2 } = {}) {
+  constructor({ xPos, yPos, dia, label, col, textCol = "#000000ff", textS= 16, strokeCol = null, strokeW = 2 } = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.dia = dia;
@@ -13,6 +10,7 @@ export class Circle {
     this.textCol = textCol;
     this.strokeCol = (strokeCol) ? strokeCol : col;
     this.strokeW = strokeW;
+    this.textS = textS;
   }
 
   draw() {
@@ -28,6 +26,7 @@ export class Circle {
     fill(this.textCol);
     textFont('sans-serif');
     textStyle(NORMAL);
+    textSize(this.textS);
     textAlign(CENTER, CENTER);
     text(this.label, this.xPos, this.yPos);
     pop();
@@ -35,7 +34,7 @@ export class Circle {
 }
 
 export class Text {
-  constructor({ xPos, yPos, label, text_size = 16, textCol = 0 } = {}) {
+  constructor({ xPos, yPos, label, text_size = 16, textCol = "#ffffff" } = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.label = label;
@@ -57,7 +56,7 @@ export class Text {
 }
 
 export class Square {
-  constructor({ xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = 0, textSize = 16, textYOffset = 0 } = {}) {
+  constructor({ xPos1, yPos1, xPos2, yPos2, col, strokeW = 2, text = null, textCol = "#ffffff", textSize = 16, textYOffset = 0 } = {}) {
     this.xPos1 = xPos1;
     this.yPos1 = yPos1;
     this.xPos2 = xPos2;
@@ -101,7 +100,7 @@ export class Square {
 }
 
 export class PointerArrow {
-  constructor({ xPos, yPos, col, length, label, textCol = 0, textS = 16, textY = 20 } = {}) {
+  constructor({ xPos, yPos, col, length, label, textCol = "#ffffff", textS = 16, textY = 20 } = {}) {
     this.xPos = xPos;
     this.yPos = yPos;
     this.col = col;
@@ -144,7 +143,7 @@ export class PointerArrow {
 
 
 export class Line {
-  constructor({ x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20, textPos = 'auto' } = {}) {
+  constructor({ x1, y1, x2, y2, col, strokeW = 2, label = null, textCol = "#ffffffff", textS = 16, textY = 20, textPos = 'auto' } = {}) {
     this.x1 = x1;
     this.y1 = y1;
     this.x2 = x2;
@@ -251,7 +250,7 @@ export class PointerTriangles {
 
 
 export class CurvedArrow {
-  constructor({ x1, y1, cpX, cpY, x2, y2, col, strokeW = 2, label = null, textCol = 0, textS = 16, textY = 20 } = {}) {
+  constructor({ x1, y1, cpX, cpY, x2, y2, col, strokeW = 2, label = null, textCol = "#ffffff", textS = 16, textY = 20 } = {}) {
     this.x1 = x1;
     this.y1 = y1;
 
@@ -316,27 +315,47 @@ export function DrawArray(objects = []) {
 }
 
 export function clearCanvas() {
-  clear();
-  background("#f0f0f0");
+  clear(); 
+  background("#151823"); 
+}
+
+export function drawWelcomeScreen( heading = "Welcome to Algorithm Canvas", subHeading = "Enter an array or graph to see the magic happen") {
+  let headerSize = (width > 490) ? 28 : 18;
+  let subHeaderSize = headerSize * 0.8;
+  let gap = headerSize * 1.05;  
+
+  textAlign(CENTER, CENTER);
+  
+  fill(255);
+  textSize(headerSize);
+  textStyle(BOLD);
+  text(heading, width / 2, height / 2 - gap / 2);
+
+  fill(170); 
+  textSize(subHeaderSize);
+  textStyle(NORMAL);
+  text(subHeading, width / 2, height / 2 + gap / 2);
 }
 
 export function setupCanvas() {
   console.log("Setting up canvas...");
 
   const parent = document.getElementById("CanvasContainer");
-  const canvas = createCanvas(parent.offsetWidth, parent.offsetHeight);
+  const canvas = createCanvas(parent.offsetWidth, parent.offsetHeight - 3);
+
+  console.log("parent offsetWidth, offsetHeight", parent.offsetWidth, parent.offsetHeight);
+  console.log("canvas width, height", canvas.width, canvas.height);
 
   height = canvas.height;
   width = canvas.width;
 
-  baseHeight = height;
-  baseWidth = width;
-  scaleFactorH = scaleFactorW = 1;
-
   canvas.parent("CanvasContainer");
   textAlign(CENTER, CENTER);
   textSize(16);
-  background("#f0f0f0");
+  background("#151823");
+  setTimeout(() => {
+    drawWelcomeScreen();
+  }, 100);
 }
 
 export function windowResized() {
@@ -344,14 +363,10 @@ export function windowResized() {
   const parent = document.getElementById("CanvasContainer");
   resizeCanvas(parent.offsetWidth, parent.offsetHeight);
 
-  // scaleFactorW = (parent.offsetWidth) / baseWidth;
   width = parent.offsetWidth;
-
-  // scaleFactorH = parent.offsetHeight / baseHeight;
   height = parent.offsetHeight;
 
   console.log("width, height", width, height);
-  console.log("scaleFactorW, scaleFactorH", scaleFactorW, scaleFactorH);
 
   DrawArray();
 }

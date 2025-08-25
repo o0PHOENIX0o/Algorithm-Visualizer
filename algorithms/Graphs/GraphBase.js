@@ -1,5 +1,5 @@
-import { Base } from '../Base.js';
-import { DrawArray, Line, Circle, PointerTriangles, clearCanvas, height, width, Square } from '../../canvas.js';
+import { Base } from '../Base/Base.js';
+import { DrawArray, Line, Circle, PointerTriangles, clearCanvas, height, width, Square } from '../../Core/canvas.js';
 
 
 export class GraphBase extends Base {
@@ -11,7 +11,7 @@ export class GraphBase extends Base {
         this.indexMap = {};
         this.radius = radius;
         this.highlightColors = ['#43A047','#FFD54F', '#2effc0ff', '#FF8A65', '#BA68C8', '#F06292', '#e6ad98ff', '#9575CD', '#00897B', '#E57373'];
-
+        this.TEXT_SIZE = 16;
         this.scaleFactor = 1; 
     }
 
@@ -87,9 +87,9 @@ export class GraphBase extends Base {
         else weight = w ?? "";
 
 
-        let line = new Line({ x1: startX, y1: startY, x2: endX, y2: endY, col: 0, strokeW: 1, label: weight, textCol: this.unsortedCol });
+        let line = new Line({ x1: startX, y1: startY, x2: endX, y2: endY, col: "#ffffff", strokeW: 1, label: weight, textCol: this.unsortedCol, textS: this.TEXT_SIZE });
 
-        let pointerTriangle = new PointerTriangles({ x1: 0, y1: 0, x2: -8, y2: -5, x3: -8, y3: 5, col: 0, angle: angle, tx: endX, ty: endY });
+        let pointerTriangle = new PointerTriangles({ x1: 0, y1: 0, x2: -8, y2: -5, x3: -8, y3: 5, col: "#ffffff", angle: angle, tx: endX, ty: endY, textS: this.TEXT_SIZE });
 
         let arrow = { line: line, arrow: pointerTriangle };
         return arrow;
@@ -127,14 +127,13 @@ export class GraphBase extends Base {
 
         let BoxH = Math.abs(BoxY2 - BoxY1);
 
-        let box = new Square({ xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.HighlightCol2, strokeW: 2, text: Boxtext, textCol: 0, textYOffset: -(10 + BoxH / 2) });
+        let box = new Square({ xPos1: BoxX1, yPos1: BoxY1, xPos2: BoxX2, yPos2: BoxY2, col: this.HighlightCol2, strokeW: 2, text: Boxtext, textCol: "#ffffff", textYOffset: -(10 + BoxH / 2), textS: this.TEXT_SIZE });
 
         return box;
     }
 
     async moveSquare({ element, xc, yc, otherElements = [], speedFactor = 4 } = {}) {
-        console.log("Moving square: ", element, " to -> ", xc, yc);
-        let offset = 5 + this.objNodeArray[0].obj.dia / 2;
+        let offset = 5 + (this.objNodeArray[0].obj.dia * this.scaleFactor) / 2;
         let targetX1 = xc - offset;
         let targetY1 = yc + offset;
         let targetX2 = xc + offset;
@@ -184,13 +183,14 @@ export class GraphBase extends Base {
         let totalLength = 2 * (this.radius + this.dia * 2);
         this.scaleFactor = Math.min(1, availableWidth / totalLength);
 
-        let sclaedRadius = this.radius * this.scaleFactor
+        let sclaedRadius = this.radius * this.scaleFactor;
         let scaledDia = this.dia * this.scaleFactor;
+        this.TEXT_SIZE *= this.scaleFactor;
 
         this.objNodeArray = [];
 
         input.forEach(element => {
-            const circle = new Circle({ xPos: 0, yPos: 0, dia: scaledDia, label: element, col: "#ffffff", textCol: "#000000", strokeCol: "#000000" });
+            const circle = new Circle({ xPos: 0, yPos: 0, dia: scaledDia, label: element, col: "#ffffff", textCol: "#000000", strokeCol: "#000000", textS: this.TEXT_SIZE });
             this.objNodeArray.push({ index: this.indexMap[element], obj: circle });
         });
 
@@ -207,12 +207,16 @@ export class GraphBase extends Base {
 
         this.directedEdges = Array.from({ length: input.length }, () => Array(input.length).fill(null));
         for (let [from, to, w] of edges) {
+            if(!(from in this.indexMap) || !(to in this.indexMap)) {
+                console.warn(`Skipping invalid edge (${from}, ${to}, ${w}) because one or both vertices are missing`);
+                continue;
+            }
             let posA = { xPos: this.objNodeArray[this.indexMap[from]].obj.xPos, yPos: this.objNodeArray[this.indexMap[from]].obj.yPos };
             let posB = { xPos: this.objNodeArray[this.indexMap[to]].obj.xPos, yPos: this.objNodeArray[this.indexMap[to]].obj.yPos }
 
             if (this.name === "prim" || this.name === "kruskal") {
                 let line = {
-                    line: new Line({ x1: posA.xPos, y1: posA.yPos, x2: posB.xPos, y2: posB.yPos, col: 0, strokeW: 1, label: w ?? "", textCol: this.unsortedCol }),
+                    line: new Line({ x1: posA.xPos, y1: posA.yPos, x2: posB.xPos, y2: posB.yPos, col: "#ffffff", strokeW: 1, label: w ?? "", textCol: this.unsortedCol, textS: this.TEXT_SIZE }),
                     arrow: null
                 }
 

@@ -1,41 +1,18 @@
-<!-- <!DOCTYPE html>
-<html>
-  <head>
-    <title>My p5.js Sketch</title>
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  </head>
-  <body>
-    <script>
-      function setup() {
-        createCanvas(400, 400);
-        background(50);
-      }
-
-      function draw() {
-        clear();
-         background(50);
-        ellipse(mouseX, mouseY, 50, 50);
-      }
-    </script>
-  </body>
-</html> -->
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
-    <title>Algorithm Visualizer</title>
-    <link rel="stylesheet" href="logger.css">
-    <link rel="stylesheet" href="style.css">
+    <title>Algorithm Canvas</title>
+    <link rel="stylesheet" href="Styles/logger.css">
+    <link rel="stylesheet" href="Styles/style.css">
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
     <!-- <script type="module" src="./sketch.js"></script> -->
-    <script type="module" src="./script.js"></script>
+    <script type="module" src="./Core/script.js"></script>
 
 </head>
 
@@ -119,31 +96,32 @@
         <!-- Main Content Area -->
         <main class="main-content">
             <div class="canvas-container">
-                <div class="canvas-header">
-                    <h2 id="algorithmTitle">Bubble Sort <span class="infoIcon"><ion-icon
-                                name="help-circle-outline"></ion-icon></span></h2>
-                    <div class="canvas-info">
-                        <span id="algorithmInfo">Time Complexity: O(n²) | Space Complexity: O(1) | Stable: Yes</span>
+                <div class="algo-header">
+                    <h1 id="algorithmTitle">Bubble Sort <span class="infoIcon"><ion-icon name="help-circle-outline"></ion-icon></span></h1>
+                    <div class="algorithm-info" id="algorithmInfo">
+                        <span class="chip">O(n²)</span>
+                        <span class="chip">O(1)</span>
+                        <span class="chip">Stable</span>
                     </div>
                 </div>
-                <div id="CanvasContainer">
+                <div id="CanvasContainer"></div>
+
+                <!-- for alerts/errors/warnings -->
+                <div class="toast-container event" id="eventToastContainer">
+                    <div class="toast-inner" id="eventInnerContainer"></div>
+                </div>
+    
+                <!-- for Algo steps-->
+                <div class="toast-container steps" id="stepsToastContainer">
+                    <h3>
+                        Steps <ion-icon name="chevron-expand-outline"></ion-icon>
+                    </h3>
+                    <div class="scrollable-content">
+                        <div class="toast-list" id="toastList"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- for alerts/errors/warnings -->
-            <div class="toast-container event" id="eventToastContainer">
-                <div class="toast-inner" id="eventInnerContainer"></div>
-            </div>
-
-            <!-- for Algo steps-->
-            <div class="toast-container steps" id="stepsToastContainer">
-                <h3>
-                    Steps <ion-icon name="chevron-expand-outline"></ion-icon>
-                </h3>
-                <div class="scrollable-content">
-                    <div class="toast-list" id="toastList"></div>
-                </div>
-            </div>
 
         </main>
     </div>
@@ -184,9 +162,11 @@
             </div>
 
             <div class="control-group search">
-                <label for="speedSlider">Speed</label>
-                <input type="range" id="speedSlider" min="1" max="5" step="1" value="1" class="slider">
-                <span id="speedValue">1x</span>
+                <div>
+                    <label for="speedSlider">Speed</label>
+                    <span id="speedValue">1x</span>
+                </div>
+                <input type="range" id="speedSlider" min="1" max="10" step="1" value="1" class="slider">
             </div>
 
             <div class="control-buttons" id="controlButtons">
@@ -240,9 +220,9 @@
         <div class="footer-content">
             <p>&copy; 2024 Algorithm Visualizer. Built for educational purposes.</p>
             <div class="footer-links">
-                <a href="#about">About</a>
-                <a href="#help">Help</a>
-                <a href="#github">GitHub</a>
+                <!-- <a href="#about">About</a>
+                <a href="#help">Help</a> -->
+                <a href="https://github.com/o0PHOENIX0o/Algorithm-Visualizer" target="_blank">GitHub</a>
             </div>
         </div>
     </footer>

@@ -1,24 +1,24 @@
-import './sketch.js';
+import '../Core/sketch.js';
 import { Notes, Logger } from './logger.js';
 
-import { windowResized } from './canvas.js';
+import { windowResized, drawWelcomeScreen } from './canvas.js';
 
-import { BubbleSort } from './algorithms/Sorting/bubbleSort.js';
-import { SelectionSort } from './algorithms/Sorting/selectionSort.js';
-import { insertionSort } from './algorithms/Sorting/insertionSort.js';
-import { quickSort } from './algorithms/Sorting/quickSort.js';
-import { mergeSort } from './algorithms/Sorting/mergeSort.js';
-import { heapSort } from './algorithms/Sorting/heapSort.js';
-import { linearSearch } from './algorithms/Searching/linearSearch.js';
-import { binarySearch } from './algorithms/Searching/binarySearch.js';
-import { hashSearch } from './algorithms/Searching/hashing.js';
-import { DFS } from './algorithms/Graphs/DFS.js';
-import { BFS } from './algorithms/Graphs/BFS.js';
-import { Dijkstra } from './algorithms/Graphs/Dijkstra.js';
-import { kruskal } from './algorithms/Graphs/Kruskal.js';
-import { prim } from './algorithms/Graphs/Prim.js';
-import { TreeTraversal } from './algorithms/Trees/Traversal.js';
-import { BST } from './algorithms/Trees/BST.js';
+import { BubbleSort } from '../Algorithms/Sorting/bubbleSort.js';
+import { SelectionSort } from '../Algorithms/Sorting/selectionSort.js';
+import { insertionSort } from '../Algorithms/Sorting/insertionSort.js';
+import { quickSort } from '../Algorithms/Sorting/quickSort.js';
+import { mergeSort } from '../Algorithms/Sorting/mergeSort.js';
+import { heapSort } from '../Algorithms/Sorting/heapSort.js';
+import { linearSearch } from '../Algorithms/Searching/linearSearch.js';
+import { binarySearch } from '../Algorithms/Searching/binarySearch.js';
+import { hashSearch } from '../Algorithms/Searching/hashing.js';
+import { DFS } from '../Algorithms/Graphs/DFS.js';
+import { BFS } from '../Algorithms/Graphs/BFS.js';
+import { Dijkstra } from '../Algorithms/Graphs/Dijkstra.js';
+import { kruskal } from '../Algorithms/Graphs/Kruskal.js';
+import { prim } from '../Algorithms/Graphs/Prim.js';
+import { TreeTraversal } from '../Algorithms/Trees/Traversal.js';
+import { BST } from '../Algorithms/Trees/BST.js';
 
 
 const controlsToggle = document.getElementById('controlsToggle');
@@ -45,26 +45,26 @@ let logger = new Logger();
 let isPlaying = false;
 
 const info = {
-  'bubble-sort': 'Time Complexity: O(n²) | Space Complexity: O(1) | Stable: Yes',
-  'selection-sort': 'Time Complexity: O(n²) | Space Complexity: O(1) | Stable: No',
-  'insertion-sort': 'Time Complexity: O(n²) | Space Complexity: O(1) | Stable: Yes',
-  'quick-sort': 'Time Complexity: O(n log n) avg, O(n²) worst | Space Complexity: O(log n) | Stable: No',
-  'merge-sort': 'Time Complexity: O(n log n) | Space Complexity: O(n) | Stable: Yes',
-  'heap-sort': 'Time Complexity: O(n log n) | Space Complexity: O(1) | Stable: No',
+  'bubble-sort': ['O(n²)', 'O(1)', 'Stable'],
+  'selection-sort': ['O(n²)', 'O(1)', 'Not Stable'],
+  'insertion-sort': ['O(n²)', 'O(1)', 'Stable'],
+  'quick-sort': ['O(n log n) avg', 'O(n²) worst', 'O(log n)', 'Not Stable'],
+  'merge-sort': ['O(n log n)', 'O(n)', 'Stable'],
+  'heap-sort': ['O(n log n)', 'O(1)', 'Not Stable'],
 
-  'linear-search': 'Time Complexity: O(n) | Space Complexity: O(1)',
-  'binary-search': 'Time Complexity: O(log n) | Space Complexity: O(1)',
-  'hash-search': 'Time Complexity: O(1) avg, O(n) worst | Space Complexity: O(n)',
+  'linear-search': ['O(n)', 'O(1)'],
+  'binary-search': ['O(log n)', 'O(1)'],
+  'hash-search': ['O(1) avg', 'O(n) worst', 'O(n)'],
 
-  'dfs': 'Time Complexity: O(V + E) | Space Complexity: O(V) | Traversal Type: Depth-First',
-  'bfs': 'Time Complexity: O(V + E) | Space Complexity: O(V) | Traversal Type: Breadth-First',
-  'dijkstra': 'Time Complexity: O((V + E) log V) | Space Complexity: O(V) | Use: Single-source shortest path (non-negative weights)',
-  'kruskal': 'Time Complexity: O(E log E) | Space Complexity: O(V) | Use: Minimum Spanning Tree',
-  'prim': 'Time Complexity: O(E log V) | Space Complexity: O(V) | Use: Minimum Spanning Tree',
+  'dfs': ['O(V + E)', 'O(V)', 'DFS'],
+  'bfs': ['O(V + E)', 'O(V)', 'BFS'],
+  'dijkstra': ['O((V + E) log V)', 'O(V)', 'Shortest Path'],
+  'kruskal': ['O(E log E)', 'O(V)', 'MST'],
+  'prim': ['O(E log V)', 'O(V)', 'MST'],
 
-  'binary-tree': 'Time Complexity: O(n) | Space Complexity: O(h) | Traversals: Inorder, Preorder, Postorder',
-  'avl-tree': 'Time Complexity: O(log n) | Space Complexity: O(n) | Self-balancing: Yes',
-  'red-black': 'Time Complexity: O(log n) | Space Complexity: O(n) | Self-balancing: Yes | Properties: Red/Black coloring, height-balanced',
+  'binary-tree': ['O(n)', 'O(h)', 'Inorder', 'Preorder', 'Postorder'],
+  'avl-tree': ['O(log n)', 'O(n)', 'Self-balancing'],
+  'red-black': ['O(log n)', 'O(n)', 'Self-balancing', 'Red/Black', 'Height-balanced'],
 };
 
 
@@ -87,6 +87,8 @@ function showWarning(title, text, isEvent = true) {
 
 function handleNavToggle() {
   sidebar.classList.toggle('active');
+  document.querySelector('.main-container').style.gridTemplateColumns = sidebar.classList.contains('active') ? '1fr' : '300px  1fr';
+  // if(currentAlgorithm) currentAlgorithm.reset();
   windowResized();
 }
 
@@ -123,21 +125,29 @@ function resetUiSettings() {
   const controlButtons = document.querySelector('#controlButtons');
   const treeControls = document.querySelector('#treeControls');
 
-  keyInput.classList.remove('active');
   keyValue.value = '';
   InputField.value = '';
   speedSlider.value = 1;
   speedValue.textContent = '1x';
   isPlaying = false;
-
+  
   let btn = document.getElementById("togglePlayBtn");
   btn.classList.remove('pause-btn');
   btn.classList.add('play-btn');
   btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
 
-  document.getElementById('startVertexDiv')?.remove();
+  let treeBtn = [document.getElementById('bulkInsert'), document.getElementById('generateBST')]
 
+  InputField.disabled = false
+  InputField.classList.remove('disabled');
+  treeBtn.forEach(btn => btn.disabled = false);
+  treeBtn.forEach(btn => btn.classList.remove('disabled-btn'));
+  
+  document.getElementById('startVertexDiv')?.remove();
+  
   document.querySelector('.control-group').insertBefore( keyInput, constrolButtonGrp);
+  keyInput.classList.remove('active');
+  keyInput.classList.remove('tree');
 
 
   subType?.classList.remove('active');
@@ -174,9 +184,13 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     const alg = e.target.dataset.algorithm;
     curAlgoType = e.target.dataset.algoType;
 
-    algoTitle.innerHTML = `${e.target.textContent} <span class="infoIcon"><ion-icon name="help-circle-outline"></ion-icon></span>`;
 
-    algoInfo.textContent = info[alg] || 'No information available';
+    algoTitle.innerHTML = `${e.target.textContent} <span class="infoIcon"><ion-icon name="help-circle-outline"></ion-icon></span>`;
+    if (info[alg]) {
+      algoInfo.innerHTML = info[alg].map(val => `<span class="chip">${val}</span>`).join(' ');
+    } else {
+      algoInfo.innerHTML = '';
+    }
 
     notes = new Notes(alg);
 
@@ -275,6 +289,7 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
           keyInput.children[0].innerText = "vertex (one at a time)";
           keyValue.setAttribute("placeholder", "eg: 64");
           keyInput.classList.add('active');
+          keyInput.classList.add('tree');
         
           document.getElementById('controlsContent').insertBefore( keyInput, treeControls);
 
@@ -289,6 +304,10 @@ document.querySelectorAll(".algorithm-btn").forEach(btn => {
     }
 
     window.currentAlgorithm = currentAlgorithm;
+
+    setTimeout(() => {
+      drawWelcomeScreen();
+    }, 100);
   });
 });
 
@@ -362,6 +381,7 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
   logger.clearLogs();
   currentAlgorithm.reset();
 
+
   let btn = document.getElementById("togglePlayBtn");
   btn.classList.remove('pause-btn');
   btn.classList.add('play-btn');
@@ -396,13 +416,22 @@ document.getElementById("applyArrayBtn").addEventListener("click", () => {
 
     let indexMap = {};
     values.forEach((v, i) => indexMap[v.trim()] = i);
+    
+    console.log(values, indexMap);
     let n = values.length;
     let adjMatrix = Array.from({ length: n }, () => Array(n).fill(0));
 
     edges.forEach(edge => {
       let [src, dest, w] = [...edge];
+
+        if (!(src in indexMap) || !(dest in indexMap)) {
+          console.warn(`Skipping invalid edge (${src}, ${dest}, ${w}) because one or both vertices are missing`);
+          return;
+        }
+        
       let weight = (w && !isNaN(Number(w))) ? Number(w) : 1;
       if (currentAlgorithm.name == "prim" || currentAlgorithm.name == "kruskal") {
+        console.log(adjMatrix[indexMap[src]][indexMap[dest]], adjMatrix[indexMap[dest]][indexMap[src]], weight);
         adjMatrix[indexMap[src]][indexMap[dest]] = adjMatrix[indexMap[dest]][indexMap[src]] = weight;
       } else {
         adjMatrix[indexMap[src]][indexMap[dest]] = weight;
@@ -447,16 +476,19 @@ document.getElementById("togglePlayBtn").addEventListener("click", () => {
     btn.innerHTML = `<span class="btn-icon"><ion-icon name="play-outline"></ion-icon></span> Resume`;
   } else {
     if (currentAlgorithm.objNodeArray.length < 1) {
-      btn.classList.remove('pause-btn');
-      btn.classList.add('play-btn');
-
-      (InputField.value.trim() == "")
-        ? showError("Input Error", "Please enter an array first.")
-        : showError("Input Error", "Please click Apply first.");
-
-      return;
+      if(InputField.value.trim() == ""){
+        showError("Input Error", "Please enter an array first.")
+        btn.classList.remove('pause-btn');
+        btn.classList.add('play-btn');
+        return;
+      }else{
+        // showError("Input Error", "Please click Apply first.");
+        document.getElementById("applyArrayBtn").click();
+      }
     }
     currentAlgorithm.Play();
+    btn.classList.add('pause-btn');
+    btn.classList.remove('play-btn');
     btn.innerHTML = `<span class="btn-icon"><ion-icon name="pause-outline"></ion-icon></span> Pause`;
   }
 });
@@ -475,6 +507,8 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
   isPlaying = false;
   currentAlgorithm.reset();
+
+  showWarning("Reset", "The algorithm has been reset.");
 });
 
 
@@ -542,11 +576,12 @@ document.getElementById("deleteAllBtn").addEventListener("click", () => {
   });
   isPlaying = false;
 
-  let btn = document.getElementById('bulkInsert');
+  let btn = [document.getElementById('bulkInsert'), document.getElementById('generateBST')]
+
   InputField.disabled = false
   InputField.classList.remove('disabled');
-  btn.disabled = false;
-  btn.classList.remove('disabled-btn');
+  btn.forEach(btn => btn.disabled = false);
+  btn.forEach(btn => btn.classList.remove('disabled-btn'));
 
   currentAlgorithm.reset();
   console.log("delete all ", currentAlgorithm.isAnimating);
@@ -570,14 +605,15 @@ document.getElementById('bulkInsert').addEventListener("click", () => { // bulk 
     showError("Input Error", "Please enter values to bulk insert.");
     return;
   }
-  let btn = document.getElementById('bulkInsert');
+  // let btn = document.getElementById('bulkInsert');
+  let btn = [document.getElementById('bulkInsert'), document.getElementById('generateBST')]
 
   currentAlgorithm.bulkInsert(values);
 
   InputField.disabled = true;
   InputField.classList.add('disabled');
-  btn.disabled = true;
-  btn.classList.add('disabled-btn');
+  btn.forEach(btn => btn.disabled = true);
+  btn.forEach(btn => btn.classList.add('disabled-btn'));
   
 });
 

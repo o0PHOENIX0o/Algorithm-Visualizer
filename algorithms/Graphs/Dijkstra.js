@@ -1,6 +1,6 @@
 import { GraphBase, PriorityQueue } from './GraphBase.js';
-import { DrawArray, Text, clearCanvas, height, width } from '../../canvas.js';
-import {Logger} from "../../logger.js";
+import { DrawArray, Text, clearCanvas, height, width, drawWelcomeScreen } from '../../Core/canvas.js';
+import {Logger} from "../../Core/logger.js";
 
 class DijkstraClass extends GraphBase {
     constructor() {
@@ -10,11 +10,6 @@ class DijkstraClass extends GraphBase {
     }
 
     reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Dijkstra has been reset. All nodes, edges, and logs are cleared." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.edgeList = [];
@@ -28,6 +23,7 @@ class DijkstraClass extends GraphBase {
         this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen
     }
 
 
@@ -102,6 +98,10 @@ class DijkstraClass extends GraphBase {
                 line.strokeW = 3;
             }
 
+            let adjBox = this.BoxAround(uIndex, Nodes);
+            adjBox.col = this.HighlightCol;
+
+
             this.logger.show({
                 message: { 
                     title: `Extract-Min: ${Nodes[uIndex].obj.label}`, 
@@ -112,7 +112,7 @@ class DijkstraClass extends GraphBase {
             });
 
             await this.moveSquare({element: box, xc: Nodes[uIndex].obj.xPos, yc: Nodes[uIndex].obj.yPos, otherElements: this.textArray});
-            this.drawAll([...this.textArray, box]);
+            this.drawAll([...this.textArray, box, adjBox]);
             await this.delay(2 * this.TimeoutDelay);
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
@@ -122,6 +122,9 @@ class DijkstraClass extends GraphBase {
                 if (!this.isAnimating) return;
                 if (this.Pqueue.getElementAt(v) && adjM[uIndex][v]) {
                     let weight = adjM[uIndex][v];
+
+                    adjBox.text = "relax"
+                    await this.moveSquare({element: adjBox, xc: Nodes[v].obj.xPos, yc: Nodes[v].obj.yPos, otherElements: [...this.textArray, box]});
 
                     this.logger.show({
                         message: { 
@@ -144,7 +147,7 @@ class DijkstraClass extends GraphBase {
                         line.strokeW = 3;
 
 
-                        this.drawAll([...this.textArray, box]);
+                        this.drawAll([...this.textArray, box, adjBox]);
                         await this.delay(1.5 * this.TimeoutDelay);
                         await this.waitWhilePaused();
 
@@ -160,7 +163,7 @@ class DijkstraClass extends GraphBase {
 
                         this.textArray[v].label = u.priority + weight;
                         this.textArray[v].text_size = TEXT_SIZE;
-                        this.drawAll([...this.textArray, box]);
+                        this.drawAll([...this.textArray, box, adjBox]);
                         await this.delay(1.5 * this.TimeoutDelay);
                     } else {
                         this.logger.show({
@@ -170,6 +173,7 @@ class DijkstraClass extends GraphBase {
                             },
                             type: "warning"
                         });
+                        await this.delay(this.TimeoutDelay);
                     }
                 }
             }

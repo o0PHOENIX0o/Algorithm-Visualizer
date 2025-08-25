@@ -1,6 +1,6 @@
-import { Base, compare } from "../Base.js"
-import { DrawArray, Line, Triangle, clearCanvas, width, PointerArrow, height } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { Base, compare } from "../Base/Base.js"
+import { DrawArray, Line, Triangle, clearCanvas, width, PointerArrow, height, drawWelcomeScreen } from '../../Core/canvas.js';
+import { Logger } from "../../Core/logger.js";
 
 class heapSortClass extends Base {
     constructor() {
@@ -10,6 +10,8 @@ class heapSortClass extends Base {
         this.lineArray = [];
         this.arrows = [];
         this.objPositions = [];
+        this.TEXT_SIZE = 16;
+
     }
 
     Play() {
@@ -23,13 +25,9 @@ class heapSortClass extends Base {
 
 
     async reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Heap Sort state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
         this.logger.clearLogs();
         this.objNodeArray = [];
+        this.objPositions = [];
         this.inputArray = [];
         this.triangleArray = [];
         this.lineArray = [];
@@ -39,6 +37,7 @@ class heapSortClass extends Base {
         await this.delay(50);
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen();
     }
 
 
@@ -146,7 +145,7 @@ class heapSortClass extends Base {
             await this.move(element.obj, targetX, targetY, 4);
             await this.waitWhilePaused();
 
-            this.lineArray.push(new Line({ x1: curX, y1: curY, x2: targetX, y2: targetY, col: 0 }));
+            this.lineArray.push(new Line({ x1: curX, y1: curY, x2: targetX, y2: targetY, col: "#dbdbdbff" }));
             DrawArray([...this.triangleArray, ...this.lineArray]);
             await this.waitWhilePaused();
 
@@ -205,8 +204,8 @@ class heapSortClass extends Base {
 
         parent.col = this.HighlightCol2;
         this.arrows = [
-            new PointerArrow({ xPos: parent.xPos, yPos: parent.yPos + 25, col: this.HighlightCol, length: 10, label: "i", textCol: 12, textS: 12 }),
-            new PointerArrow({ xPos: parent.xPos, yPos: parent.yPos + 45, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12 })
+            new PointerArrow({ xPos: parent.xPos, yPos: parent.yPos + 25, col: this.HighlightCol, length: 10, label: "i", textS: 12 }),
+            new PointerArrow({ xPos: parent.xPos, yPos: parent.yPos + 45, col: this.HighlightCol, length: 10, label: "max", textS: 12 })
         ]
 
         await this.drawTriangle(parent, left, leftChild, rightChild);
@@ -220,7 +219,7 @@ class heapSortClass extends Base {
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
 
-            this.arrows[1] = new PointerArrow({ xPos: leftChild.xPos, yPos: leftChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12 });
+            this.arrows[1] = new PointerArrow({ xPos: leftChild.xPos, yPos: leftChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textS: 12 });
             leftChild.col = this.HighlightCol;
 
             DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
@@ -237,7 +236,7 @@ class heapSortClass extends Base {
             leftChild.col = this.BaseCol;
             rightChild.col = this.HighlightCol;
 
-            this.arrows[1] = new PointerArrow({ xPos: rightChild.xPos, yPos: rightChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textCol: 12, textS: 12 });
+            this.arrows[1] = new PointerArrow({ xPos: rightChild.xPos, yPos: rightChild.yPos + 25, col: this.HighlightCol, length: 10, label: "max", textS: 12 });
 
             DrawArray([...this.triangleArray, ...this.lineArray, ...this.arrows]);
             await this.delay(this.TimeoutDelay)
@@ -350,6 +349,7 @@ class heapSortClass extends Base {
     async algoExecutor() {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
+        this.objPositions=[];
 
         await Promise.all(this.objNodeArray.map(element => this.animateY(element.obj, null, -(element.obj.yPos - 60), 2))); //animateY -> move all nodes to the top of the canvas (in base class)
         await this.waitWhilePaused();
@@ -378,6 +378,7 @@ class heapSortClass extends Base {
 
     async run() {
         this.isAnimating = true;
+        this.TEXT_SIZE *= this.scaleFactor;
 
         this.logger.show({
             message: { title: "Heap Sort", text: "Starting Heap Sort. The array will be transformed into a max-heap and then sorted." },

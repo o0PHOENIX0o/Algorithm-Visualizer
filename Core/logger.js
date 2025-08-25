@@ -1,4 +1,4 @@
-import algoData from './algoData.js';
+import algoData from '../Data/algoData.js';
 
 // resizable steps container
 const resizable = document.querySelector(".toast-container.steps");
@@ -56,7 +56,7 @@ function stopResize() {
 
 // logger class
 export class Logger {
-    constructor({ logTimeout = 5000, titleStyles = {}, messageStyles = {} } = {}) {
+    constructor({ logTimeout = 10000, titleStyles = {}, messageStyles = {} } = {}) {
         this.logs = [];
         this.isPaused = false;
         this.isHidden = false;
@@ -287,13 +287,15 @@ export class Notes {
 
         let imgCount = Object.keys(images).length;
 
+                                            // <img src="${img}" alt="algo-step" class="algorithm-step-image" loading="lazy"> 
+
+                                            // <img src="${images.algorithm}" alt="${this.name} Visualization" class="algorithm-image" loading="lazy">
 
         let content = `
             <div class="notes-content">
                     <h3>📚 Overview</h3>
                     <p>${subHeading}</p>
 
-                    <img src="${images.algorithm}" alt="${this.name} Visualization" class="algorithm-image" loading="lazy">
 
                     <h4><strong>Complexity:</strong></h4>
                     <div class="complexity-box">
@@ -320,21 +322,16 @@ export class Notes {
                     <div class="steps-list">
                         <ol>
                             ${working.map(({ step, img }) => {
-            if (img == undefined || img == null || img == '') {
-                return ` <li>
-                                                ${step} 
-                                            </li>`
-            }
-            return ` <li>
-                                                ${step} 
-                                                <img src="${img}" alt="algo-step" class="algorithm-step-image" loading="lazy"> 
-                                            </li>`
-        }).join('')
-            }
+                                if (img == undefined || img == null || img == '') {
+                                    return ` <li> ${step} </li>`
+                                }
+                                return ` <li> ${step} 
+                                        </li>`
+                            }).join('')}
                         </ol>
                     </div>
 
-                    <h3>💻 Code Example</h3>
+                    <h3>💻 Pseudo Code</h3>
                     <div class="code-example">
                         <pre><code class="language-javascript">${Pseudocode}</code></pre>
                     </div>                

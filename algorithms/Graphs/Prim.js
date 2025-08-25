@@ -1,6 +1,6 @@
 import { GraphBase, PriorityQueue } from './GraphBase.js';
-import { DrawArray, Text, clearCanvas, height, width } from '../../canvas.js';
-import {Logger} from "../../logger.js";
+import { DrawArray, Text, clearCanvas, height, width, drawWelcomeScreen } from '../../Core/canvas.js';
+import {Logger} from "../../Core/logger.js";
 
 class PrimClass extends GraphBase {
     constructor() {
@@ -10,11 +10,6 @@ class PrimClass extends GraphBase {
     }
 
     reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Prim's state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.edgeList = [];
@@ -28,6 +23,7 @@ class PrimClass extends GraphBase {
         this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen
     }
 
     drawDist(Nodes) {
@@ -101,6 +97,9 @@ class PrimClass extends GraphBase {
                 type: "info"
             });
 
+            let adjBox = this.BoxAround(uIndex, Nodes);
+            adjBox.col = this.HighlightCol;
+
 
             Nodes[uIndex].obj.col = this.HighlightCol2;
             Nodes[uIndex].obj.strokeCol = this.sortedCol;
@@ -115,7 +114,7 @@ class PrimClass extends GraphBase {
             if (!this.isAnimating) return;
 
             await this.moveSquare({element: box, xc: Nodes[uIndex].obj.xPos, yc: Nodes[uIndex].obj.yPos, otherElements: this.textArray});
-            this.drawAll([...this.textArray, box]);
+            this.drawAll([...this.textArray, box, adjBox]);
             await this.delay(2 * this.TimeoutDelay);
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
@@ -140,6 +139,9 @@ class PrimClass extends GraphBase {
                         await this.waitWhilePaused();
                         if (!this.isAnimating) return;
 
+                        adjBox.text = "relax";
+                        await this.moveSquare({element: adjBox, xc: Nodes[v].obj.xPos, yc: Nodes[v].obj.yPos, otherElements: [...this.textArray, box]});
+
                         this.logger.show({
                             message: {  title: `Edge Chosen: ${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}`,  text: `Edge <b>${Nodes[uIndex].obj.label} → ${Nodes[v].obj.label}</b> improves MST.<br>  <br> <b>current total weight = ${totalWeight}</b>.`},
                             type: "success"
@@ -154,7 +156,7 @@ class PrimClass extends GraphBase {
                         line.strokeW = 3;
 
 
-                        this.drawAll([...this.textArray, box]);
+                        this.drawAll([...this.textArray, box, adjBox]);
                         await this.delay(1.5 * this.TimeoutDelay);
                         await this.waitWhilePaused();
 
@@ -162,9 +164,10 @@ class PrimClass extends GraphBase {
                         this.textArray[v].text_size = TEXT_SIZE;
 
                         MST.push({ u, v, weight, line });
-                        this.drawAll([...this.textArray, box]);
+                        this.drawAll([...this.textArray, box, adjBox]);
                         await this.delay(1.5 * this.TimeoutDelay);
                     }
+                    await this.delay(this.TimeoutDelay);
                 }
             }
 

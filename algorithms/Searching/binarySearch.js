@@ -1,6 +1,6 @@
-import { Base } from "../Base.js"
-import { DrawArray, PointerArrow, Circle, Square, clearCanvas } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { Base } from "../Base/Base.js"
+import { DrawArray, PointerArrow, Circle, Square, clearCanvas, drawWelcomeScreen } from '../../Core/canvas.js';
+import { Logger } from "../../Core/logger.js";
 
 class BinarySearchClass extends Base {
     constructor() {
@@ -9,9 +9,8 @@ class BinarySearchClass extends Base {
         this.keyCircle = [];
         this.squareArray = [];
         this.logger = new Logger();
+        this.isDesc = false; // new flag for descending order
     }
-
-
 
     Play() {
         if (!this.isAnimating && !this.isPause && this.objNodeArray.length > 0) {
@@ -21,11 +20,6 @@ class BinarySearchClass extends Base {
     }
 
     async reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Binary Search state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.arrows = [];
@@ -38,7 +32,6 @@ class BinarySearchClass extends Base {
         clearCanvas();
         DrawArray(null);
     }
-
 
     async binarySearchAlgo(array, l, r, key) {
         await this.waitWhilePaused();
@@ -66,7 +59,6 @@ class BinarySearchClass extends Base {
             },
             type: "info"
         });
-
 
         this.keyCircle = [new Circle({ xPos: array[mid].obj.xPos, yPos: (array[mid].obj.yPos - array[mid].obj.dia - this.spacing), dia: this.dia, label: key, col: this.sortedCol })];
 
@@ -97,7 +89,6 @@ class BinarySearchClass extends Base {
         await this.waitWhilePaused();
         if (!this.isAnimating) return;
 
-
         if (Number(array[mid].value) === key) {
             array[mid].obj.col = this.sortedCol;
             this.arrows = [new PointerArrow({ xPos: array[mid].obj.xPos, yPos: array[l].obj.yPos + 40, col: this.HighlightCol, length: 20, label: "key" })];
@@ -114,18 +105,21 @@ class BinarySearchClass extends Base {
             });
 
             return;
+        }
 
-        } else if (Number(array[mid].value) > key) { // go left
+        // branching depends on order
+        if ((!this.isDesc && Number(array[mid].value) > key) || (this.isDesc && Number(array[mid].value) < key)) {
+            // go left
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
-            for (let i = mid; i <= r; i++) { array[i].obj.col = this.BaseCol; array[i].obj.textCol = "#6d6c6c"; }
+            for (let i = mid; i <= r; i++) { array[i].obj.col = "#525252ff"; array[i].obj.textCol = "#cececeff"; }
 
             const leftArr = array.slice(l, mid).map(node => node.value);
             const rightArr = array.slice(mid, r + 1).map(node => node.value);
 
             this.logger.show({
                 message: {
-                    title: `Key ${key} < ${array[mid].value} → Go Left`,
+                    title: `Key ${key} ${this.isDesc ? ">" : "<"} ${array[mid].value} → Go Left`,
                     text: `Current array: [${array.slice(l, r + 1).map(node => node.value)}] <br>
                         <span style="color:green">Left array: [${leftArr}] </span> <br>
                         <span style="color:red">Right array (discarded): [${rightArr}]</span>`
@@ -133,18 +127,18 @@ class BinarySearchClass extends Base {
                 type: "info"
             });
             return await this.binarySearchAlgo(array, l, mid - 1, key)
-
-        } else {  // go right
+        } else {
+            // go right
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
-            for (let i = 0; i <= mid; i++) { array[i].obj.col = this.BaseCol; array[i].obj.textCol = "#6d6c6c"; }
+            for (let i = 0; i <= mid; i++) { array[i].obj.col = "#525252ff"; array[i].obj.textCol = "#cececeff"; }
 
             const leftArr = array.slice(l, mid + 1).map(node => node.value);
             const rightArr = array.slice(mid + 1, r + 1).map(node => node.value);
 
             this.logger.show({
                 message: {
-                    title: `Key ${key} > ${array[mid].value} → Go Right`,
+                    title: `Key ${key} ${this.isDesc ? "<" : ">"} ${array[mid].value} → Go Right`,
                     text: `Current array: [${array.slice(l, r + 1).map(node => node.value)}] <br>
                         <span style="color:red">Left array (discarded): [${leftArr}] </span> <br>
                         <span style="color:green">Right array: [${rightArr}]</span>`
@@ -157,11 +151,27 @@ class BinarySearchClass extends Base {
     }
 
     isSorted(array) {
-        let isAsc = true;
-        for (let i = 1; i < array.length; i++)
-            if (Number(array[i - 1].value) > Number(array[i].value)) isAsc = false;
+        if (array.length <= 1) return true;
 
-        return isAsc;
+        let asc = true;
+        let desc = true;
+
+        for (let i = 1; i < array.length; i++) {
+            const prev = Number(array[i - 1].value);
+            const curr = Number(array[i].value);
+
+            if (prev > curr) asc = false;
+            if (prev < curr) desc = false;
+        }
+
+        if (asc) {
+            this.isDesc = false;
+            return true;
+        } else if (desc) {
+            this.isDesc = true;
+            return true;
+        }
+        return false;
     }
 
     async run() {
@@ -177,10 +187,12 @@ class BinarySearchClass extends Base {
             this.reset();
             return;
         }
-        await this.waitWhilePaused();
-        if (!this.isAnimating) return;
+
         this.logger.show({
-            message: { title: "Binary Search", text:`Starting Binary Search for key ${this.key}.` },
+            message: { 
+                title: "Binary Search", 
+                text: `Starting Binary Search for key ${this.key} on a ${this.isDesc ? "descending" : "ascending"} array.` 
+            },
             type: "info",
             isEvent: true
         });

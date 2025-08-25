@@ -1,6 +1,6 @@
-import { DrawArray, Square, clearCanvas, Circle, height, width, Line } from "../../canvas.js";
+import { DrawArray, Square, clearCanvas, Circle, height, width, Line, drawWelcomeScreen } from "../../Core/canvas.js";
 import { TreeBase } from "./TreeBase.js";
-import {Logger} from "../../logger.js";
+import { Logger } from "../../Core/logger.js";
 
 class BSTclass extends TreeBase {
     constructor() {
@@ -19,7 +19,7 @@ class BSTclass extends TreeBase {
         this.MOBILE_MAX_DEPTH = 4;
 
         // Visual constants
-        this.Y_OFFSET = 100;
+        this.Y_OFFSET = 100 ;
         this.NODE_SPACING = 10;
         this.SCALING_FACTOR = 0.9; // 0.9 for keeping some margin
         this.SPEED_UP_FACTOR = 1;
@@ -36,11 +36,7 @@ class BSTclass extends TreeBase {
 
 
     reset({ preserveLayout = false, preserveLogs = false } = {}) {
-        this.showLog({
-            message: { title: "Reset", text: "BST state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
+        
         this.objNodeArray = [];
         this.inputArray = [];
         this.lineArray = [];
@@ -55,6 +51,7 @@ class BSTclass extends TreeBase {
         if(!preserveLogs) this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen();
     }
 
     
@@ -104,6 +101,7 @@ class BSTclass extends TreeBase {
 
     async generatePositionMap(objPositions, linePositions) {
         const config = this.getCurrentConfig();
+        console.log(this.Y_OFFSET)
 
         const buildBranch = async ({ nodeIndex, offsetX, direction, depth }) => {
             if (nodeIndex === 0) {
@@ -188,7 +186,7 @@ class BSTclass extends TreeBase {
             y1: linePosition.y1,
             x2: linePosition.x2,
             y2: linePosition.y2,
-            col: 0,
+            col: "#ffffff",
             strokeW: 1,
             // label: `${childIndex - 1}`,
             // textPos: 'center'
@@ -204,7 +202,8 @@ class BSTclass extends TreeBase {
 
     async bulkInsert(values) {
         this.isAnimating = true;
-        console.log("Bulk inserting values:", values);
+
+        console.log("Bulk inserting values:", values, this.Y_OFFSET);
 
         const numericValues = values.map(Number).filter(v => !isNaN(v));
         if (numericValues.length === 0) {

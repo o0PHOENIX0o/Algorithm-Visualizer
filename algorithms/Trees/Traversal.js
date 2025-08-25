@@ -1,17 +1,12 @@
-import { DrawArray, clearCanvas, height } from "../../canvas.js";
+import { DrawArray, clearCanvas, height, drawWelcomeScreen } from "../../Core/canvas.js";
 import { TreeBase } from "./TreeBase.js";
-import {Logger} from "../../logger.js";
+import { Logger } from "../../Core/logger.js";
 
 class TreeTraversalClass extends TreeBase {
     constructor() {
         super('Tree Traversal');
         this.pointerSquares = []
         this.logger = new Logger();
-        this.logger.show({
-            message: { title: "Tree Traversal", text: "Visualizing tree traversal algorithms: PreOrder, InOrder, and PostOrder." },
-            type: "info",
-            isEvent: true
-        })
     }
 
     showLog({message, type = "info", isEvent = false, timer} = {}) {
@@ -31,6 +26,7 @@ class TreeTraversalClass extends TreeBase {
         this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen();
     }
 
     async preOrder(i, Array) {

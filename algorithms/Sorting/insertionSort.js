@@ -1,6 +1,6 @@
-import { Base, compare } from "../Base.js"
-import { DrawArray, PointerArrow, Square, clearCanvas } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { Base, compare } from "../Base/Base.js"
+import { DrawArray, PointerArrow, Square, clearCanvas, drawWelcomeScreen } from '../../Core/canvas.js';
+import { Logger } from "../../Core/logger.js";
 
 class insertionSortClass extends Base {
     // Class attributes for positioning and animation
@@ -25,11 +25,6 @@ class insertionSortClass extends Base {
 
 
     async reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Insertion Sort state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.arrows = [];
@@ -39,6 +34,7 @@ class insertionSortClass extends Base {
         await this.delay(50);
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen();
     }
 
     async run() {

@@ -1,6 +1,6 @@
-import { Base, compare } from "../Base.js"
-import { DrawArray, PointerArrow, clearCanvas } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { Base, compare } from "../Base/Base.js"
+import { DrawArray, PointerArrow, clearCanvas, drawWelcomeScreen } from "../../Core/canvas.js";
+import { Logger } from "../../Core/logger.js";
 
 class BubbleSortClass extends Base {
   constructor() {
@@ -29,11 +29,6 @@ class BubbleSortClass extends Base {
   }
 
   async reset() {
-    this.logger.show({ 
-      message: { title: "Reset", text: "Bubble Sort state and visuals have been reset." }, 
-      type: "warning", 
-      isEvent: true 
-    });
     this.logger.clearLogs();
     this.objNodeArray = [];
     this.inputArray = [];
@@ -43,6 +38,7 @@ class BubbleSortClass extends Base {
     await this.delay(50);
     clearCanvas();
     DrawArray(null);
+    // drawWelcomeScreen();
   }
 
 
@@ -63,8 +59,8 @@ class BubbleSortClass extends Base {
           a.obj.col = b.obj.col = this.HighlightCol;
 
           this.arrows = [
-            new PointerArrow({ xPos: a.obj.xPos, yPos: (a.obj.yPos + this.dia), col: this.HighlightCol, length: this.dia / 2, label: "j" }),
-            new PointerArrow({ xPos: b.obj.xPos, yPos: (b.obj.yPos + this.dia), col: this.HighlightCol, length: this.dia / 2, label: "j+1" })
+            new PointerArrow({ xPos: a.obj.xPos, yPos: (a.obj.yPos + this.dia), col: this.HighlightCol, length: this.dia / 2, label: "j"  , textS: this.TEXT_SIZE}),
+            new PointerArrow({ xPos: b.obj.xPos, yPos: (b.obj.yPos + this.dia), col: this.HighlightCol, length: this.dia / 2, label: "j+1", textS: this.TEXT_SIZE})
           ];
 
           await this.waitWhilePaused();
@@ -113,6 +109,8 @@ class BubbleSortClass extends Base {
   async run() {
     this.isAnimating = true;
     this.logger.clearLogs();
+
+    console.log("TEXT_SIZE", this.TEXT_SIZE);
 
     this.logger.show({
       message: { title: "Bubble Sort Started", text: "Sorting the array using Bubble Sort algorithm." },

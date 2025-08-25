@@ -1,6 +1,6 @@
 import { GraphBase } from "./GraphBase.js";
-import { DrawArray, clearCanvas } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { DrawArray, clearCanvas } from '../../Core/canvas.js';
+import { Logger } from "../../Core/logger.js";
 
 
 class BFSClass extends GraphBase {
@@ -10,11 +10,6 @@ class BFSClass extends GraphBase {
     }
 
     reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "BFS state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.edgeList = [];
@@ -27,6 +22,7 @@ class BFSClass extends GraphBase {
         this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen();
     }
 
 
@@ -152,7 +148,7 @@ class BFSClass extends GraphBase {
 
             this.directedEdges.forEach((row, i) => {
                 row.forEach((edge, j) => {
-                    if (edge !== null && edge.line.col == 0) this.directedEdges[i][j] = null;
+                    if (edge !== null && edge.line.col == "#ffffff") this.directedEdges[i][j] = null;
                 })
             })
             this.drawAll();

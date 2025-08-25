@@ -1,7 +1,7 @@
-import { Base, compare } from "../Base.js"
-import { DrawArray, PointerArrow, Square, clearCanvas } from '../../canvas.js';
+import { Base, compare } from "../Base/Base.js"
+import { DrawArray, PointerArrow, Square, clearCanvas, drawWelcomeScreen } from '../../Core/canvas.js';
 
-import { Logger } from "../../logger.js";
+import { Logger } from "../../Core/logger.js";
 
 class SelectionSortClass extends Base {
     constructor() {
@@ -20,11 +20,6 @@ class SelectionSortClass extends Base {
     }
 
     async reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Selection Sort state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.arrows = [];
@@ -35,6 +30,7 @@ class SelectionSortClass extends Base {
         this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen();
     }
 
     async run() {

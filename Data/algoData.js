@@ -1463,8 +1463,14 @@ Heapify(A, n, i)
         "inPlace": false
       },
       "working": [
-        "<strong>Pre-order:</strong> Root -> Left -> Right",
-        "<strong>In-order:</strong> Left -> Root -> Right",
+        {
+          "step": "<strong>Pre-order:</strong> Root -> Left -> Right",
+          "img": ""
+        },
+        {
+          "step": "<strong>In-order:</strong> Left -> Root -> Right",
+          "img": ""
+        },
         {
           "step": "<strong>Post-order:</strong> Left -> Right -> Root",
           "img": ""
@@ -1568,11 +1574,26 @@ Postorder(node)
         "inPlace": true
       },
       "working": [
-        "<strong>Binary Property:</strong> Left subtree contains values less than node, right subtree contains values greater",
-        "<strong>Recursive Structure:</strong> Each subtree is also a valid BST",
-        "<strong>Search Path:</strong> At each node, decide to go left or right based on comparison",
-        "<strong>Dynamic Structure:</strong> Tree shape depends on insertion order",
-        "<strong>Balancing:</strong> Unbalanced trees can degrade to linked list performance"
+        {
+          "step": "<strong>Binary Property:</strong> Left subtree contains values less than node, right subtree contains values greater",
+          "img": ""
+        },
+        {
+          "step": "<strong>Recursive Structure:</strong> Each subtree is also a valid BST",
+          "img": ""
+        },
+        {
+          "step": "<strong>Search Path:</strong> At each node, decide to go left or right based on comparison",
+          "img": ""
+        },
+        {
+          "step": "<strong>Dynamic Structure:</strong> Tree shape depends on insertion order",
+          "img": ""
+        },
+        {
+          "step": "<strong>Balancing:</strong> Unbalanced trees can degrade to linked list performance",
+          "img": ""
+        }
       ],
       "Pseudocode": `structure Node
           value

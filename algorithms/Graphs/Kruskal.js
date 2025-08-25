@@ -1,6 +1,6 @@
 import { GraphBase } from './GraphBase.js';
-import { DrawArray, PointerArrow, Square, clearCanvas, height, width } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { DrawArray, PointerArrow, Square, clearCanvas, height, width, drawWelcomeScreen } from '../../Core/canvas.js';
+import { Logger } from "../../Core/logger.js";
 
 
 class DisjointSet {
@@ -44,11 +44,7 @@ class KruskalClass extends GraphBase {
     }
 
     reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Kruskal's state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
+       
         this.objNodeArray = [];
         this.inputArray = [];
         this.edgeList = [];
@@ -62,6 +58,7 @@ class KruskalClass extends GraphBase {
         this.logger.clearLogs()
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen
     }
 
 
@@ -76,7 +73,6 @@ class KruskalClass extends GraphBase {
         let totalBoxWidth = edges.length * (boxWidth + BoxSpace);;
         this.boxSF = Math.min(1, availableWidth / totalBoxWidth);
 
-        console.log("scaleFactor: ", this.scaleFactor, this.boxSF, availableWidth, totalBoxWidth);
         boxWidth *= this.boxSF;
         BoxSpace *= this.boxSF;
         const TEXT_SIZE = 16 * this.boxSF;
@@ -95,7 +91,7 @@ class KruskalClass extends GraphBase {
 
             this.edgeBoxes.push({
                 position: { xPos: (boxX2 + boxX1) / 2, yPos: (boxY1 + boxY2) / 2 },
-                obj: new Square({ xPos1: boxX1, yPos1: boxY1, xPos2: boxX2, yPos2: boxY2, col: "#000000", strokeW: 2 * this.boxSF, text: label, textSize: TEXT_SIZE })
+                obj: new Square({ xPos1: boxX1, yPos1: boxY1, xPos2: boxX2, yPos2: boxY2, col: "#ffffffff", strokeW: 2 * this.boxSF, text: label, textSize: TEXT_SIZE })
             })
         })
 

@@ -1,6 +1,5 @@
-import { Base } from "../Base.js";
-import { DrawArray, Line, width, Square } from '../../canvas.js';
-import {Logger} from "../../logger.js";
+import { Base } from "../Base/Base.js";
+import { DrawArray, Line, width, Square } from "../../Core/canvas.js";
 
 export class TreeBase extends Base {
     constructor(name, spacing = 10, diameter = 30, gap = 36) {
@@ -9,6 +8,7 @@ export class TreeBase extends Base {
         this.lineArray = [];
         this.objPositions = [];
         this.lineMap = {};
+        this.TEXT_SIZE = 16;
     }
 
     Play() {
@@ -45,7 +45,7 @@ export class TreeBase extends Base {
         });
     }
 
-    BoxAround({ index, Nodes, Boxtext = "", col = this.HighlightCol2, strokeW = 2, textCol = 0, textYOffset = 10 } = {}) {
+    BoxAround({ index, Nodes, Boxtext = "", col = this.HighlightCol2, strokeW = 2, textCol = "#ffffff", textYOffset = 10 } = {}) {
         let offset = 5 + (Nodes[index].obj.dia * this.scaleFactor) / 2;
 
         let BoxX1 = Nodes[index].obj.xPos - offset;
@@ -129,7 +129,7 @@ export class TreeBase extends Base {
             await this.move({ element: element.obj, x: targetX, y: targetY, speedFactor: 4 });
             await this.waitWhilePaused();
 
-            let line = new Line({ x1: curX, y1: curY, x2: targetX, y2: targetY, col: 0, strokeW: 1, textPos: 'center' });
+            let line = new Line({ x1: curX, y1: curY, x2: targetX, y2: targetY, col: "#ffffff", strokeW: 1, textPos: 'center' });
             this.lineArray.push(line);
 
             this.lineMap[element.obj.label] = line;
@@ -154,7 +154,10 @@ export class TreeBase extends Base {
         console.log('available width', width * 0.9);
 
         let scalingFactor = Math.min(1, (width * 0.9) / totalwidth);
-        this.leafGap = this.leafGap * scalingFactor;
+        
+        this.leafGap *= scalingFactor;
+        this.dia *= scalingFactor;
+        this.spacing *= scalingFactor;
 
         for (let i = 0; i < Array.length; i++) {
             await this.waitWhilePaused();

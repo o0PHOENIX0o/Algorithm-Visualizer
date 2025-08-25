@@ -1,6 +1,6 @@
-import { Base, compare } from "../Base.js"
-import { DrawArray, PointerArrow, Square, clearCanvas } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { Base, compare } from "../Base/Base.js"
+import { DrawArray, PointerArrow, Square, clearCanvas, drawWelcomeScreen } from '../../Core/canvas.js';
+import { Logger } from "../../Core/logger.js";
 
 class quickSortClass extends Base {
     constructor() {
@@ -21,11 +21,6 @@ class quickSortClass extends Base {
 
 
     async reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "Quick Sort state and visuals have been reset." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.arrows = [];
@@ -36,6 +31,7 @@ class quickSortClass extends Base {
         this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen();
     }
 
     async drawSquare(array, col = this.unsortedCol) {
@@ -102,6 +98,7 @@ class quickSortClass extends Base {
                     message: { title: "Swap", text: `Swapping ${Array[i].value} at index ${i} with ${Array[swapIndex].value} at index ${swapIndex}.` },
                     type: "info"
                 });
+
                 await this.swapAnimation(Array[i].obj, Array[swapIndex].obj, [...this.arrows, ...this.squareArray]);
                 [Array[i], Array[swapIndex]] = [Array[swapIndex], Array[i]];
                 await this.waitWhilePaused();
@@ -120,6 +117,10 @@ class quickSortClass extends Base {
             message: { title: "Swap Pivot", text: `Swapping pivot ${pivot.value} at index ${pivotIndex} with ${Array[swapIndex].value} at index ${swapIndex}.` },
             type: "info"
         });
+
+        Array[swapIndex].obj.col = Array[pivotIndex].obj.col = this.HighlightCol2;
+        DrawArray([...this.arrows, ...this.squareArray]);
+        await this.delay(this.TimeoutDelay);
 
         await this.swapAnimation(Array[pivotIndex].obj, Array[swapIndex].obj, [...this.arrows, ...this.squareArray]);
         [Array[pivotIndex], Array[swapIndex]] = [Array[swapIndex], Array[pivotIndex]];

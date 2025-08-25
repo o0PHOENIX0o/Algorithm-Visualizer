@@ -1,6 +1,6 @@
-import { Base } from "../Base.js"
-import { DrawArray, Circle, Square, Line, width, height, clearCanvas } from '../../canvas.js';
-import { Logger } from "../../logger.js";
+import { Base } from "../Base/Base.js"
+import { DrawArray, Circle, Square, Line, width, height, clearCanvas, drawWelcomeScreen } from '../../Core/canvas.js';
+import { Logger } from "../../Core/logger.js";
 
 class hashSearchClass extends Base {
   constructor() {
@@ -26,10 +26,6 @@ class hashSearchClass extends Base {
   }
 
   async reset() {
-    this.logger.show({
-      message: { title: "Reset", text: "Hash Search state and visuals have been reset." },
-      type: "warning",
-    });
     this.objNodeArray = [];
     this.inputArray = [];
     this.arrows = [];
@@ -45,6 +41,7 @@ class hashSearchClass extends Base {
     this.logger.clearLogs();
     clearCanvas();
     DrawArray(null);
+    // drawWelcomeScreen
   }
 
 
@@ -133,7 +130,7 @@ class hashSearchClass extends Base {
       Object.assign(BucketPositions[index], { x: BucketPositions[index].x, y: BucketPositions[index].y + element.obj.dia + this.spacing - 5 });
 
       this.lineArray = [
-        new Line({ x1: element.obj.xPos, y1: element.obj.yPos, x2: (this.hashBox.xPos1 + hashBoxWidth / 2), y2: (this.hashBox.yPos1 - hashBoxHeight / 2), col: 0 })
+        new Line({ x1: element.obj.xPos, y1: element.obj.yPos, x2: (this.hashBox.xPos1 + hashBoxWidth / 2), y2: (this.hashBox.yPos1 - hashBoxHeight / 2), col: this.HighlightCol })
       ];
       DrawArray([...this.bucketArray, this.hashBox, ...this.lineArray]);
 
@@ -233,8 +230,8 @@ class hashSearchClass extends Base {
 
     for (let i = 0; i < this.bucketArray.length; i++) {
       if (!this.hashTable[i]) {
-        this.bucketArray[i].col = this.BaseCol;
-        this.bucketArray[i].textCol = "#f0f0f0";;
+        this.bucketArray[i].col = "#535353ff";
+        this.bucketArray[i].textCol = "#535353ff";
       }
     }
 
@@ -280,7 +277,7 @@ class hashSearchClass extends Base {
     if (!this.isAnimating) return;
 
     this.lineArray = [
-      new Line({ x1: this.keyCircle[0].xPos, y1: this.keyCircle[0].yPos, x2: (this.hashBox.xPos1 + hashBoxWidth / 2), y2: (this.hashBox.yPos1 - hashBoxHeight / 2), col: 0 })
+      new Line({ x1: this.keyCircle[0].xPos, y1: this.keyCircle[0].yPos, x2: (this.hashBox.xPos1 + hashBoxWidth / 2), y2: (this.hashBox.yPos1 - hashBoxHeight / 2), col: this.HighlightCol })
     ];
     DrawArray([...this.bucketArray, this.hashBox, ...this.lineArray, ...this.keyCircle]);
 
@@ -306,8 +303,8 @@ class hashSearchClass extends Base {
       } else {
         if (bucketVal) {
           for (const element of bucketVal) {
-            element.obj.col = this.BaseCol;
-            element.obj.textCol = "#777777ff";
+            element.obj.col = "#535353ff";
+            element.obj.textCol = "#535353ff";
           }
         }
       }

@@ -1,6 +1,6 @@
 import { GraphBase } from './GraphBase.js';
-import { DrawArray, clearCanvas } from '../../canvas.js';
-import { Logger } from '../../logger.js';
+import { DrawArray, clearCanvas, drawWelcomeScreen } from '../../Core/canvas.js';
+import { Logger } from '../../Core/logger.js';
 
 class DFSClass extends GraphBase {
     constructor() {
@@ -9,11 +9,6 @@ class DFSClass extends GraphBase {
     }
 
     reset() {
-        this.logger.show({
-            message: { title: "Reset", text: "DFS has been reset. All nodes, edges, and logs are cleared." },
-            type: "warning",
-            isEvent: true
-        });
         this.objNodeArray = [];
         this.inputArray = [];
         this.edgeList = [];
@@ -26,6 +21,7 @@ class DFSClass extends GraphBase {
         this.logger.clearLogs();
         clearCanvas();
         DrawArray(null);
+        // drawWelcomeScreen
     }
 
 
@@ -33,7 +29,6 @@ class DFSClass extends GraphBase {
         let DFSOrder = [];
         let isSeen = Array(Nodes.length).fill(false);
 
-        let stack = [u];
 
         const DFSvisit = async (array, u, highlightColor) => {
             console.log("Visiting node: ", u, highlightColor);
@@ -51,7 +46,7 @@ class DFSClass extends GraphBase {
                 message: {
                     title: `Exploring Node ${array[u].obj.label}`,
                     text: `Node <b>${array[u].obj.label}</b> is now being visited.<br>
-                           <b>Current stack →</b> [${stack.map(index => array[index].obj.label)}]`
+                           <b>Current stack →</b> [${stack?.map(index => array[index]?.obj?.label)}]`
                 },
                 type: "info"
             });
@@ -91,10 +86,11 @@ class DFSClass extends GraphBase {
                         line.strokeW = 3;
                         this.drawAll([box]);
 
+                        console.log("befor 98", u, array, array[u]);
                         this.logger.show({
                             message: {
-                                title: `Discovered New Node`,
-                                text: `From <b>${array[u].obj.label}</b>, moving to unvisited neighbor <b>${array[v].obj.label}</b>.<br>
+                                title: `Discovered New Node ${array[v].obj.label}`,
+                                text: `From <b>${array[u].obj.label}</b>, moving to un  visited neighbor <b>${array[v].obj.label}</b>.<br>
                                        <b>Stack after push →</b> [${[...stack, v].map(index => array[index].obj.label)}]`
                             },
                             type: "info"
@@ -151,11 +147,17 @@ class DFSClass extends GraphBase {
             await this.delay(1.5 * this.TimeoutDelay)
             await this.waitWhilePaused();
             if (!this.isAnimating) return;
+            return DFSOrder;
         }
 
+        let stack = [];
+        let forest = [];
         if (u === -1) {
+            console.log("Starting DFS for disconnected graph", u);
             for (let u = 0; u < Nodes.length; u++) {
+                DFSOrder = [];
                 let highlightColor = this.highlightColors[u % this.highlightColors.length];
+                stack = [u];
                 if (!isSeen[u]) {
                     this.logger.show({
                         message: {
@@ -164,10 +166,23 @@ class DFSClass extends GraphBase {
                         },
                         type: "info"
                     });
-                    await DFSvisit(Nodes, u, highlightColor);
+                    await this.delay(this.TimeoutDelay);
+                    let DFStree = await DFSvisit(Nodes, u, highlightColor);
+                    console.log("DFS tree from node ", u, DFStree);
+                    forest.push([...DFStree]);
                 }
             }
+            console.log("Full DFS forest: ", forest);
+
+            this.logger.show({
+                message: {
+                    title: `DFS Complete`,
+                    text: `DFS forest: <br> ${forest.map((tree, index) => `Tree ${index + 1}: ${tree?.map(i => Nodes[i].obj.label).join(' → ')}`).join('<br>')}`
+                },
+                type: "success"
+            });
         } else {
+            stack.push(u);
             this.logger.show({
                 message: {
                     title: `Starting DFS`,
@@ -175,12 +190,20 @@ class DFSClass extends GraphBase {
                 },
                 type: "info"
             });
-            await DFSvisit(Nodes, u, this.highlightColors[Math.floor(Math.random() * this.highlightColors.length)]);
+            let dfsTree = await DFSvisit(Nodes, u, this.highlightColors[Math.floor(Math.random() * this.highlightColors.length)]);
+            
+            this.logger.show({
+                message: {
+                    title: `DFS Complete`,
+                    text: `DFS traversal order: ${dfsTree?.map(i => Nodes[i].obj.label).join(' → ')}`
+                },
+                type: "success"
+            });
         }
 
         this.directedEdges.forEach((row, i) => {
             row.forEach((edge, j) => {
-                if (edge !== null && edge.line.col == 0) this.directedEdges[i][j] = null;
+                if (edge !== null && edge.line.col == "#ffffff") this.directedEdges[i][j] = null;
             })
         })
         this.drawAll();

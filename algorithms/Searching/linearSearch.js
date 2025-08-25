@@ -1,7 +1,7 @@
-import { Base, compare } from "../Base.js"
-import { DrawArray, PointerArrow, Circle, Square, clearCanvas } from '../../canvas.js';
+import { Base, compare } from "../Base/Base.js"
+import { DrawArray, PointerArrow, Circle, Square, clearCanvas, drawWelcomeScreen } from '../../Core/canvas.js';
 
-import { Logger } from "../../logger.js";
+import { Logger } from "../../Core/logger.js";
 
 class linearSearchClass extends Base {
   constructor() {
@@ -20,11 +20,6 @@ class linearSearchClass extends Base {
   }
 
   async reset() {
-    this.logger.show({
-      message: { title: "Reset", text: "Linear Search state and visuals have been reset." },
-      type: "warning",
-      isEvent: true
-    });
     this.objNodeArray = [];
     this.inputArray = [];
     this.arrows = [];
@@ -36,6 +31,7 @@ class linearSearchClass extends Base {
     this.logger.clearLogs();
     clearCanvas();
     DrawArray(null);
+    // drawWelcomeScreen();
   }
 
 
