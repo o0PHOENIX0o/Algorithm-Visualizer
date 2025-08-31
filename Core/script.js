@@ -84,6 +84,10 @@ function showError(title, text, isEvent = true) {
 function showWarning(title, text, isEvent = true) {
   logger.show({ message: { title, text }, type: 'warning', timer: 3000, isEvent: isEvent });
 }
+function showMsg(title, text, isEvent = true) {
+  logger.show({ message: { title, text }, type: 'info', timer: 3000, isEvent: isEvent });
+}
+
 
 function handleNavToggle() {
   sidebar.classList.toggle('active');
@@ -110,9 +114,8 @@ function handleAlgoTitleClick(e) {
   notes?.showNotes();
   scrollToTop();
   if (!isPlaying) return;
-  let btn = document.getElementById("playPauseBtn");
   currentAlgorithm.Pause();
-  btn.innerHTML = `<span class="btn-icon">▶</span> Play`;
+  setPlayState(document.getElementById("togglePlayBtn"));
 }
 
 // Attach modularized event listeners
@@ -462,8 +465,6 @@ document.getElementById("togglePlayBtn").addEventListener("click", () => {
   });
 
   let btn = document.getElementById("togglePlayBtn");
-
-
 
   if (currentAlgorithm.isPause) {
     currentAlgorithm.Resume();

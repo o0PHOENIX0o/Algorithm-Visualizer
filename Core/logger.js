@@ -131,6 +131,7 @@ export class Logger {
 
         let progressBar = null;
         if (timer > 0) {
+            console.log("Adding progress bar for ", title);
             progressBar = document.createElement('div');
             progressBar.className = 'progress-bar';
             toastWrapper.appendChild(progressBar);
