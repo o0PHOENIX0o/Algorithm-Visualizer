@@ -18,7 +18,7 @@ let algoData = {
       "inPlace": true
     },
     "notes": {
-      "heading": "Bubble Sort Explaination",
+      "heading": "Bubble Sort Explanation",
       "subHeading": "Bubble Sort is one of the simplest sorting algorithms to understand and implement. It works by repeatedly stepping through the list, comparing adjacent elements and swapping them if they are in the wrong order. The pass through the list is repeated until the list is sorted.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=1"
@@ -60,17 +60,17 @@ let algoData = {
         }
       ],
       "Pseudocode": `BubbleSort(A)
-    n ← length(A)
-    repeat
-        swapped ← false
-        for i ← 0 to n − 2 do
-            if A[i] > A[i + 1] then
-                swap A[i], A[i + 1]
-                swapped ← true
-        n ← n − 1           // last element is in place
-    until swapped = false
-    return A
-`,
+        n ← length(A)
+        repeat
+            swapped ← false
+            for i ← 0 to n − 2 do
+                if A[i] > A[i + 1] then
+                    swap A[i], A[i + 1]
+                    swapped ← true
+            n ← n − 1           // last element is in place
+        until swapped = false
+        return A
+    `,
       "applications": [
         "<strong>Educational Purpose:</strong> Perfect for learning sorting concepts",
         "<strong>Small Datasets:</strong> Acceptable for arrays with less than 50 elements",
@@ -139,7 +139,7 @@ let algoData = {
       "inPlace": true
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Insertion Sort Explanation",
       "subHeading": "Insertion Sort builds the final sorted array one item at a time. It is much less efficient on large lists than more advanced algorithms such as quicksort, heapsort, or merge sort. However, it provides several advantages for small datasets and has some performance advantages over other O(n²) algorithms.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=3"
@@ -181,15 +181,15 @@ let algoData = {
         }
       ],
       "Pseudocode": `InsertionSort(A)
-    for i ← 1 to length(A) − 1 do
-        key ← A[i]
-        j ← i − 1
-        while j ≥ 0 and A[j] > key do
-            A[j + 1] ← A[j]
-            j ← j − 1
-        A[j + 1] ← key
-    return A
-`,
+          for i ← 1 to length(A) − 1 do
+              key ← A[i]
+              j ← i − 1
+              while j ≥ 0 and A[j] > key do
+                  A[j + 1] ← A[j]
+                  j ← j − 1
+              A[j + 1] ← key
+          return A
+      `,
       "applications": [
         "<strong>Small Arrays:</strong> Very efficient for small datasets (< 50 elements)",
         "<strong>Nearly Sorted Arrays:</strong> Excellent performance on partially sorted data",
@@ -254,7 +254,7 @@ let algoData = {
       "inPlace": true
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Selection Sort Explanation",
       "subHeading": "Selection Sort is a simple, in-place comparison sorting algorithm. It is noted for its simplicity and has performance advantages over more complicated algorithms in certain situations.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=6"
@@ -284,15 +284,15 @@ let algoData = {
         }
       ],
       "Pseudocode": `SelectionSort(A)
-    n ← length(A)
-    for i ← 0 to n − 2 do
-        minIndex ← i
-        for j ← i + 1 to n − 1 do
-            if A[j] < A[minIndex] then
-                minIndex ← j
-        swap A[i], A[minIndex]
-    return A
-`,
+        n ← length(A)
+        for i ← 0 to n − 2 do
+            minIndex ← i
+            for j ← i + 1 to n − 1 do
+                if A[j] < A[minIndex] then
+                    minIndex ← j
+            swap A[i], A[minIndex]
+        return A
+    `,
       "applications": [
         "<strong>Small Arrays:</strong> Useful for small datasets.",
         "<strong>Memory Constraints:</strong> When memory writes are costly.",
@@ -354,7 +354,7 @@ let algoData = {
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Merge Sort Explanation",
       "subHeading": "Merge Sort is a stable, comparison-based, divide-and-conquer sorting algorithm that is efficient for large datasets.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=4"
@@ -384,27 +384,27 @@ let algoData = {
         }
       ],
       "Pseudocode": `MergeSort(A)
-    if length(A) ≤ 1 then
-        return A
-    mid ← ⌊length(A) / 2⌋
-    left  ← MergeSort(A[0 .. mid − 1])
-    right ← MergeSort(A[mid .. end])
-    return Merge(left, right)
+        if length(A) ≤ 1 then
+            return A
+        mid ← ⌊length(A) / 2⌋
+        left  ← MergeSort(A[0 .. mid − 1])
+        right ← MergeSort(A[mid .. end])
+        return Merge(left, right)
 
-Merge(L, R)
-    result ← empty list
-    i ← 0, j ← 0
-    while i < length(L) and j < length(R) do
-        if L[i] ≤ R[j] then
-            append L[i] to result
-            i ← i + 1
-        else
-            append R[j] to result
-            j ← j + 1
-    append L[i .. end] to result
-    append R[j .. end] to result
-    return result
-`,
+    Merge(L, R)
+        result ← empty list
+        i ← 0, j ← 0
+        while i < length(L) and j < length(R) do
+            if L[i] ≤ R[j] then
+                append L[i] to result
+                i ← i + 1
+            else
+                append R[j] to result
+                j ← j + 1
+        append L[i .. end] to result
+        append R[j .. end] to result
+        return result
+    `,
       "applications": [
         "<strong>Large Datasets:</strong> Efficient for sorting large arrays.",
         "<strong>Linked Lists:</strong> Well-suited for linked list sorting.",
@@ -465,7 +465,7 @@ Merge(L, R)
       "inPlace": true
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Quick Sort Explanation",
       "subHeading": "Quick Sort is a highly efficient divide-and-conquer sorting algorithm. It works by selecting a 'pivot' element from the array and partitioning the other elements into two sub-arrays according to whether they are less than or greater than the pivot. The sub-arrays are then sorted recursively.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=5"
@@ -503,22 +503,22 @@ Merge(L, R)
         }
       ],
       "Pseudocode": `QuickSort(A, low, high)
-    if low < high then
-        p ← Partition(A, low, high)
-        QuickSort(A, low, p − 1)
-        QuickSort(A, p + 1, high)
-    return A
+        if low < high then
+            p ← Partition(A, low, high)
+            QuickSort(A, low, p − 1)
+            QuickSort(A, p + 1, high)
+        return A
 
-Partition(A, low, high)
-    pivot ← A[high]
-    i ← low − 1
-    for j ← low to high − 1 do
-        if A[j] < pivot then
-            i ← i + 1
-            swap A[i], A[j]
-    swap A[i + 1], A[high]
-    return i + 1
-`,
+    Partition(A, low, high)
+        pivot ← A[high]
+        i ← low − 1
+        for j ← low to high − 1 do
+            if A[j] < pivot then
+                i ← i + 1
+                swap A[i], A[j]
+        swap A[i + 1], A[high]
+        return i + 1
+    `,
       "applications": [
         "<strong>General Purpose:</strong> Most commonly used sorting algorithm",
         "<strong>Large Datasets:</strong> Excellent performance on large arrays",
@@ -586,7 +586,7 @@ Partition(A, low, high)
       "inPlace": true
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Heap Sort Explanation",
       "subHeading": "Heap Sort is an efficient comparison-based sorting algorithm that uses a binary heap data structure.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=2"
@@ -616,26 +616,26 @@ Partition(A, low, high)
         }
       ],
       "Pseudocode": `HeapSort(A)
-    n ← length(A)
-    // Build max heap
-    for i ← ⌊n/2⌋ − 1 downto 0 do
-        Heapify(A, n, i)
-    // Extract elements one by one
-    for i ← n − 1 downto 1 do
-        swap A[0], A[i]
-        Heapify(A, i, 0)
-    return A
+        n ← length(A)
+        // Build max heap
+        for i ← ⌊n/2⌋ − 1 downto 0 do
+            Heapify(A, n, i)
+        // Extract elements one by one
+        for i ← n − 1 downto 1 do
+            swap A[0], A[i]
+            Heapify(A, i, 0)
+        return A
 
-Heapify(A, n, i)
-    largest ← i
-    l ← 2i + 1
-    r ← 2i + 2
-    if l < n and A[l] > A[largest] then largest ← l
-    if r < n and A[r] > A[largest] then largest ← r
-    if largest ≠ i then
-        swap A[i], A[largest]
-        Heapify(A, n, largest)
-`,
+      Heapify(A, n, i)
+        largest ← i
+        l ← 2i + 1
+        r ← 2i + 2
+        if l < n and A[l] > A[largest] then largest ← l
+        if r < n and A[r] > A[largest] then largest ← r
+        if largest ≠ i then
+            swap A[i], A[largest]
+            Heapify(A, n, largest)
+    `,
       "applications": [
         "<strong>Large Datasets:</strong> Efficient for large arrays.",
         "<strong>Priority Queues:</strong> Used in implementing priority queues.",
@@ -691,7 +691,7 @@ Heapify(A, n, i)
       "inPlace": true
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Linear Search Explanation",
       "subHeading": "Linear Search is the simplest searching algorithm that checks every element in the list sequentially until the target value is found or the list ends.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=7"
@@ -729,11 +729,11 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `LinearSearch(A, target)
-    for i ← 0 to length(A) − 1 do
-        if A[i] = target then
-            return i
-    return −1
-`,
+          for i ← 0 to length(A) − 1 do
+              if A[i] = target then
+                  return i
+          return −1
+      `,
       "applications": [
         "<strong>Unsorted Data:</strong> Works on unsorted datasets",
         "<strong>Small Datasets:</strong> Good for lists with small number of elements",
@@ -796,7 +796,7 @@ Heapify(A, n, i)
       "inPlace": true
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Binary Search Explanation",
       "subHeading": "Binary Search is an efficient algorithm for finding a target value within a sorted array. It works by repeatedly dividing the search interval in half.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=9"
@@ -834,18 +834,18 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `BinarySearch(A, target)
-    low ← 0
-    high ← length(A) − 1
-    while low ≤ high do
-        mid ← ⌊(low + high) / 2⌋
-        if A[mid] = target then
-            return mid
-        else if A[mid] < target then
-            low ← mid + 1
-        else
-            high ← mid − 1
-    return −1
-`,
+        low ← 0
+        high ← length(A) − 1
+        while low ≤ high do
+            mid ← ⌊(low + high) / 2⌋
+            if A[mid] = target then
+                return mid
+            else if A[mid] < target then
+                low ← mid + 1
+            else
+                high ← mid − 1
+        return −1
+    `,
       "applications": [
         "<strong>Sorted Data:</strong> Efficient for large sorted datasets",
         "<strong>Search Operations:</strong> Common in databases and libraries",
@@ -906,7 +906,7 @@ Heapify(A, n, i)
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Hash Search Explanation",
       "subHeading": "Hash Search leverages hash tables for fast data retrieval using key-value pairs.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=8"
@@ -940,30 +940,30 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `HashTable(size)
-    table ← array of size, each entry a bucket (list)
+        table ← array of size, each entry a bucket (list)
 
-    hash(key)
-        h ← 0
-        for each character c in key do
-            h ← (h × 31 + code(c)) mod size
-        return h
+        hash(key)
+            h ← 0
+            for each character c in key do
+                h ← (h × 31 + code(c)) mod size
+            return h
 
-    set(key, value)
-        idx ← hash(key)
-        // chaining: replace if key exists, else append
-        for each (k, v) in table[idx] do
-            if k = key then
-                v ← value
-                return
-        append (key, value) to table[idx]
+        set(key, value)
+            idx ← hash(key)
+            // chaining: replace if key exists, else append
+            for each (k, v) in table[idx] do
+                if k = key then
+                    v ← value
+                    return
+            append (key, value) to table[idx]
 
-    get(key)
-        idx ← hash(key)
-        for each (k, v) in table[idx] do
-            if k = key then
-                return v
-        return null
-`,
+        get(key)
+            idx ← hash(key)
+            for each (k, v) in table[idx] do
+                if k = key then
+                    return v
+            return null
+    `,
       "applications": [
         "<strong>Database Indexing:</strong> Used in hash-based indexes.",
         "<strong>Symbol Tables:</strong> Compilers and interpreters.",
@@ -1021,7 +1021,7 @@ Heapify(A, n, i)
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Breadth-First Search (BFS) Explanation",
       "subHeading": "Breadth-First Search (BFS) is a fundamental graph traversal algorithm that explores vertices in layers.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=10"
@@ -1051,18 +1051,18 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `BFS(G, s)
-    visited ← empty set
-    Q ← empty queue
-    enqueue(Q, s)
-    add s to visited
+        visited ← empty set
+        Q ← empty queue
+        enqueue(Q, s)
+        add s to visited
 
-    while Q is not empty do
-        u ← dequeue(Q)
-        for each v in neighbors(G, u) do
-            if v ∉ visited then
-                add v to visited
-                enqueue(Q, v)
-`,
+        while Q is not empty do
+            u ← dequeue(Q)
+            for each v in neighbors(G, u) do
+                if v ∉ visited then
+                    add v to visited
+                    enqueue(Q, v)
+    `,
       "applications": [
         "<strong>Shortest Path:</strong> Finding shortest path in unweighted graphs.",
         "<strong>Web Crawlers:</strong> Used in web crawling algorithms.",
@@ -1123,7 +1123,7 @@ Heapify(A, n, i)
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Depth-First Search (DFS) Explanation",
       "subHeading": "Depth First Search (DFS) is an algorithm for traversing or searching tree or graph data structures. It starts at the root node and explores as far as possible along each branch before backtracking.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=11"
@@ -1161,14 +1161,14 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `DFS(G, u, visited)
-    if visited is null then
-        visited ← empty set
+        if visited is null then
+            visited ← empty set
 
-    add u to visited
-    for each v in neighbors(G, u) do
-        if v ∉ visited then
-            DFS(G, v, visited)
-`,
+        add u to visited
+        for each v in neighbors(G, u) do
+            if v ∉ visited then
+                DFS(G, v, visited)
+    `,
       "applications": [
         "<strong>Path Finding:</strong> Used to find paths in a graph",
         "<strong>Cycle Detection:</strong> Detects cycles in graphs",
@@ -1233,7 +1233,7 @@ Heapify(A, n, i)
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Dijkstra's Algorithm Explanation",
       "subHeading": "Dijkstra's Algorithm is a classic algorithm for finding the shortest paths from a source node to all other nodes in a weighted graph.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=12"
@@ -1263,23 +1263,23 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `Dijkstra(G, source)
-    for each vertex v in G do
-        dist[v] ← ∞
-    dist[source] ← 0
+        for each vertex v in G do
+            dist[v] ← ∞
+        dist[source] ← 0
 
-    PQ ← min-priority-queue of (distance, vertex)
-    insert (0, source) into PQ
+        PQ ← min-priority-queue of (distance, vertex)
+        insert (0, source) into PQ
 
-    while PQ is not empty do
-        (d, u) ← extract-min(PQ)
-        if d > dist[u] then
-            continue   // outdated entry
-        for each edge (u, v, w) outgoing from u do
-            if dist[u] + w < dist[v] then
-                dist[v] ← dist[u] + w
-                insert (dist[v], v) into PQ   // or decrease-key
-    return dist
-`,
+        while PQ is not empty do
+            (d, u) ← extract-min(PQ)
+            if d > dist[u] then
+                continue   // outdated entry
+            for each edge (u, v, w) outgoing from u do
+                if dist[u] + w < dist[v] then
+                    dist[v] ← dist[u] + w
+                    insert (dist[v], v) into PQ   // or decrease-key
+        return dist
+    `,
       "applications": [
         "<strong>Network Routing:</strong> Used in routing protocols.",
         "<strong>Map Services:</strong> Shortest path in maps and GPS.",
@@ -1336,7 +1336,7 @@ Heapify(A, n, i)
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Prim's Algorithm Explanation",
       "subHeading": "Prim's Algorithm is a greedy algorithm that finds a minimum spanning tree for a weighted undirected graph.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=13"
@@ -1366,27 +1366,27 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `PrimMST(G, start)
-    for each vertex v in G do
-        key[v] ← ∞
-        parent[v] ← NIL
-        inMST[v] ← false
-    key[start] ← 0
+        for each vertex v in G do
+            key[v] ← ∞
+            parent[v] ← NIL
+            inMST[v] ← false
+        key[start] ← 0
 
-    PQ ← min-priority-queue of (key, vertex)
-    insert (0, start) into PQ
+        PQ ← min-priority-queue of (key, vertex)
+        insert (0, start) into PQ
 
-    while PQ is not empty do
-        (k, u) ← extract-min(PQ)
-        if inMST[u] then continue
-        inMST[u] ← true
-        for each edge (u, v, w) incident to u do
-            if ¬inMST[v] and w < key[v] then
-                key[v] ← w
-                parent[v] ← u
-                insert (key[v], v) into PQ
+        while PQ is not empty do
+            (k, u) ← extract-min(PQ)
+            if inMST[u] then continue
+            inMST[u] ← true
+            for each edge (u, v, w) incident to u do
+                if ¬inMST[v] and w < key[v] then
+                    key[v] ← w
+                    parent[v] ← u
+                    insert (key[v], v) into PQ
 
-    return { (parent[v], v) for all v with parent[v] ≠ NIL }
-`,
+        return { (parent[v], v) for all v with parent[v] ≠ NIL }
+    `,
       "applications": [
         "<strong>Network Design:</strong> Designing least-cost networks.",
         "<strong>Clustering:</strong> Used in clustering algorithms.",
@@ -1441,7 +1441,7 @@ Heapify(A, n, i)
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Kruskal's Algorithm Explanation",
       "subHeading": "Kruskal's Algorithm is a greedy algorithm for finding a minimum spanning tree in a weighted undirected graph.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=14"
@@ -1471,17 +1471,17 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `KruskalMST(G)
-    MST ← ∅
-    make-set(v) for each vertex v in G
-    E ← edges of G sorted by non-decreasing weight
+        MST ← ∅
+        make-set(v) for each vertex v in G
+        E ← edges of G sorted by non-decreasing weight
 
-    for each edge (u, v, w) in E do
-        if find(u) ≠ find(v) then
-            MST ← MST ∪ {(u, v, w)}
-            union(u, v)
+        for each edge (u, v, w) in E do
+            if find(u) ≠ find(v) then
+                MST ← MST ∪ {(u, v, w)}
+                union(u, v)
 
-    return MST
-`,
+        return MST
+    `,
       "applications": [
         "<strong>Network Design:</strong> Designing least-cost networks.",
         "<strong>Clustering:</strong> Used in clustering algorithms.",
@@ -1535,7 +1535,7 @@ Heapify(A, n, i)
       "inPlace": false
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Tree Traversal Explanation",
       "subHeading": "Tree traversal algorithms systematically visit all nodes in a tree data structure.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=15"
@@ -1565,23 +1565,23 @@ Heapify(A, n, i)
         }
       ],
       "Pseudocode": `Preorder(node)
-    if node = null then return
-    visit(node)
-    Preorder(node.left)
-    Preorder(node.right)
+        if node = null then return
+        visit(node)
+        Preorder(node.left)
+        Preorder(node.right)
 
-Inorder(node)
-    if node = null then return
-    Inorder(node.left)
-    visit(node)
-    Inorder(node.right)
+    Inorder(node)
+        if node = null then return
+        Inorder(node.left)
+        visit(node)
+        Inorder(node.right)
 
-Postorder(node)
-    if node = null then return
-    Postorder(node.left)
-    Postorder(node.right)
-    visit(node)
-`,
+    Postorder(node)
+        if node = null then return
+        Postorder(node.left)
+        Postorder(node.right)
+        visit(node)
+    `,
       "applications": [
         "<strong>Expression Trees:</strong> Evaluating and printing expressions.",
         "<strong>File Systems:</strong> Traversing directory structures.",
@@ -1646,7 +1646,7 @@ Postorder(node)
       "inPlace": true
     },
     "notes": {
-      "heading": "Overview",
+      "heading": "Binary Search Tree (BST) Explanation",
       "subHeading": "Binary Search Tree (BST) is a hierarchical data structure that maintains sorted data and allows for efficient insertion, deletion, and search operations.",
       "images": {
         "algorithm": "https://picsum.photos/500/250?random=16"
